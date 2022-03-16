@@ -6,6 +6,8 @@ require_once('StaffCommonCode.php');
 staff_header($title,  true);
 ?>
 
+<div class="row">
+<div class="col-lg-8">
 <div class="card mt-2">
     <div class="card-header">
         <h2><?php echo CON_NAME; ?></h2>
@@ -38,13 +40,16 @@ if (!populateCustomTextArray()) {
     RenderError($message_error);
     exit();
 }
-echo "    <div class=\"card-body session-status-definitions\">";
+echo "    <div class=\"card-body\">";
 echo fetchCustomText("staff_overview");
 echo "    </div><!-- close card body -->";
 ?>
 </div><!-- close card top level -->
 
-<hr>
+</div>
+<div class="col-lg-4">
+
+<hr class="d-lg-none" />
 
 <div class="card mt-2">
 <?php
@@ -81,5 +86,7 @@ echo "    </div><!-- close card body -->\n";
 </p>
 </div><!-- close card top level -->
 
+</div>
+</div>
 
 <?php staff_footer(); ?>
