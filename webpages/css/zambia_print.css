@@ -1,0 +1,66 @@
+@page {
+    margin-top: 0in;
+    margin-bottom: 0in;
+    margin-left: 0in;
+    margin-right: 0in;    
+}
+
+.table-tent .panelname { font-weight: bold; font-size: 18pt } 
+.table-tent .paneldescribe { font-size: 14pt; margin-top: 10pt; } 
+.table-tent .panelists { font-size: 12pt; font-style: italic } 
+.table-tent .panelists b { font-size: 12pt; font-style: normal } 
+.table-tent .lastnote { font-size: 10pt } 
+.table-tent-body {
+    margin: 0px;
+}
+.table-tent.paper-letter .page {
+    height: 8.5in;
+    width: 11in;
+}
+.table-tent.paper-a4 .page {
+    height: 210mm;
+    width: 297mm;
+}
+.table-tent .front {
+    box-sizing: border-box;
+    height: 50%;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    text-align:center; 
+    font-weight: bold;
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg); 
+    overflow: hidden;
+    padding: 0.75in;
+}
+.table-tent .back {
+    box-sizing: border-box;
+    height: 50%;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 0.75in;
+}
+.table-tent .title { 
+    font-size: 52pt; 
+    font-weight: bold; 
+    line-height:72pt;
+    text-align:center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.table-tent p { margin-top: 2px; margin-bottom: 2px; }
+.table-tent { 
+    margin-left:auto; 
+    font-family:"Futura Condensed",sans-serif;
+    margin-right:auto; 
+}
+.table-tent .panelist { 
+    text-align:center; 
+    line-height:72pt; 
+    font-size: 80pt;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}

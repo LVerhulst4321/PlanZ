@@ -1,0 +1,809 @@
+/**
+ * Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+ */
+@import (reference) "zambia_include.less";
+
+/**
+ * LAYOUT
+ */
+
+* {
+    box-sizing: border-box;
+}
+
+/*
+ * Page header stuff
+ */
+.header-wrapper {
+    margin-left:-20px;
+    margin-right:-20px;
+}
+
+#login-form {
+    padding-right: 1.5rem;
+}
+
+#login {
+    float: right;
+}
+
+.login-alert-container {
+    text-align: center;
+    font-weight: bold;
+    margin-top:1rem;
+}
+
+.pageHeader {
+    padding: 0;
+    width: 100%;
+    display: table;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    .pageHeaderText {
+        width: 88%;
+        margin-left: 0;
+        display: table-cell;
+        vertical-align: middle;
+        float: none;
+        padding-left: 1.5rem
+    }
+}
+/* <end> Page header stuff */
+
+/* navbar stuff */
+.navbar {
+    margin-bottom: 0.2em;
+    margin-left: -20px;
+    margin-right:  -20px;
+}
+
+form.navbar-search {
+    margin-top: 9px !important;
+}
+
+/* End of navbar stuff */
+
+a {
+    color: @linkColor;
+}
+
+/**
+ * STYLES
+ */
+
+#buttonBox {
+    margin: 0.4em;
+}
+
+.borderBox {
+    border: @black thin solid;
+    padding: 5px;
+    margin: 0;
+    color: @black;
+}
+
+@adjustment: 5px;
+
+.checkbox.inline {
+    padding-top: 0;
+    margin-bottom: @adjustment;
+}
+.checkbox.inline.long {
+    padding-top: 0;
+    margin-bottom: @adjustment;
+    width: 14em;
+}
+
+.checkbox.adjust {
+    padding-top: 0;
+    margin-bottom: @adjustment + 3;
+}
+
+.padded {
+    margin-top: 0.5em;
+}
+
+#resultsDiv {
+    padding-top: 1.0em;
+}
+
+#searchPartsINPUT {
+    margin-bottom: 0;
+}
+
+.nowidth {
+    width: auto !important;
+    padding-right: 1em;
+    text-align: right;
+}
+
+.compact {
+    margin-bottom: 0;
+}
+
+@border: 2px solid white;
+.topBorder {
+    border-top: @border;
+    border-left: @border;
+    border-right: @border;
+}
+
+.edgeBorder {
+    border-left: @border;
+    border-right: @border;
+}
+
+.bottomBorder {
+    border-bottom: @border;
+    border-left: @border;
+    border-right: @border;
+}
+
+h1 {
+    font-family: @font-family;
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 1em;
+    color: @black;
+    a {
+        color: @white;
+        text-decoration: none;
+    }
+}
+
+h2 {
+    font-family: @font-family;
+    font-size: 1.5em;
+    padding: 0;
+    color: @darkest-gray;
+    background-color: @light-gray;
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+input.search-query {
+    height: 21px !important;
+}
+
+.reportPageContent {
+    line-height: normal;
+}
+
+div.reportPageContent table, table.report {
+    border-collapse: collapse;
+    margin: 10px;
+    border: 1px solid @black;
+    font-family: Arial;
+    font-size: 12px;
+}
+
+div.reportPageContent table th, th.report {
+    border: 1px solid @black;
+    background-color: @reportBackgroundColor;
+    padding-right: 0.2em;
+    padding-left: 0.2em;
+}
+
+div.reportPageContent table td, td.report {
+    border: 1px solid @black;
+    vertical-align: top;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+}
+
+div.reportPageContent table td a, .report A {
+    color: @reportLinkColor;
+}
+
+th.report.sorting_disabled span.sorting {
+    display:none;
+}
+
+td.report.highlight1 {
+    font-weight: bold;
+    background-color: @reportHighlightBackgroundColor;
+}
+
+td.za-report-lastRowCell {
+    border-bottom: 2px solid @black;
+}
+
+ul#boxes li {
+    font-family: @font-family;
+    font-size: 1.33em;
+    padding: 2.5em 0;
+    color: @dark-gray;
+    background-color: @lightest-gray;
+    text-align: center;
+}
+
+.compressed {
+    width: auto;
+}
+
+.table .myspan1 {
+    width: 71px;
+}
+
+/**
+ * RESPONSIVE
+ */
+@media (max-width: 1100px) {
+    .extra-wide-only {
+        display: none;
+    }
+}
+
+@media (max-width: 780px) {
+    .wide-only {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .wide-medium-only {
+        display: none;
+    }
+
+    h2, .label {
+        text-align: left;
+    }
+}
+
+.rankINP {
+    width: 2em !important;
+}
+
+.sessionWhyMe {
+    height: 4.3em !important;
+}
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+    padding: 0 1px !important;
+}
+
+input.search-query {
+    padding: 0 4px 0 8px !important;
+}
+
+@media (min-width: 480px) {
+    label[for="use_photo"] {
+        width: auto !important;
+        text-align: left !important;
+    }
+}
+
+.grid-form .row-fluid > div[class*='span'] {
+    padding: 0.1em 0.5em
+}
+
+/* Invite Participants */
+#invite-participants-intro {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+label[for='participant-select'] {
+    margin-right:0.5rem;
+
+    & + .choices {
+        width: 25rem;
+    }
+}
+
+label[for='session-select'] {
+    margin-right:0.5rem;
+
+    & + .choices {
+        width: 31rem;
+    }
+}
+/* <end> Invite Participants */
+
+/**
+ * Session History & Staff Assign Participants
+ */
+#session-history-form, #selsesform {
+    label {
+        margin-right: 1.5rem;
+
+        & + .choices {
+            width: 31rem;
+        }
+    }
+    .choices {
+        margin-right: 1.5rem;
+    }
+}
+
+#assign-participant-row {
+    & > .choices {
+        width: 31rem;
+    }
+    
+    button {
+        margin-right:1.5rem;
+    }
+} 
+
+#NPS_TXTA {
+    width: 50%;
+}
+
+.stAsPa-sesInfRow {
+    margin-bottom: 6px;
+}
+
+select#tags {
+    height: 6.8rem;
+}
+/* <end> Session History & Staff Assign Participants */
+
+/**
+ * Maintain Room Schedule
+ */
+#maintain-room-sched-room-form {
+    label[for='selroom'] {
+        margin-right: 1.5rem;
+    }
+
+    #selroom {
+        margin-right: 1.5rem;
+    }
+}
+
+.room-select-td > .choices {
+    width: 31rem;
+}
+
+#add-to-room-schedule-table td {
+    vertical-align:bottom;
+}
+/* <end> Maintain Room Schedule */
+
+/**
+ * Edit / Create Session
+ */
+select#tagdest {
+    height: 10rem;
+}
+/* <end> Edit / Create Session */
+
+/* Bootstrap extensions */
+.dropdown-menu > li > .menu-error-entry {
+    background-color: @problemBackgroundColor;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: bold;
+    line-height: 20px;
+    color: @problemColor;
+    white-space: nowrap;
+
+}
+
+.success-bg {
+    background-color: @successBackgroundColor;
+}
+
+.info-bg {
+    background-color: @infoBackgroundColor;
+}
+
+.warning-bg {
+    background-color: @warningBackgroundColor;
+}
+
+.problem-bg {
+    background-color: @problemBackgroundColor;
+}
+
+.row-container {
+    padding: 0;
+    width: 100%;
+    margin: 0 0;
+    padding-bottom: 1.5em;
+
+    &.not-attending {
+        background-color: @problemBackgroundColor;
+    }
+}
+
+.grid-table-cell {
+    padding: 5px;
+    border-left:1px solid @black;
+    border-top:1px solid @black;
+
+    &:last-child {
+        border-right:1px solid @black;
+    }
+
+    &.span3 {
+        margin-left:0;
+        width:25%;
+    }
+
+    &.span6 {
+        margin-left:0;
+        width:50%;
+    }
+}
+
+.grid-table-row {
+    &:first-child {
+        .grid-table-cell {
+            &:first-child {
+                border-top-left-radius:4px;
+            }
+
+            &:last-child {
+                border-top-right-radius:4px;
+            }
+        }
+    }
+
+    &:last-child {
+        margin-bottom: 10px;
+
+        .grid-table-cell {
+            border-bottom:1px solid @black;
+
+            &:first-child {
+                border-bottom-left-radius:4px;
+            }
+
+            &:last-child {
+                border-bottom-right-radius:4px;
+            }
+        }
+    }
+
+    &.info .grid-table-cell {
+        border-color: @bs2-info-border-color;
+        background-color: @bs2-info-bg-color;
+    }
+}
+
+.well.well-success {
+    background-color: @bs2-success-bg-color;
+    border-color: @bs2-success-border-color;
+}
+
+table.multcol-list td {
+    padding-right: 1em;
+}
+
+.control-group-horizontal {
+    select {
+        margin-right: 1.5rem;
+    }
+
+    .controls {
+        label {
+            display:inline-block;
+            margin-right: 1.5rem;
+    
+            span {
+                vertical-align:middle;
+            }
+        }
+
+        input[type='radio'] {
+            margin-top:-2px;
+        }
+    }
+    
+    &.control-group-sm {
+        .controls label {
+            margin-right: 0.75rem;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+.form-more-whitespace {
+    .control-group {
+        margin-bottom: 1rem;
+    }
+    label:not(:first-child) {
+        padding-left: 0.5rem;
+    }
+}
+
+.navbar-inverse .inactive.brand:hover {
+    color: @darker-gray;
+}
+
+.clearboth {
+    clear: both;
+}
+/* <end> Bootstrap extensions */
+
+.not-attending-header-row {
+    background-color: @problemBackgroundColor;
+    padding: 2px 4px;
+    font-weight: bold;
+}
+
+.za-sessionHistory-moderator {
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.za-sessionHistory-editBanner {
+    background-color: @gray;
+    border: 1px solid @darker-gray;
+    border-radius: 3px;
+    padding: 3px 4px;
+    color: white;
+    margin-bottom: 3px;
+    [class*='span'] {
+        min-height: 0;
+    }
+}
+
+.error-container {
+    line-height: 2;
+}
+
+.hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/**
+ * General spacing bits
+ */
+.page-top-spacer {
+    margin-top: 1.5rem;
+}
+
+.vert-sep {
+    margin-bottom: 1rem;
+}
+
+.vert-sep-above {
+    margin-top: 1rem;
+}
+
+/* <end> General spacing bits */
+
+/**
+ * choices widget overrides
+ */
+.zambia-form {
+    &, * {
+        box-sizing: border-box;
+    }
+
+    .choices {
+        display: inline-block;
+        margin-right: 1.25rem;
+        vertical-align: middle;
+        margin-bottom: initial;
+        
+        &:focus-within {
+            outline: 1px dotted @near-black;
+            outline: 4px auto -webkit-focus-ring-color;
+        }
+    }
+
+    .choices__inner {
+        min-height:initial;
+        padding: 0.5rem 1.6rem 0.25rem 0.5rem;
+    }
+
+    .choices__list--dropdown {
+        word-break: initial;
+    }
+
+    .choices__list--single {
+        padding: 0.25rem 0 0.25rem 0.25rem;
+
+        & > .choices__item--selectable {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+/* Start of settings needed make the tabs work */
+.menutab {
+    background-image: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    height: 18px;
+
+    &.enabled {
+        background-color: @brown;
+        color: @white;
+
+        &:hover {
+            background: @white;
+
+            a {
+                color: @brown;
+                text-decoration: none;
+            }
+        }
+
+        a {
+            color: @white;
+            text-decoration: none;
+        }
+    }
+
+    &.disabled {
+        background: @darkest-gray;
+        color: white;
+    }
+}
+
+/* definitions for the table at the top of the pages */
+table.tabhead {
+    margin: 0;
+    width: 100%;
+    border: 0;
+    padding: 0;
+}
+tr.tabrow {
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+td.tabblocks {
+    padding-top: 3px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    background: @darker-gray;
+    color: @white;
+}
+td.head {
+    background: @darker-gray;
+}
+/*
+ * attributes of the images used to draw the borders of the tabs
+ */
+img.tabborder {
+    vertical-align:top;
+    height: 14px;
+    width: 10px;
+}
+/* End of settings needed make the tabs work */
+.border0000 {
+    border:none
+}
+.border0010 {
+    border-top: none;
+    border-right: none;
+    border-bottom: solid @black 1px;
+    border-left: none
+}
+.border0020 {
+    border-top: none;
+    border-right: none;
+    border-bottom: solid @black 2px;
+    border-left: none
+}
+.border1111 {
+    border-top: solid @black 1px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
+}
+.border1121 {
+    border-top: solid @black 1px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 1px
+}
+.border1211 {
+    border-top: solid @black 1px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
+}
+.border1221 {
+    border-top: solid @black 1px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 1px
+}
+.border2111 {
+    border-top: solid @black 2px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
+}
+.border2122 {
+    border-top: solid @black 2px;
+    border-right: solid @black 1px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 2px
+}
+.border2211 {
+    border-top: solid @black 2px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 1px;
+    border-left: solid @black 1px
+}
+.border2221 {
+    border-top: solid @black 2px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 1px
+}
+.border2222 {
+    border-top: solid @black 2px;
+    border-right: solid @black 2px;
+    border-bottom: solid @black 2px;
+    border-left: solid @black 2px
+}
+
+/* ForgotPasswordResetForm.xsl */
+#revealPassword {
+    margin-left: 0.35rem;
+    padding: 0 0 0 0.35rem;
+    border:none;
+    background:transparent;
+
+    img {
+        width:1.8rem;
+    }
+}
+
+#password-instructions span {
+    padding-right: 1rem;
+}
+
+/* Table Changed Row Highlight Color */
+table > tbody > tr > td.tdChangedHighlight.tdChangedHighlight {
+    background-color: @changed-cell-color;
+}
+
+.za-table-striped tbody > tr:nth-child(odd) {
+    & > td, & > th {
+        background-color: @light-gray;
+    }
+}
+.my-suggestions-wrapper {
+    padding-top:1rem;
+
+    .titledtextarea {
+        margin: 1rem;
+        padding-bottom: 1rem;
+
+        & > label {
+            font-weight: bold;
+            font-size: 1.05rem;
+            display: block;
+        }
+
+        & > textarea {
+            display: block;
+            width: 50rem;
+            max-width: 95%;
+        }
+    }
+}

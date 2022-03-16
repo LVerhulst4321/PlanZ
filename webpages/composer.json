@@ -1,0 +1,5 @@
+{
+    "require": {
+        "emarref/jwt": "^1.0"
+    }
+}
