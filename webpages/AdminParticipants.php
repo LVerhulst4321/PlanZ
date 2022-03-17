@@ -51,7 +51,11 @@ if ($fbadgeid) {
             </div>
         </div>
     </div>
+
+
     <div id="resultsDiv" class="container-fluid">
+
+
         <div class="row mt-3">
             <div class="col-sm-2 col-xl-1">
                 <div class="">
@@ -113,6 +117,8 @@ if (USE_REG_SYSTEM === TRUE) {
                 </div>
            </div>
         </div>
+
+
         <div class="row mt-3">
 <?php 
 if (USE_REG_SYSTEM === FALSE) {
@@ -153,6 +159,8 @@ if (USE_REG_SYSTEM === FALSE) {
                 </div>
             </div>
         </div>
+
+
 <?php
 if (USE_REG_SYSTEM === FALSE) {
 ?>
@@ -174,6 +182,8 @@ if (USE_REG_SYSTEM === FALSE) {
                 </div>
             </div>
         </div>
+
+
         <div class="row mt-3">
             <div class="col-sm-2 offset-sm-2 offset-xl-1">
                 <div class="">
@@ -211,6 +221,8 @@ if (USE_REG_SYSTEM === FALSE) {
 <?php
 };
 ?>
+
+
         <div class="row mt-3">
             <div class="container-sm p-2 my-2 border border-dark">
                 <div class="control-group">
@@ -227,28 +239,32 @@ if (USE_REG_SYSTEM === FALSE) {
                 </div>
             </div>
         </div>
-        <div class="row">
+
+
+        <div class="row mt-3">
 <?php
 if (RESET_PASSWORD == true) {
     if (may_I("ResetUserPassword")) {
 ?>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="password">Change Participant's Password:</label>
+            <div class="container-sm p-2 my-2 border border-dark">
+                <div class="col-sm-3">
+                    <div class="">
+                        <label for="password">Change Participant's Password:</label>
+                    </div>
+                    <div>
+                        <input type="password" maxlength="40" id="password" readonly="readonly" class="mycontrol" />
+                    </div>
+                    <span id="passwordsDontMatch" style="color: red;">Passwords don't match.</span>
                 </div>
-                <div>
-                    <input type="password" maxlength="40" id="password" readonly="readonly" class="mycontrol" />
+                <div class="col-sm-3">
+                    <div class="">
+                        <label for="cpassword">Confirm New Password:</label>
+                    </div>
+                    <div>
+                        <input type="password" maxlength="40" id="cpassword" readonly="readonly" class="mycontrol" />
+                    </div>
                 </div>
-                <span id="passwordsDontMatch" style="color: red;">Passwords don't match.</span>
             </div>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="cpassword">Confirm New Password:</label>
-                </div>
-                <div>
-                    <input type="password" maxlength="40" id="cpassword" readonly="readonly" class="mycontrol" />
-                </div>
-            </div>     
 <?php
     };
 };
@@ -263,6 +279,8 @@ if (RESET_PASSWORD == true) {
                 </div>
             </div>
         </div>
+
+
         <div class="row mt-3">
             <div class="col-sm-6">
                 
@@ -310,6 +328,8 @@ if (HTML_BIO === TRUE) {
 ?>
             </div>
         </div>
+
+
         <div class="row mt-3">
             <div class="col-sm-4">
                 <div class="pb-1">
@@ -321,6 +341,8 @@ if (HTML_BIO === TRUE) {
                 </div>
             </div>
         </div>
+
+
         <div class="row mt-3">
             <div class="col col-auto">
                 <button type="button" class="btn btn-primary" data-loading-text="Updating..." id="updateBUTN"
@@ -332,6 +354,8 @@ if (HTML_BIO === TRUE) {
                 </button>
             </div>
         </div>
+
+
     </div>
 </form>
 <?php
