@@ -101,7 +101,22 @@ EOB;
         }
     }
     $query .= "\n";
-    $query .= "GROUP BY S.sessionid\n";
+    $query .= "GROUP BY S.sessionid,\n";
+    $query .= "         TR.trackname,\n";
+    $query .= "         TY.typename,\n";
+    $query .= "         S.title,\n";
+    $query .= "         duration,\n";
+    $query .= "         S.estatten,\n";
+    $query .= "         S.progguiddesc,\n";
+    $query .= "         S.persppartinfo,\n";
+    $query .= "         starttime,\n";
+    $query .= "         R.roomname,\n";
+    $query .= "         SS.statusname,\n";
+    $query .= "         notesforprog,\n";
+    $query .= "         notesforpart,\n";
+    $query .= "         servicenotes,\n";
+    $query .= "         pubstatusname,\n";
+    $query .= "         sessionhistory\n";
     $query .= " ORDER BY ";
     $query .= "  trackname, typename, title";
     return(mysqli_query_exit_on_error($query));
