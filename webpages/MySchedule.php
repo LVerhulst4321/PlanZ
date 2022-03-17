@@ -107,17 +107,17 @@ if (!$registered) {
     echo "</div>";
 }
 
-?>
-
-<div class="alert alert-primary">Please take a moment to confirm your panel assignments.</div>
-
-<div class="card">
-    <div class="card-body">
-<?php
 $allowConfirmation = 'false';
 if (defined('CONFIRM_SESSION_ASSIGNMENT') && CONFIRM_SESSION_ASSIGNMENT === TRUE) {
     $allowConfirmation = 'true';
+?>
+    <div class="alert alert-primary">Please take a moment to confirm your panel assignments.</div>
+<?php 
 }
+?>
+<div class="card">
+    <div class="card-body">
+<?php
 
 RenderXSLT('my_schedule.xsl', array( "badgeid" => $badgeid, "allowConfirmation" => $allowConfirmation ), $resultXML);
 ?>

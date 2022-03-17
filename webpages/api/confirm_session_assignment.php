@@ -1,8 +1,8 @@
 <?php
 // Created by BC Holmes on 2022-03-16.
 
-if (!include ('../../db_name.php')) {
-	include ('../../db_name.php');
+if (!include ('../config/db_name.php')) {
+	include ('../config/db_name.php');
 }
 
 require_once('./db_support_functions.php');
