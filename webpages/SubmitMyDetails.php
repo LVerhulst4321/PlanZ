@@ -35,14 +35,14 @@ $pronounotherE = mysqli_real_escape_string($linki, $pronounother);
 
 $query = "REPLACE ParticipantDetails SET ";
 $query .= "badgeid='$badgeid', ";
-$query .= "dayjob=$dayjobE, ";
-$query .= "accessibilityissues=$accessibilityissuesE, ";
-$query .= "ethnicity=$ethnicityE, ";
-$query .= "gender=$genderE, ";
-$query .= "sexualorientation=$sexualorientationE, ";
+$query .= "dayjob='$dayjobE', ";
+$query .= "accessibilityissues='$accessibilityissuesE', ";
+$query .= "ethnicity='$ethnicityE', ";
+$query .= "gender='$genderE', ";
+$query .= "sexualorientation='$sexualorientationE', ";
 $query .= "agerangeid=$agerangeidE, ";
 $query .= "pronounid=$pronounidE, ";
-$query .= "pronounother=$pronounotherE;";
+$query .= "pronounother='$pronounotherE';";
 
 if (!mysqli_query($linki, $query)) {
     $message = $query . "<BR>Error updating database.  Database not updated.";
