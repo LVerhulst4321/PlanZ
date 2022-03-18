@@ -3,12 +3,12 @@
     $action=$_POST["action"]; // "create" or "edit" or "brainstorm"
     if ($action=="brainstorm") {
             require_once ('BrainstormCommonCode.php');
+            require_once ('BrainstormRenderCreateSession.php');
             }
         else {
             require_once ('StaffCommonCode.php');
             }
     require_once ('RenderEditCreateSession.php');
-    require_once ('BrainstormRenderCreateSession.php');
     //session_start();
     global $name, $email, $messages;
     $messages="";
