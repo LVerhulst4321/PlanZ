@@ -301,6 +301,7 @@ SELECT
     LEFT OUTER JOIN (
         SELECT participantid, COUNT(*) AS answercount
         FROM ParticipantSurveyAnswers
+        GROUP BY participantid
     ) A ON (P.badgeid = A.participantid)
     WHERE P.interested = 1 AND S.badgeid IS NULL
 ORDER BY

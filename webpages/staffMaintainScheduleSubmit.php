@@ -90,7 +90,7 @@ SELECT
         JOIN Sessions S USING (sessionid)
         JOIN Tracks TR USING (trackid)
         JOIN Types TY USING (typeid)
-        JOIN Divisions D USING (divisionid)
+        JOIN Divisions D ON (D.divisionid = S.divisionid)
         JOIN Rooms R USING (roomid)
     WHERE
         SCH.roomid IN ($roomsToDisplayList)
@@ -618,7 +618,7 @@ SELECT
                   Sessions S
              JOIN Tracks TR USING (trackid)
              JOIN Types TY USING (typeid)
-             JOIN Divisions D USING (divisionid)
+             JOIN Divisions D ON (D.divisionid = S.divisionid)
         LEFT JOIN Schedule SCH USING (sessionid)
         LEFT JOIN Rooms R USING (roomid)
     WHERE
@@ -761,7 +761,7 @@ SELECT
              Sessions S
         JOIN Tracks TR USING (trackid)
         JOIN Types TY USING (typeid)
-        JOIN Divisions D USING (divisionid)
+        JOIN Divisions D ON (D.divisionid = S.divisionid)
     WHERE
             S.statusid IN (2,3,7)
         AND NOT EXISTS (
