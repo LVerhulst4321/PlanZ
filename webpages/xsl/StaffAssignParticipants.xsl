@@ -21,6 +21,7 @@
                 <xsl:value-of select="doc/query[@queryName='sessionInfo']/row/@title" />
             </span>
         </h2>
+        <div class="container">
         <form id="assign-participants-form" method="post" action="StaffAssignParticipants.php">
             <xsl:if test="doc/query[@queryName='sessionInfo']/row/@progguiddesc">
                 <div class="row mp-2">
@@ -131,6 +132,7 @@
                 </xsl:if>
             </div>
         </form>
+        </div>
     </xsl:template>
     <xsl:template match="doc/query[@queryName='participantInterest']/row">
         <xsl:if test="preceding-sibling::*[1]/@attending='1' and @attending='0'">
