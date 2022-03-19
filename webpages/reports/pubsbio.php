@@ -4,12 +4,13 @@ $report = [];
 $report['name'] = 'Pubs - Participant Bio and pubname';
 $report['multi'] = 'true';
 $report['output_filename'] = 'pubs_bios.csv';
-$report['description'] = 'Show the id, pubsname and bio for each participant who is on at least one scheduled, public session.';
-$report['categories'] = array(
+$report['description'] =
+    'Show the id, pubsname and bio for each participant who is on at least one scheduled, public session.';
+$report['categories'] = [
     'Publication Reports' => 870,
-);
+];
 $report['queries'] = [];
-$report['queries']['participants'] =<<<'EOD'
+$report['queries']['participants'] = <<<'EOD'
 SELECT
         P.badgeid,
         P.pubsname,
@@ -34,8 +35,7 @@ SELECT
 EOD;
 
 if (defined('USE_PRONOUNS') && USE_PRONOUNS) {
-
-    $report['xsl'] =<<<'EOD'
+    $report['xsl'] = <<<'EOD'
     <?xml version="1.0" encoding="UTF-8" ?>
     <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
         <xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -76,9 +76,9 @@ if (defined('USE_PRONOUNS') && USE_PRONOUNS) {
             </tr>
         </xsl:template>
     </xsl:stylesheet>
-    EOD;
+EOD;
 } else {
-    $report['xsl'] =<<<'EOD'
+    $report['xsl'] = <<<'EOD'
     <?xml version="1.0" encoding="UTF-8" ?>
     <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
         <xsl:output encoding="UTF-8" indent="yes" method="html" />
@@ -116,5 +116,5 @@ if (defined('USE_PRONOUNS') && USE_PRONOUNS) {
             </tr>
         </xsl:template>
     </xsl:stylesheet>
-    EOD;
+EOD;
 }
