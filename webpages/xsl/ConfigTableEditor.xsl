@@ -711,7 +711,12 @@
                 <div id="tceedit-div" style="display: none">
                     <div class="row mt-4">
                         <div class="col col-12">
-                            <textarea id="tceedit-textarea" />
+                            <textarea id="tceedit-textarea" rows="10" cols="120" />
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col col-auto">
+                            <button class="btn btn-secondary" id="close" name="close" value="close" type="button" onclick="savetceEdit(true)">Close Editor</button>
                         </div>
                     </div>
                 </div>
