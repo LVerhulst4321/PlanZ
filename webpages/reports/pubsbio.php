@@ -4,11 +4,10 @@ $report = [];
 $report['name'] = 'Pubs - Participant Bio and pubname';
 $report['multi'] = 'true';
 $report['output_filename'] = 'pubs_bios.csv';
-$report['description'] =
-    'Show the id, pubsname and bio for each participant who is on at least one scheduled, public session.';
-$report['categories'] = [
+$report['description'] = 'Show the id, pubsname and bio for each participant who is on at least one scheduled, public session.';
+$report['categories'] = array(
     'Publication Reports' => 870,
-];
+);
 $report['queries'] = [];
 $report['queries']['participants'] = <<<'EOD'
 SELECT
