@@ -58,12 +58,10 @@ header p {
   width: 100%;
 }
 .header.participant-header {
-  background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e5e5e5 0%, #c3c1db 57%, #8d86d9 87.3%, #2c14ff 100%);
+  background-color: #6452fd;
 }
 .header.staff-header {
-  background-color: #a7d2a5;
-  background-image: linear-gradient(0deg, #f0f0f0 0%, #f0f0f0 24%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+  background-color: #12992f;
   color: black;
 }
 .header-contents {
@@ -122,8 +120,7 @@ header p {
 }
 /* End Header Stuff */
 body:not(.full-page) {
-  background-image: url('../images/light_honeycomb.png');
-  background-repeat: repeat;
+  background-color: #d1d1d1;
 }
 #ParticipantView {
   color: #4da3ff;
@@ -153,9 +150,5 @@ select {
 }
 .roles-list-container {
   column-count: 3;
-  max-width: 70rem;
-}
-.interests-list-container {
-  column-count: 4;
   max-width: 70rem;
 }

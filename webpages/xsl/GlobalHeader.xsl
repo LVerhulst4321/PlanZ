@@ -6,7 +6,7 @@
     <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "Consent", "No_Permission", "Password_Reset" -->
     <xsl:param name="no_user_required" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="CON_NAME" select="''" />
-    <xsl:param name="headerimg" select="'images/Z_illuminated.jpg'" />
+    <xsl:param name="headerimg" select="'images/Plan-Z-Logo-250.png'" />
     <xsl:param name="headerimgalt" select="'PlanZ &quot;Z&quot; logo'" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />

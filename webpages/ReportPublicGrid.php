@@ -60,7 +60,7 @@ if ($showPublicReports) {
                     <div id="reg-header-container" class="collapsible-wrapper">
                         <div id="reg-header">
                             <div class="header-contents">
-                                <img src="images/Z_illuminated.jpg" alt="Convention logo" class="d-none d-lg-block" />
+                                <img src="images/Plan-Z-Logo-250.png" alt="Convention logo" class="d-none d-lg-block" />
                                 <h1 class="d-none d-md-block"><span class="d-none d-lg-inline"> <?php echo CON_NAME; ?> Grid of Scheduled Events</span></h1>
                             </div>
                         </div>
