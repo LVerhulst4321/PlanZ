@@ -19,6 +19,7 @@ new name was desired.
 * MySQL (Tested on 5.6 & 8.0)
 * SMTP connection for use as mail relay (only if you want to send email from PlanZ)
   * Note: many hosts limit use of their mail relays in ways not compatible with PlanZ
+* The participant photo upload option requires the PHP extension GD library
 
 ## Built In Dependencies
 These libraries are included in the repo and should just work if you leave as is
