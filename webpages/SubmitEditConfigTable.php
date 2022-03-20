@@ -50,7 +50,8 @@ EOD;
     }
 }
 
-function update_table($tablename) {
+function update_table($tablename)
+{
     global $json_return, $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
 
     if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
@@ -74,7 +75,7 @@ function update_table($tablename) {
             $row->display_order = $display_order;
             $display_order = $display_order + 10;
         }
-        $id = (int) $row->$indexcol;
+        $id = (int)$row->$indexcol;
         if ($id) {
             $idsFound = $idsFound . ',' . $id;
         }
@@ -84,7 +85,8 @@ function update_table($tablename) {
     // delete the ones no longer in the JSON uploaded, check for none uploaded
     if (mb_strlen($idsFound) < 2) {
         $sql = "DELETE FROM $tablename WHERE $indexcol >= 0;";
-    } else {
+    }
+    else {
         $sql = "DELETE FROM $tablename WHERE $indexcol NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
     //error_log("\ndelete unused rows = '" . $sql . "'");
@@ -116,7 +118,7 @@ function update_table($tablename) {
 
         foreach ($rows as $row) {
             $paramarray = array();
-            $id = (int) $row->$indexcol;
+            $id = (int)$row->$indexcol;
             if ($id < 0) {
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
@@ -147,7 +149,8 @@ function update_table($tablename) {
                 $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
                 $fieldcount++;
             }
-        } else {
+        }
+        else {
             $keytype = strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
         }
     }
@@ -160,7 +163,7 @@ function update_table($tablename) {
         //error_log("\n\nUpdate Loop: " . $id);
         if ($id >= 0) {
             $paramarray = array();
-            foreach($schema as $col) {
+            foreach ($schema as $col) {
                 if ($col['COLUMN_KEY'] != 'PRI') {
                     $colname = $col['COLUMN_NAME'];
                     if ($colname != 'Usage_COUNT') {
@@ -188,7 +191,8 @@ function update_table($tablename) {
 
     if (mb_strlen($message) > 2) {
         $message = "<p>Database changes: " . mb_substr($message, 2) . "</p>";
-    } else {
+    }
+    else {
         $message = "";
     }
 
@@ -239,7 +243,8 @@ EOD;
         if (strcasecmp($row["TABLE_NAME"], $tablename) == 0) {
             // table refers to another table for one of its fields;
             $referenced_columns[] = $row["COLUMN_NAME"] . ":" . $row["REFERENCED_TABLE_NAME"] . "." . $row["REFERENCED_COLUMN_NAME"];
-        } else {
+        }
+        else {
             // table is referenced by another table
             $foreign_keys[] = array(
                 "TABLE_NAME" => $row["TABLE_NAME"],
@@ -280,7 +285,8 @@ EOD;
                             $occurs .= "+";
                         $occurs .= "SUM$curfield.occurs";
                     }
-                } else {
+                }
+                else {
                     if ($joinclause == "")
                         $joinclause = "LEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
                     else {
@@ -303,7 +309,8 @@ EOD;
         if (DBVER >= "8") {
             $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
             $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-        } else {
+        }
+        else {
             $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
         }
         if ($occurs != "")
@@ -340,7 +347,7 @@ EOD;
     }
 
     // now get the data rows
-    $query="$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
+    $query = "$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
     if ($displayorder_found)
         $query = $query . "ORDER BY display_order;";
     else if ($prikey != ",")

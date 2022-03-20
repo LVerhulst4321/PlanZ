@@ -100,14 +100,16 @@ function discardChanges() {
 
 function savetceEdit(display) {
     if (curcell) {
-        tinyMCE.triggerSave();
-        newval = txtel.value;
-        newval = newval.replace(/\<\/p\>[ \r\n]*\<p\>/gi, "\n");
-        newval = newval.replace(/\<br *\/*\>/gi, "\n");
-        newval = newval.replace(/^\<p\> */i, "");
-        newval = newval.replace(/ *\<\/p\> *$/i, "");
-        curcell.setValue(newval);
-        tinyMCE.remove();
+        txtel = document.getElementById("tceedit-textarea");
+        curcell.setValue(txtel.value);
+        // tinyMCE.triggerSave();
+        // newval = txtel.value;
+        // newval = newval.replace(/\<\/p\>[ \r\n]*\<p\>/gi, "\n");
+        // newval = newval.replace(/\<br *\/*\>/gi, "\n");
+        // newval = newval.replace(/^\<p\> */i, "");
+        // newval = newval.replace(/ *\<\/p\> *$/i, "");
+        // curcell.setValue(newval);
+        // tinyMCE.remove();
         curcell = null;
         if (display) {
             document.getElementById("tceedit-div").style.display = "none";
@@ -135,34 +137,35 @@ function tceEditor(e, cell) {
     // initialize the starting value from the current value of the cell
     curcell = cell;
     cellValue = cell.getValue();
-    txtel.value = (cellValue ? cellValue.replace(/\n/g, "<br/>") : "");
+    txtel.value = cellValue;
 
     el = document.getElementById("tceedit-div");
     el.style.display = "block";
-    tinyMCE.init({
-        setup: function (editor) {
-            editor.ui.registry.addButton('customSaveButton', {
-                icon: 'save',
-                tooltip: 'Save contents back to table',
-                onAction: function () {
-                    savetceEdit(true);
-                }
-            })
-        },
-        selector: 'textarea#tceedit-textarea',
-        plugins: 'fullscreen searchreplace charmap nonbreaking visualchars',
-        browser_spellcheck: true,
-        contextmenu: false,
-        height: 400,
-        min_height: 200,
-        menubar: false,
-        toolbar: [
-            ' customSaveButton | undo redo | searchreplace |visualchars nonbreaking charmap | fullscreen'
-        ],
-        toolbar_mode: 'wrap',
-        content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
-        placeholder: 'Type custom content here...'
-    });
+    // Removing Rich Text Control, but leave code for now, in case we want HTML values in a field in future.
+    // tinyMCE.init({
+    //     setup: function (editor) {
+    //         editor.ui.registry.addButton('customSaveButton', {
+    //             icon: 'save',
+    //             tooltip: 'Save contents back to table',
+    //             onAction: function () {
+    //                 savetceEdit(true);
+    //             }
+    //         })
+    //     },
+    //     selector: 'textarea#tceedit-textarea',
+    //     plugins: 'fullscreen searchreplace charmap nonbreaking visualchars',
+    //     browser_spellcheck: true,
+    //     contextmenu: false,
+    //     height: 400,
+    //     min_height: 200,
+    //     menubar: false,
+    //     toolbar: [
+    //         ' customSaveButton | undo redo | searchreplace |visualchars nonbreaking charmap | fullscreen'
+    //     ],
+    //     toolbar_mode: 'wrap',
+    //     content_style: 'body {font - family:Helvetica,Arial,sans-serif; font-size:14px }',
+    //     placeholder: 'Type custom content here...'
+    // });
     document.getElementById("add-row").disabled = true;
     document.getElementById("resetbtn").disabled = true;
     document.getElementById("submitbtn").disabled = true; 
