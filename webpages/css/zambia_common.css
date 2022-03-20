@@ -88,12 +88,10 @@ header p {
   display: flex;
 }
 .alt-header-contents.participant-header {
-  background-color: #dedcff;
-  background-image: linear-gradient(0deg, #e5e5e5 0%, #9e99dc 30.2%, #6156e0 71.8%, #2c14ff 100%);
+  background-color: #6452fd;
 }
 .alt-header-contents.staff-header {
-  background-color: #a7d2a5;
-  background-image: linear-gradient(0deg, #f0f0f0 0%, #b8cfbd 54%, #73ba83 74%, #0d8026 100%);
+  background-color: #12992f;
 }
 .alt-header-spacer {
   width: 15rem;
