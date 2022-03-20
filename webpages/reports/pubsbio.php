@@ -13,10 +13,14 @@ $report['queries']['participants'] = <<<'EOD'
 SELECT
         P.badgeid,
         P.pubsname,
-        P.bio
+        CD.badgename,
+        concat(CD.firstname,' ',CD.lastname) AS name,
+        P.bio,
+        PP.pronouns
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
+    LEFT JOIN ParticipantPronouns PP USING (badgeid)
     WHERE
         EXISTS (
             SELECT SCH.sessionid
@@ -33,87 +37,52 @@ SELECT
         CD.firstname;
 EOD;
 
-if (defined('USE_PRONOUNS') && USE_PRONOUNS) {
-    $report['xsl'] = <<<'EOD'
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-        <xsl:output encoding="UTF-8" indent="yes" method="html" />
-        <xsl:include href="xsl/reportInclude.xsl" />
-        <xsl:template match="/">
-            <xsl:choose>
-                <xsl:when test="doc/query[@queryName='participants']/row">
-                    <table id="reportTable" class="report table table-sm">
-                        <col style="width:6em;" />
-                        <col style="width:12em;" />
-                        <col style="width:8em;" />
-                        <col />
-                        <thead>
-                            <tr>
-                                <th>Person Id</th>
-                                <th>Name for Publications</th>
-                                <th>Pronouns</th>
-                                <th>Biography</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
-                        </tbody>
-                    </table>
-                </xsl:when>
-                <xsl:otherwise>
-                    <div class="alert alert-danger">No results found.</div>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:template>
+$report['xsl'] = <<<'EOD'
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output encoding="UTF-8" indent="yes" method="html" />
+    <xsl:include href="xsl/reportInclude.xsl" />
+    <xsl:template match="/">
+        <xsl:choose>
+            <xsl:when test="doc/query[@queryName='participants']/row">
+                <table id="reportTable" class="report table table-sm">
+                    <col style="width:6em;" />
+                    <col style="width:12em;" />
+                    <col style="width:8em;" />
+                    <col />
+                    <thead>
+                        <tr>
+                            <th>Person Id</th>
+                            <th>Name for Publications</th>
+                            <th>Pronouns</th>
+                            <th>Biography</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
+                    </tbody>
+                </table>
+            </xsl:when>
+            <xsl:otherwise>
+                <div class="alert alert-danger">No results found.</div>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
-        <xsl:template match="doc/query[@queryName='participants']/row">
-            <tr>
-                <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
-                <td><xsl:value-of select="@pubsname" /></td>
-                <td><xsl:value-of select="@pronouns" /></td>
-                <td><xsl:value-of select="@bio" /></td>
-            </tr>
-        </xsl:template>
-    </xsl:stylesheet>
+    <xsl:template match="doc/query[@queryName='participants']/row">
+        <tr>
+            <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
+            <td>
+                <xsl:call-template name="showSimplePubsname">
+                    <xsl:with-param name="badgeid" select = "@badgeid" />
+                    <xsl:with-param name="pubsname" select = "@pubsname" />
+                    <xsl:with-param name="badgename" select = "@badgename" />
+                    <xsl:with-param name="name" select = "@name" />
+                </xsl:call-template>
+            </td>
+            <td><xsl:value-of select="@pronouns" /></td>
+            <td><xsl:value-of select="@bio" /></td>
+        </tr>
+    </xsl:template>
+</xsl:stylesheet>
 EOD;
-} else {
-    $report['xsl'] = <<<'EOD'
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-        <xsl:output encoding="UTF-8" indent="yes" method="html" />
-        <xsl:include href="xsl/reportInclude.xsl" />
-        <xsl:template match="/">
-            <xsl:choose>
-                <xsl:when test="doc/query[@queryName='participants']/row">
-                    <table id="reportTable" class="report table table-sm">
-                        <col style="width:6em;" />
-                        <col style="width:12em;" />
-                        <col />
-                        <thead>
-                            <tr>
-                                <th>Person Id</th>
-                                <th>Name for Publications</th>
-                                <th>Biography</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
-                        </tbody>
-                    </table>
-                </xsl:when>
-                <xsl:otherwise>
-                    <div class="alert alert-danger">No results found.</div>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:template>
-
-        <xsl:template match="doc/query[@queryName='participants']/row">
-            <tr>
-                <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
-                <td><xsl:value-of select="@pubsname" /></td>
-                <td><xsl:value-of select="@bio" /></td>
-            </tr>
-        </xsl:template>
-    </xsl:stylesheet>
-EOD;
-}

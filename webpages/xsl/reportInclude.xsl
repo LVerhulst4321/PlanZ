@@ -42,6 +42,24 @@
         </xsl:if>
     </xsl:template>
 
+    <xsl:template name="showSimplePubsname">
+        <xsl:param name="badgeid" />
+        <xsl:param name="pubsname" />
+        <xsl:param name="badgename" />
+        <xsl:param name="name" />
+        <xsl:choose>
+            <xsl:when test="$pubsname!=''">
+                <xsl:value-of select="$pubsname"/>
+            </xsl:when>
+            <xsl:when test="$badgename!=''">
+                <xsl:value-of select="$badgename"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$name"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="showDuration">
         <xsl:param name="durationhrs" />
         <xsl:param name="durationmin" />

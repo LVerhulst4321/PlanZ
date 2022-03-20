@@ -47,5 +47,12 @@ Other software which can work with PlanZ:
 * ConClár (https://github.com/lostcarpark/conclar), an online Program Guide tool for conventions
 
 ## More Information
+
+### Installation
+
+Are you trying to install PlanZ? Check out the [installation notes](./Install/INSTALL.md).
+
+### Documentation
+
 Check out the [wiki](https://github.com/olszowka/Zambia/wiki) to review the original version of this code.
 
