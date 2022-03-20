@@ -3,13 +3,13 @@
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
-require_once 'StaffCommonCode.php'; // will check if logged in and for staff privileges
+require_once('StaffCommonCode.php'); // will check if logged in and for staff privileges
 
 $schema_loaded = false;
-$schema = [];
+$schema = array();
 $displayorder_found = false;
 $prikey = '';
-$json_return = [];
+$json_return = array();
 
 function fetch_schema($tablename)
 {
@@ -31,16 +31,16 @@ function fetch_schema($tablename)
         ORDINAL_POSITION;
 EOD;
         $result = mysqli_query_exit_on_error($query);
-        $schema = [];
+        $schema = array();
         $displayorder_found = false;
         $prikey = '';
         while ($row = $result->fetch_assoc()) {
             $schema[] = $row;
-            if ($row['COLUMN_NAME'] == 'display_order') {
+            if ($row["COLUMN_NAME"] == 'display_order') {
                 $displayorder_found = true;
             }
-            if ($row['COLUMN_KEY'] == 'PRI') {
-                $prikey = $prikey . $row['COLUMN_NAME'] . ',';
+            if ($row["COLUMN_KEY"] == 'PRI') {
+                $prikey = $prikey . $row["COLUMN_NAME"] . ",";
             }
         }
 
@@ -53,36 +53,30 @@ EOD;
 
 function update_table($tablename)
 {
-    global $json_return,
-        $linki,
-        $message_error,
-        $schema,
-        $displayorder_found,
-        $prikey,
-        $schema_loaded;
+    global $json_return, $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
 
     if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
-        $message_error = 'You do not have permission to view this page.';
+        $message_error = "You do not have permission to view this page.";
         RenderErrorAjax($message_error);
         exit();
     }
 
-    $rows = json_decode(base64_decode(getString('tabledata')));
+    $rows = json_decode(base64_decode(getString("tabledata")));
     // $json_return['debug'] = print_r($rows, true);
-    $tablename = getString('tablename');
+    $tablename = getString("tablename");
 
-    $indexcol = getString('indexcol');
+    $indexcol = getString("indexcol");
 
     fetch_schema($tablename);
     // reset display order to match new order and find which rows to delete
-    $idsFound = '';
+    $idsFound = "";
     $display_order = 10;
     foreach ($rows as $row) {
         if ($row->display_order >= 0) {
             $row->display_order = $display_order;
             $display_order = $display_order + 10;
         }
-        $id = (int) $row->$indexcol;
+        $id = (int)$row->$indexcol;
         if ($id) {
             $idsFound = $idsFound . ',' . $id;
         }
@@ -92,11 +86,9 @@ function update_table($tablename)
     // delete the ones no longer in the JSON uploaded, check for none uploaded
     if (mb_strlen($idsFound) < 2) {
         $sql = "DELETE FROM $tablename WHERE $indexcol >= 0;";
-    } else {
-        $sql =
-            "DELETE FROM $tablename WHERE $indexcol NOT IN (" .
-            mb_substr($idsFound, 1) .
-            ');';
+    }
+    else {
+        $sql = "DELETE FROM $tablename WHERE $indexcol NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
     //error_log("\ndelete unused rows = '" . $sql . "'");
 
@@ -108,7 +100,7 @@ function update_table($tablename)
     // insert new rows (those with id < 0)
     $inserted = 0;
     $fieldcount = 0;
-    $datatype = '';
+    $datatype = "";
     $sql = "INSERT INTO $tablename (";
     foreach ($schema as $col) {
         //var_error_log($col);
@@ -119,43 +111,35 @@ function update_table($tablename)
         }
     }
     if ($fieldcount > 0) {
-        $sql = substr($sql, 0, -1) . ') VALUES (';
+        $sql = substr($sql, 0, -1) . ") VALUES (";
         for ($i = 0; $i < $fieldcount; $i++) {
-            $sql .= '?,';
+            $sql .= "?,";
         }
-        $sql = substr($sql, 0, -1) . ');';
+        $sql = substr($sql, 0, -1) . ");";
 
         foreach ($rows as $row) {
-            $paramarray = [];
-            $id = (int) $row->$indexcol;
+            $paramarray = array();
+            $id = (int)$row->$indexcol;
             if ($id < 0) {
                 foreach ($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
                         $name = $col['COLUMN_NAME'];
                         // If uploaded data has column property, and it's not an empty string, add to paramarray. Otherwise add a null (null is needed to prevent error inserting non-char fields).
-                        $paramarray[] =
-                            property_exists($row, $name) &&
-                            trim($row->$name) !== ''
-                                ? trim($row->$name)
-                                : null;
+                        $paramarray[] = (property_exists($row, $name) && trim($row->$name) !== '' ? trim($row->$name) : null);
                     }
                 }
 
                 //error_log("\n\nInsert of '$id' with datatype of '$datatype'");
                 //error_log($sql);
                 //var_error_log($paramarray);
-                $inserted += mysql_cmd_with_prepare(
-                    $sql,
-                    $datatype,
-                    $paramarray
-                );
+                $inserted += mysql_cmd_with_prepare($sql, $datatype, $paramarray);
             }
         }
     }
 
     // update existing rows (those with id >= 0)
     $updated = 0;
-    $datatype = '';
+    $datatype = "";
 
     $sql = "UPDATE $tablename SET\n";
     $keytype = 's';
@@ -163,11 +147,11 @@ function update_table($tablename)
         if ($col['COLUMN_KEY'] != 'PRI') {
             if ($col['COLUMN_NAME'] != 'Usage_COUNT') {
                 $sql .= "\t" . $col['COLUMN_NAME'] . " = ?,\n";
-                $datatype .=
-                    strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
+                $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
                 $fieldcount++;
             }
-        } else {
+        }
+        else {
             $keytype = strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
         }
     }
@@ -179,7 +163,7 @@ function update_table($tablename)
         $id = $row->$prikey;
         //error_log("\n\nUpdate Loop: " . $id);
         if ($id >= 0) {
-            $paramarray = [];
+            $paramarray = array();
             foreach ($schema as $col) {
                 if ($col['COLUMN_KEY'] != 'PRI') {
                     $colname = $col['COLUMN_NAME'];
@@ -195,21 +179,22 @@ function update_table($tablename)
         }
     }
 
-    $message = '';
+    $message = "";
     if ($deleted > 0) {
-        $message = ', ' . $deleted . ' rows deleted';
+        $message = ", " . $deleted . " rows deleted";
     }
     if ($inserted > 0) {
-        $message = $message . ', ' . $inserted . ' rows inserted';
+        $message = $message . ", " . $inserted . " rows inserted";
     }
     if ($updated > 0) {
-        $message = $message . ', ' . $updated . ' rows updated';
+        $message = $message . ", " . $updated . " rows updated";
     }
 
     if (mb_strlen($message) > 2) {
-        $message = '<p>Database changes: ' . mb_substr($message, 2) . '</p>';
-    } else {
-        $message = '';
+        $message = "<p>Database changes: " . mb_substr($message, 2) . "</p>";
+    }
+    else {
+        $message = "";
     }
 
     // get updated survey now with the id's in it
@@ -221,20 +206,20 @@ function fetch_table($tablename, $message)
     global $schema, $displayorder_found, $json_return, $prikey;
     $db = DBDB;
     if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
-        $message_error = 'You do not have permission to view this page.';
+        $message_error = "You do not have permission to view this page.";
         RenderErrorAjax($message_error);
         exit();
     }
 
     if (strpos($tablename, ' ', 0) !== false) {
-        $json_return['message'] = $tablename;
+        $json_return["message"] = $tablename;
         echo json_encode($json_return) . "\n";
         return;
     }
 
     // json of schema and table contents
     fetch_schema($tablename);
-    $json_return['tableschema'] = $schema;
+    $json_return["tableschema"] = $schema;
 
     // get the foreign keys
     $query = <<<EOD
@@ -253,35 +238,30 @@ function fetch_table($tablename, $message)
     ORDER BY
         COLUMN_NAME, TABLE_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME;
 EOD;
-    $foreign_keys = [];
-    $referenced_columns = [];
+    $foreign_keys = array();
+    $referenced_columns = array();
     $result = mysqli_query_exit_on_error($query);
     while ($row = $result->fetch_assoc()) {
-        if (strcasecmp($row['TABLE_NAME'], $tablename) == 0) {
+        if (strcasecmp($row["TABLE_NAME"], $tablename) == 0) {
             // table refers to another table for one of its fields;
-            $referenced_columns[] =
-                $row['COLUMN_NAME'] .
-                ':' .
-                $row['REFERENCED_TABLE_NAME'] .
-                '.' .
-                $row['REFERENCED_COLUMN_NAME'];
-        } else {
+            $referenced_columns[] = $row["COLUMN_NAME"] . ":" . $row["REFERENCED_TABLE_NAME"] . "." . $row["REFERENCED_COLUMN_NAME"];
+        }
+        else {
             // table is referenced by another table
-            $foreign_keys[] = [
-                'TABLE_NAME' => $row['TABLE_NAME'],
-                'COLUMN_NAME' => $row['COLUMN_NAME'],
-                'REFERENCED_TABLE_NAME' => $row['REFERENCED_TABLE_NAME'],
-                'REFERENCED_COLUMN_NAME' => $row['REFERENCED_COLUMN_NAME'],
-            ];
+            $foreign_keys[] = array(
+                "TABLE_NAME" => $row["TABLE_NAME"],
+                "COLUMN_NAME" => $row["COLUMN_NAME"],
+                "REFERENCED_TABLE_NAME" => $row["REFERENCED_TABLE_NAME"],
+                "REFERENCED_COLUMN_NAME" => $row["REFERENCED_COLUMN_NAME"]);
         }
     }
 
-    $withclause = '';
-    $joinclause = '';
-    $curfield = '';
-    $mycurname = '';
-    $union = '';
-    $occurs = '';
+    $withclause = "";
+    $joinclause = "";
+    $curfield = "";
+    $mycurname = "";
+    $union = "";
+    $occurs = "";
 
     // Build CTE's for getting count of foreign key usage
     if (count($foreign_keys) > 0) {
@@ -290,29 +270,25 @@ EOD;
             $reftable = $key['TABLE_NAME'];
             $reffield = $key['COLUMN_NAME'];
             if ($reffield != $curfield) {
-                $union = '';
-                if (DBVER >= '8') {
-                    if ($withclause == '') {
-                        $withclause = 'WITH Ref' . $reffield . " AS (\n";
-                    } else {
-                        $withclause .=
-                            "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n), Ref" .
-                            $reffield .
-                            " AS (\n";
+                $union = "";
+                if (DBVER >= "8") {
+                    if ($withclause == "")
+                        $withclause = "WITH Ref" . $reffield . " AS (\n";
+                    else {
+                        $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n), Ref" . $reffield . " AS (\n";
                         $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-                        if ($occurs != '') {
-                            $occurs .= '+';
-                        }
+                        if ($occurs != "")
+                            $occurs .= "+";
                         $occurs .= "SUM$curfield.occurs";
                     }
-                } else {
-                    if ($joinclause == '') {
+                }
+                else {
+                    if ($joinclause == "")
                         $joinclause = "LEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                    } else {
+                    else {
                         $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\nLEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
-                        if ($occurs != '') {
-                            $occurs .= '+';
-                        }
+                        if ($occurs != "")
+                            $occurs .= "+";
                         $occurs .= "SUM$curfield.occurs";
                     }
                 }
@@ -320,27 +296,26 @@ EOD;
                 $mycurname = $mycolname;
                 $curfield = $reffield;
             }
-            if (DBVER >= '8') {
+            if (DBVER >= "8")
                 $withclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable\n";
-            } else {
+            else
                 $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $curfield\n";
-            }
-            $union = 'UNION ALL';
-        }
-        if (DBVER >= '8') {
+            $union = "UNION ALL";
+        }        
+        if (DBVER >= "8") {
             $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
             $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-        } else {
+        }
+        else {
             $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
         }
-        if ($occurs != '') {
-            $occurs .= '+';
-        }
+        if ($occurs != "")
+            $occurs .= "+";
         $occurs .= "SUM$curfield.occurs";
         $occurs = "CASE WHEN $occurs IS NULL THEN 0 ELSE $occurs END AS Usage_Count";
-    } else {
-        $occurs = '0 AS Usage_Count';
     }
+    else
+        $occurs = "0 AS Usage_Count";
 
     // table select - get select list for field that is a foreign key to another table
     foreach ($referenced_columns as $key) {
@@ -350,8 +325,8 @@ EOD;
         $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
         $reffield = substr($key, $periodpos + 1);
 
-        $namefield = str_replace('id', 'name', $reffield);
-        $data = [];
+        $namefield = str_replace("id", "name", $reffield);
+        $data = array();
         $query = "SELECT $reffield AS id, $namefield AS name FROM $reftable ORDER BY display_order;";
         $result = mysqli_query_exit_on_error($query);
         while ($row = $result->fetch_assoc()) {
@@ -359,50 +334,49 @@ EOD;
         }
         mysqli_free_result($result);
         if (count($data) == 0) {
-            if ($message != '') {
-                $message .= '<br/>';
+            if ($message != "") {
+                $message .= "<br/>";
             }
             $message .= "Warning: Cannot edit this table until the table $reftable has been edited and is not empty";
         }
-        $json_return[$colname . '_select'] = $data;
+        $json_return[$colname . "_select"] = $data;
     }
 
     // now get the data rows
     $query = "$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
-    if ($displayorder_found) {
-        $query = $query . 'ORDER BY display_order;';
-    } elseif ($prikey != ',') {
-        $query = $query . 'ORDER BY ' . $prikey . ';';
-    }
+    if ($displayorder_found)
+        $query = $query . "ORDER BY display_order;";
+    else if ($prikey != ",")
+        $query = $query . "ORDER BY " . $prikey . ";";
 
     //error_log($query);
     $result = mysqli_query_exit_on_error($query);
-    $rows = [];
+    $rows = array();
     while ($row = $result->fetch_assoc()) {
         $rows[] = $row;
     }
     mysqli_free_result($result);
-    $json_return['tabledata'] = $rows;
+    $json_return["tabledata"] = $rows;
 
-    if ($message != '') {
-        $json_return['message'] = $message;
+    if ($message != "") {
+        $json_return["message"] = $message;
     }
     echo json_encode($json_return) . "\n";
 }
 
 // Start here.  Should be AJAX requests only
-$ajax_request_action = getString('ajax_request_action');
-if ($ajax_request_action == '') {
+$ajax_request_action = getString("ajax_request_action");
+if ($ajax_request_action == "") {
     exit();
 }
 
 switch ($ajax_request_action) {
-    case 'fetchtable':
-        $tablename = getString('tablename');
-        fetch_table($tablename, '');
+    case "fetchtable":
+        $tablename = getString("tablename");
+        fetch_table($tablename, "");
         break;
-    case 'updatetable':
-        $tablename = getString('tablename');
+    case "updatetable":
+        $tablename = getString("tablename");
         update_table($tablename);
         break;
     default:
