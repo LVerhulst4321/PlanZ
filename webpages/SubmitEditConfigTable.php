@@ -19,7 +19,7 @@ function fetch_schema($tablename) {
         //error_log("table = " . $tablename);
         // json of schema and table contents
         $query=<<<EOD
-SELECT
+    SELECT
         COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY, EXTRA
     FROM
         INFORMATION_SCHEMA.COLUMNS
@@ -50,7 +50,8 @@ EOD;
     }
 }
 
-function update_table($tablename) {
+function update_table($tablename)
+{
     global $json_return, $linki, $message_error, $schema, $displayorder_found, $prikey, $schema_loaded;
 
     if (!(may_I('ce_All') || may_I("ce_$tablename"))) {
@@ -74,7 +75,7 @@ function update_table($tablename) {
             $row->display_order = $display_order;
             $display_order = $display_order + 10;
         }
-        $id = (int) $row->$indexcol;
+        $id = (int)$row->$indexcol;
         if ($id) {
             $idsFound = $idsFound . ',' . $id;
         }
@@ -84,7 +85,8 @@ function update_table($tablename) {
     // delete the ones no longer in the JSON uploaded, check for none uploaded
     if (mb_strlen($idsFound) < 2) {
         $sql = "DELETE FROM $tablename WHERE $indexcol >= 0;";
-    } else {
+    }
+    else {
         $sql = "DELETE FROM $tablename WHERE $indexcol NOT IN (" . mb_substr($idsFound, 1) . ");";
     }
     //error_log("\ndelete unused rows = '" . $sql . "'");
@@ -116,7 +118,7 @@ function update_table($tablename) {
 
         foreach ($rows as $row) {
             $paramarray = array();
-            $id = (int) $row->$indexcol;
+            $id = (int)$row->$indexcol;
             if ($id < 0) {
                 foreach($schema as $col) {
                     if ($col['EXTRA'] != 'auto_increment') {
@@ -147,7 +149,8 @@ function update_table($tablename) {
                 $datatype .= strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
                 $fieldcount++;
             }
-        } else {
+        }
+        else {
             $keytype = strpos($col['DATA_TYPE'], 'int') !== false ? 'i' : 's';
         }
     }
@@ -160,7 +163,7 @@ function update_table($tablename) {
         //error_log("\n\nUpdate Loop: " . $id);
         if ($id >= 0) {
             $paramarray = array();
-            foreach($schema as $col) {
+            foreach ($schema as $col) {
                 if ($col['COLUMN_KEY'] != 'PRI') {
                     $colname = $col['COLUMN_NAME'];
                     if ($colname != 'Usage_COUNT') {
@@ -188,7 +191,8 @@ function update_table($tablename) {
 
     if (mb_strlen($message) > 2) {
         $message = "<p>Database changes: " . mb_substr($message, 2) . "</p>";
-    } else {
+    }
+    else {
         $message = "";
     }
 
@@ -217,7 +221,7 @@ function fetch_table($tablename, $message) {
 
     // get the foreign keys
     $query = <<<EOD
-SELECT
+    SELECT
         TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
     FROM
         INFORMATION_SCHEMA.KEY_COLUMN_USAGE
@@ -239,7 +243,8 @@ EOD;
         if (strcasecmp($row["TABLE_NAME"], $tablename) == 0) {
             // table refers to another table for one of its fields;
             $referenced_columns[] = $row["COLUMN_NAME"] . ":" . $row["REFERENCED_TABLE_NAME"] . "." . $row["REFERENCED_COLUMN_NAME"];
-        } else {
+        }
+        else {
             // table is referenced by another table
             $foreign_keys[] = array(
                 "TABLE_NAME" => $row["TABLE_NAME"],
@@ -259,15 +264,9 @@ EOD;
     // Build CTE's for getting count of foreign key usage
     if (count($foreign_keys) > 0 ) {
         foreach ($foreign_keys as $key) {
-            $colonpos = strpos($key, ':');
-            $mycolname = substr($key, 0, $colonpos);
-            $periodpos = strpos($key, '.');
-            $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
-            $reffield = substr($key, $periodpos + 1);
-            //error_log("Referenced: '$key'");
-            //error_log("colname: '$mycolname'");
-            //error_log("reftable: '$reftable'");
-            //error_log("reffield: '$reffield'");
+            $mycolname = $key["REFERENCED_COLUMN_NAME"];
+            $reftable = $key["TABLE_NAME"];
+            $reffield = $key["COLUMN_NAME"];
             if ($reffield != $curfield) {
                 $union = "";
                 if (DBVER >= "8") {
@@ -280,7 +279,8 @@ EOD;
                             $occurs .= "+";
                         $occurs .= "SUM$curfield.occurs";
                     }
-                } else {
+                }
+                else {
                     if ($joinclause == "")
                         $joinclause = "LEFT OUTER JOIN (\nSELECT $reffield, SUM(occurs) AS occurs FROM (";
                     else {
@@ -303,7 +303,8 @@ EOD;
         if (DBVER >= "8") {
             $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
             $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
-        } else {
+        }
+        else {
             $joinclause .= ") Ref$curfield\nGROUP BY $curfield\n) SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";
         }
         if ($occurs != "")
@@ -340,7 +341,7 @@ EOD;
     }
 
     // now get the data rows
-    $query="$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
+    $query = "$withclause SELECT $occurs, $tablename.* FROM $tablename\n$joinclause";
     if ($displayorder_found)
         $query = $query . "ORDER BY display_order;";
     else if ($prikey != ",")
