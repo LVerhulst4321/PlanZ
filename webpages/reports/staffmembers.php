@@ -61,7 +61,7 @@ SELECT
         P.pubsname,
         CONCAT(CD.firstname,' ',CD.lastname) AS name,
         CONCAT(CD.lastname, CD.firstname) AS nameSort,
-        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)) AS pubsnameSort,
+        P.sortedpubsname,
         CD.email AS email
     FROM
              Participants P
@@ -73,7 +73,7 @@ SELECT
                 UHPR.badgeid = P.badgeid
             AND UHPR.permroleid IN (1, 2, 12)) /* admin, staff, senior staff */
     ORDER BY
-        CD.lastname, CD.firstname;
+        nameSort;
 EOD;
 $report['queries']['privileges'] =<<<'EOD'
 SELECT
@@ -128,7 +128,7 @@ $report['xsl'] =<<<EOD
             <td><xsl:value-of select="@name"/></td>
             <td><xsl:value-of select="@nameSort"/></td>
             <td><xsl:value-of select="@pubsname"/></td>
-            <td><xsl:value-of select="@pubsnameSort"/></td>
+            <td><xsl:value-of select="@sortedpubsname"/></td>
             <td>
                 <xsl:choose>
                     <xsl:when test="/doc/query[@queryName='bad_password']/row[@badgeid=\$badgeid]">
@@ -136,7 +136,7 @@ $report['xsl'] =<<<EOD
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:text>OK</xsl:text>
-                    </xsl:otherwise>                    
+                    </xsl:otherwise>
                 </xsl:choose>
             </td>
             <td><xsl:value-of select="@email"/></td>

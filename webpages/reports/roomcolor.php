@@ -3,7 +3,7 @@ $report = [];
 $report['name'] = 'Room Colors for Grid';
 $report['description'] = 'List all the colors that can be used on the room grid.';
 $report['categories'] = array(
-    'PlanZ Administration Reports' => 880,
+    'Administration Reports' => 880,
     'Hotel Reports' => 880,
 );
 $report['queries'] = [];

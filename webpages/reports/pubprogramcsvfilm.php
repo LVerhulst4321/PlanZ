@@ -28,7 +28,7 @@ SELECT
                   Sessions S
              JOIN Schedule SCH USING (sessionid)
              JOIN Rooms R USING (roomid)
-             JOIN Divisions D USING (divisionid)
+             JOIN Divisions D ON (D.divisionid = S.divisionid)
              JOIN Tracks T USING (trackid)
              JOIN Types Ty USING (typeid)
              JOIN KidsCategories K USING (kidscatid)
@@ -36,9 +36,9 @@ SELECT
         LEFT JOIN Participants P ON POS.badgeid=P.badgeid
     WHERE
             S.pubstatusid != 3  ## no Do Not Print
-        AND divisionid in (7, 12)  ## film and anime
+        AND D.divisionid in (7, 12)  ## film and anime
     GROUP BY
-        SCH.sessionid
+        SCH.sessionid, SCH.starttime, R.roomname, R.display_order
     ORDER BY
         SCH.starttime,
         R.display_order

@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'All Permissions Report';
 $report['description'] = 'List all permissions and phases.';
 $report['categories'] = array(
-    'PlanZ Administration Reports' => 160,
+    'Administration Reports' => 160,
 );
 $report['columns'] = array(
 );

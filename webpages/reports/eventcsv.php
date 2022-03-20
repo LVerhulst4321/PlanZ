@@ -26,7 +26,7 @@ SELECT
     WHERE 
         S.divisionid = 3 /* Events */
     GROUP BY
-        S.sessionid
+        S.sessionid, SCH.starttime, R.roomname
     ORDER BY
         SCH.starttime
 EOD;

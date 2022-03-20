@@ -26,11 +26,11 @@ SELECT
         invitedguest,
         signupreq
     FROM
-             Sessions
+             Sessions S
         JOIN Tracks USING (trackid)
         JOIN SessionStatuses AS SS USING (statusid)
         JOIN RoomSets AS RS USING (roomsetid)
-        JOIN Divisions AS D USING (divisionid)
+        JOIN Divisions AS D ON (D.divisionid = S.divisionid)
         JOIN Types AS T USING (typeid)
         JOIN PubStatuses AS PS USING (pubstatusid)
         JOIN KidsCategories AS KC USING (kidscatid)

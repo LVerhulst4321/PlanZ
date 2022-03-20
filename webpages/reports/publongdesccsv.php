@@ -15,7 +15,7 @@ SELECT
         S.sessionid,
         T.trackname,
         TY.typename,
-        DV.divisionname,
+        D.divisionname,
         PS.pubstatusname,
         S.pubsno,
         GROUP_CONCAT(TG.tagname SEPARATOR ' ') tags,
@@ -27,7 +27,7 @@ SELECT
              JOIN Sessions S USING (sessionid)
              JOIN Tracks T USING (trackid)
              JOIN Types TY USING (typeid)
-             JOIN Divisions DV USING (divisionid)
+             JOIN Divisions D ON (D.divisionid = S.divisionid)
              JOIN PubStatuses PS USING (pubstatusid)
              JOIN KidsCategories K USING (kidscatid)
         LEFT JOIN SessionHasTag SHT USING (sessionid)
