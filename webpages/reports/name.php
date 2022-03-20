@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Name Report';
+$report['multi'] = 'true';
+$report['output_filename'] = 'name_to_pubsname_and_badgename.csv';
 $report['description'] = 'Maps id, pubsname, badgename and first and last name together (includes every record in the database regardless of status).';
 $report['categories'] = array(
     'Events Reports' => 670,
@@ -10,6 +12,7 @@ $report['categories'] = array(
     'Registration Reports' => 1,
 );
 $report['columns'] = array(
+    null,
     null,
     null,
     null,
@@ -30,6 +33,7 @@ SELECT
         CD.firstname,
         CD.badgeid,
         P.interested,
+        P.anonymous,
         IF(EXISTS(
             SELECT SCH.scheduleid
                 FROM
@@ -56,17 +60,18 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr style="height:2.6rem">
-                            <th class="report">Person ID</th>
-                            <th class="report">Name for Publications</th>
-                            <th class="report">Last Name</th>
-                            <th class="report">First Name</th>
-                            <th class="report">Badge Name</th>
-                            <th class="report">Sorted Pubs Name</th>
-                            <th class="report">Interested</th>
-                            <th class="report">Scheduled</th>
+                            <th>Person ID</th>
+                            <th>Name for Publications</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Badge Name</th>
+                            <th>Sorted Pubs Name</th>
+                            <th>Interested</th>
+                            <th>Anon</th>
+                            <th>Scheduled</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
@@ -80,17 +85,17 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='participants']/row">
         <tr>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showBadgeid">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@pubsname" /></td>
-            <td class="report"><xsl:value-of select="@lastname" /></td>
-            <td class="report"><xsl:value-of select="@firstname" /></td>
-            <td class="report"><xsl:value-of select="@badgename" /></td>
-            <td class="report"><xsl:value-of select="@sortedpubsname" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@pubsname" /></td>
+            <td><xsl:value-of select="@lastname" /></td>
+            <td><xsl:value-of select="@firstname" /></td>
+            <td><xsl:value-of select="@badgename" /></td>
+            <td><xsl:value-of select="@sortedpubsname" /></td>
+            <td>
                 <xsl:choose>
                     <xsl:when test="@interested='0'">Didn't respond</xsl:when>
                     <xsl:when test="@interested='1'">Yes</xsl:when>
@@ -98,7 +103,8 @@ $report['xsl'] =<<<'EOD'
                     <xsl:otherwise>Didn't log in</xsl:otherwise>
                 </xsl:choose>
             </td>
-            <td class="report">
+            <td><xsl:if test="@anonymous = 'Y'">Yes</xsl:if></td>
+            <td>
                 <xsl:choose>
                     <xsl:when test="@participantIsScheduled='1'">Yes</xsl:when>
                     <xsl:otherwise>No</xsl:otherwise>
