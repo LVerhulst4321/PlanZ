@@ -275,10 +275,10 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 <?php
     if (MEETING_LINK === TRUE) {
 ?>
-        <div class="row-fluid vert-sep vert-sep-above">
-                    <div class="control-group">
-                        <label class="control-label" for="meetinglink">Meeting Link:</label>
-                        <input type="text" class="span11" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
+        <div class="row mt-3">
+                    <div class="form-group col-md-6">
+                        <label for="meetinglink">Meeting Link:</label>
+                        <input type="text" class="form-control" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
                     </div>
                 </div>
 <?php
