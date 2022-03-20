@@ -16,7 +16,8 @@ SELECT
         CD.badgename,
         concat(CD.firstname,' ',CD.lastname) AS name,
         P.bio,
-        PP.pronouns
+        PP.pronouns, 
+        P.anonymous
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
@@ -48,13 +49,15 @@ $report['xsl'] = <<<'EOD'
                 <table id="reportTable" class="report table table-sm">
                     <col style="width:6em;" />
                     <col style="width:12em;" />
-                    <col style="width:8em;" />
+                    <col style="width:6em;" />
+                    <col style="width:6em;" />
                     <col />
                     <thead>
                         <tr>
                             <th>Person Id</th>
-                            <th>Name for Publications</th>
-                            <th>Pronouns</th>
+                            <th title="What name does the participant want to appear in publications? It might not be the same as the Badge Name.">Name for Publications</th>
+                            <th title="What pronouns, if any, has the participant specified?">Pronouns</th>
+                            <th title="Has the participant indicated that they want to be anonymous?">Anon</th>
                             <th>Biography</th>
                         </tr>
                     </thead>
@@ -81,6 +84,7 @@ $report['xsl'] = <<<'EOD'
                 </xsl:call-template>
             </td>
             <td><xsl:value-of select="@pronouns" /></td>
+            <td><xsl:if test="@anonymous = 'Y'">Yes</xsl:if></td>
             <td><xsl:value-of select="@bio" /></td>
         </tr>
     </xsl:template>
