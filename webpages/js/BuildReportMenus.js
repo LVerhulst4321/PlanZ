@@ -19,10 +19,10 @@ $(function() {
             },
             error: function(response) {
                 if (response.status === 401) {
-                    $.zambia.redirectToLogin();
+                    $.planz.redirectToLogin();
                 } else {
                     $('#build-report-btn .spinner-border').hide();
-                    showMessage(response.data);
+                    showMessage(response.responseJSON);
                 }
             }
         });
@@ -39,6 +39,6 @@ $(function() {
                 data = { "severity": "danger", "text": data};
             }
         }
-        $.zambia.simpleAlert(data.severity, data.text);
+        $.planz.simpleAlert(data.severity, data.text);
     }
 });

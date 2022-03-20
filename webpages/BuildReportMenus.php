@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             </div>
         </form>
     </div>
-    <script type="text/javascript" src="./js/zambiaExtension.js"></script>
+    <script type="text/javascript" src="./js/planzExtension.js"></script>
     <script type="text/javascript" src="./js/BuildReportMenus.js"></script>
         <?php
         staff_footer();
