@@ -19,7 +19,7 @@ function fetch_schema($tablename) {
         //error_log("table = " . $tablename);
         // json of schema and table contents
         $query=<<<EOD
-SELECT
+    SELECT
         COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY, EXTRA
     FROM
         INFORMATION_SCHEMA.COLUMNS
@@ -221,7 +221,7 @@ function fetch_table($tablename, $message) {
 
     // get the foreign keys
     $query = <<<EOD
-SELECT
+    SELECT
         TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
     FROM
         INFORMATION_SCHEMA.KEY_COLUMN_USAGE
@@ -264,15 +264,9 @@ EOD;
     // Build CTE's for getting count of foreign key usage
     if (count($foreign_keys) > 0 ) {
         foreach ($foreign_keys as $key) {
-            $colonpos = strpos($key, ':');
-            $mycolname = substr($key, 0, $colonpos);
-            $periodpos = strpos($key, '.');
-            $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
-            $reffield = substr($key, $periodpos + 1);
-            //error_log("Referenced: '$key'");
-            //error_log("colname: '$mycolname'");
-            //error_log("reftable: '$reftable'");
-            //error_log("reffield: '$reffield'");
+            $mycolname = $key["REFERENCED_COLUMN_NAME"];
+            $reftable = $key["TABLE_NAME"];
+            $reffield = $key["COLUMN_NAME"];
             if ($reffield != $curfield) {
                 $union = "";
                 if (DBVER >= "8") {
