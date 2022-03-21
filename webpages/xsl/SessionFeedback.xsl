@@ -49,7 +49,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="javascript/zambiaExtension.js" />
-    <script type="text/javascript" src="javascript/zambiaExtensionFeedback.js" />
+    <script type="text/javascript" src="js/zambiaExtension.js" />
+    <script type="text/javascript" src="js/zambiaExtensionFeedback.js" />
   </xsl:template>
 </xsl:stylesheet>
