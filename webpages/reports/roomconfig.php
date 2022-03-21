@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Room Configuration';
+$report['multi'] = 'true';
+$report['output_filename'] = 'room_config.csv';
 $report['description'] = 'List all configurable information associated with rooms.';
 $report['categories'] = array(
     'Administration Reports' => 890,
@@ -52,24 +54,28 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='rooms']/row">
-                <table class="report">
-                    <tr>
-                        <th rowspan = "2" class="report">Room Id</th>
-                        <th class="report">Room Name</th>
-                        <th class="report">Height</th>
-                        <th class="report">Dimensions</th>
-                        <th class="report">Area</th>
-                        <th class="report">Function</th>
-                        <th class="report">Floor</th>
-                        <th class="report">Notes</th>
-                        <th class="report" title="rooms.is_scheduled">To be scheduled*</th>
-                        <th class="report">Has been scheduled</th>
-                    </tr>
-                    <tr>
-                        <th class="report" colspan = "4">Times</th>
-                        <th class="report" colspan = "5">Room Sets</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='rooms']/row" />
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th rowspan = "2">Room Id</th>
+                            <th>Room Name</th>
+                            <th>Height</th>
+                            <th>Dimensions</th>
+                            <th>Area</th>
+                            <th>Function</th>
+                            <th>Floor</th>
+                            <th>Notes</th>
+                            <th title="rooms.is_scheduled">To be scheduled*</th>
+                            <th>Has been scheduled</th>
+                        </tr>
+                        <tr>
+                            <th colspan = "4">Times</th>
+                            <th colspan = "5">Room Sets</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='rooms']/row" />
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -81,19 +87,19 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='rooms']/row">
         <xsl:variable name="roomid" select="@roomid" />
         <tr>
-            <td rowspan="2" class="report"><xsl:value-of select="@roomid"/></td>
-            <td class="report"><xsl:value-of select="@roomname"/></td>
-            <td class="report"><xsl:value-of select="@height"/></td>
-            <td class="report"><xsl:value-of select="@dimensions"/></td>
-            <td class="report"><xsl:value-of select="@area"/></td>
-            <td class="report"><xsl:value-of select="@function"/></td>
-            <td class="report"><xsl:value-of select="@floor"/></td>
-            <td class="report"><xsl:value-of select="@notes"/></td>
-            <td class="report"><xsl:value-of select="@is_scheduled"/></td>
-            <td class="report"><xsl:value-of select="@scheduled"/></td>
+            <td rowspan="2"><xsl:value-of select="@roomid"/></td>
+            <td><xsl:value-of select="@roomname"/></td>
+            <td><xsl:value-of select="@height"/></td>
+            <td><xsl:value-of select="@dimensions"/></td>
+            <td><xsl:value-of select="@area"/></td>
+            <td><xsl:value-of select="@function"/></td>
+            <td><xsl:value-of select="@floor"/></td>
+            <td><xsl:value-of select="@notes"/></td>
+            <td><xsl:value-of select="@is_scheduled"/></td>
+            <td><xsl:value-of select="@scheduled"/></td>
         </tr>
         <tr>
-            <td colspan="4" class="report">
+            <td colspan="4">
                 <xsl:choose>
                     <xsl:when test="@opentime1 or @closetime1">
                         <xsl:value-of select="@opentime1"/><xsl:text> - </xsl:text><xsl:value-of select="@closetime1"/><br />
@@ -125,7 +131,7 @@ $report['xsl'] =<<<'EOD'
                     <xsl:otherwise><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></xsl:otherwise>
                 </xsl:choose>
             </td>
-            <td colspan="5" class="report">
+            <td colspan="5">
                 <xsl:choose>
                     <xsl:when test="/doc/query[@queryName='roomsets']/row[@roomid=$roomid]">
                         <xsl:apply-templates select="/doc/query[@queryName='roomsets']/row[@roomid=$roomid]" />

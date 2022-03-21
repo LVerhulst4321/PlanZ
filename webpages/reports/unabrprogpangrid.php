@@ -78,7 +78,7 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='rooms']/row and doc/query[@queryName='times']/row and doc/query[@queryName='sessions']/row">
-                <table>
+                <table class="table table-sm table-bordered">
                     <thead>
                         <tr>
                             <th style="">Time</th>
