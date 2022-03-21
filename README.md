@@ -1,4 +1,7 @@
 # PlanZ (aka Zambia)
+
+![PlanZ Logo](./webpages/images/Plan-Z-Logo-192.png)
+
 Convention scheduling tool originally developed for Arisia. Now used by several other conventions.
 PlanZ tracks sessions (events, panels, and anything that needs to be scheduled),
 participants, and rooms.
