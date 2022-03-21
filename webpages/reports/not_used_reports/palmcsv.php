@@ -29,7 +29,7 @@ SELECT
     WHERE
         S.pubstatusid = 2
     GROUP BY
-        SCH.sessionid
+        SCH.sessionid, SCH.starttime, R.Roomname
     ORDER BY
         SCH.starttime, R.roomname;
 EOD;

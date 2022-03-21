@@ -34,7 +34,7 @@ SELECT
       LEFT JOIN ParticipantOnSession POS USING(sessionid)
       LEFT JOIN Participants P USING(badgeid)
     GROUP BY
-        S.sessionid
+        S.sessionid, R.roomname, SCH.starttime
     ORDER BY
         SCH.starttime
 EOD;

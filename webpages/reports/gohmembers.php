@@ -4,7 +4,7 @@ $report = [];
 $report['name'] = 'GoH Members';
 $report['description'] = 'List Members with the GoH Status.';
 $report['categories'] = array(
-    'PlanZ Administration Reports' => 1010,
+    'Administration Reports' => 1010,
     'Security Reports' => 10,
     'GOH Reports' => 590,
 );

@@ -2,7 +2,7 @@
 // Copyright (c) 2017-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Event Liaison Export';
-$report['description'] = 'Export CSV file of Event Liaison info';
+$report['description'] = 'Export CSV file of Event Liaison info. Uses Event Participant and Event Organizer roles.';
 $report['categories'] = array(
     'Reports downloadable as CSVs' => 150,
     'Events Reports' => 40

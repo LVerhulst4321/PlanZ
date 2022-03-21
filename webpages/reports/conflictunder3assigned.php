@@ -28,7 +28,7 @@ SELECT
             S.statusid IN (1, 2, 3, 6, 7) ## Brainstorm, Vetted, Scheduled, Edit Me, Assigned
         AND S.typeid = 1 ## Panel
     GROUP BY
-        S.sessionid
+        S.sessionid, S.title, T.trackname, R.roomname, SCH.roomid, durationmin, durationhrs, starttime
     HAVING
         numAssigned < 3
     ORDER BY

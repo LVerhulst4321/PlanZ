@@ -32,7 +32,8 @@ SELECT DISTINCT
         R.roomname,
         T.trackname,
         S.sessionid,
-        S.title
+        S.title,
+        SCH.starttime AS sqlstarttime
     FROM
              Sessions S
         JOIN Tracks T USING (trackid)
@@ -126,7 +127,7 @@ $report['xsl'] =<<<'EOD'
             <td class="report" >
                 <xsl:for-each select="/doc/query[@queryName='services']/row[@sessionid=$sessionid]">
                     <div><xsl:value-of select="@servicename" /></div>
-                </xsl:for-each>    
+                </xsl:for-each>
             </td>
         </tr>
     </xsl:template>

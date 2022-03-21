@@ -10,7 +10,6 @@ $report['queries']['participants'] =<<<'EOD'
 SELECT
         P.badgeid,
         P.pubsname,
-        P.website,
         PD.dayjob,
         PD.accessibilityissues,
         PD.ethnicity,
@@ -25,7 +24,7 @@ SELECT
     WHERE
         P.interested = 1
     ORDER BY
-        IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)), CD.firstname;
+        P.sortedpubsname;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>

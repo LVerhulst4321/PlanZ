@@ -9,7 +9,8 @@ $report['categories'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT DISTINCT
-        P.badgeid
+        P.badgeid,
+        P.sortedpubsname
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
@@ -17,8 +18,7 @@ SELECT DISTINCT
         JOIN Sessions S USING (sessionid)
         JOIN Schedule SCH USING (sessionid)
     ORDER BY
-        IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),
-        CD.firstname;
+        P.sortedpubsname;
 EOD;
 $report['queries']['schedule'] =<<<'EOD'
 SELECT
@@ -28,7 +28,7 @@ SELECT
         S.duration,
         R.roomname,
         R.function,
-        TR.trackname, 
+        TR.trackname,
         S.sessionid,
         S.title,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime
@@ -41,8 +41,7 @@ SELECT
         JOIN Rooms R USING (roomid)
         JOIN Tracks TR USING (trackid)
     ORDER BY
-        IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),
-        CD.firstname,
+        P.sortedpubsname,
         SCH.starttime;
 EOD;
 $report['xsl'] =<<<'EOD'

@@ -10,7 +10,8 @@ $report['categories'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT DISTINCT
-        P.badgeid
+        P.badgeid,
+        P.sortedpubsname
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
@@ -19,8 +20,7 @@ SELECT DISTINCT
     WHERE
         S.statusid IN (1, 2, 3, 6, 7) ## Brainstorm, Vetted, Scheduled, Edit Me, Assigned
     ORDER BY
-        IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),
-        CD.firstname;
+        P.sortedpubsname;
 EOD;
 $report['queries']['sessions'] =<<<'EOD'
 SELECT
