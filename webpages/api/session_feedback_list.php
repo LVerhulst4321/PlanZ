@@ -48,7 +48,7 @@ function find_session_for_feedback($db, $badgeid, $term) {
       LEFT OUTER JOIN ParticipantSessionInterest psi on psi.sessionid = s.sessionid and psi.badgeid = ?
      WHERE ss.may_be_scheduled = 1
        AND ps.pubstatusid = 2
-       AND s.divisionid in (select divisionid from Divisions where allow_partSessionInterest = 1)
+       AND s.divisionid in (select divisionid from Divisions where is_part_session_interest_allowed = 1)
        $clause
      ORDER BY t.display_order, s.sessionid;
 EOD;
