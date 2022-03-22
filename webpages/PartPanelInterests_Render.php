@@ -2,7 +2,7 @@
 // Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 function render_session_interests($session_interest_count,$message,$message_error, $pageIsDirty, $showNotAttendingWarning) {
     global $session_interests, $title;
-    participant_header($title);
+    participant_header($title, false, 'Normal', false);
     if ($showNotAttendingWarning) {
         echo "<div class=\"alert alert-block\" style=\"margin:15px 0;\">\n";
         echo "    <h4>Warning!</h4>\n";
@@ -41,7 +41,7 @@ function render_session_interests($session_interest_count,$message,$message_erro
     echo "<hr />\n";
     // "Update Ranks" Section
     echo "<form id=\"sessionFRM\" class=\"form-inline\" name=\"sessionform\" method=\"POST\" action=\"PartPanelInterests_POST2.php\">\n";
-	echo "<input type=\"hidden\" name=\"submitranks\" value=\"1\" />\n";
+    echo "<input type=\"hidden\" name=\"submitranks\" value=\"1\" />\n";
     echo "<div class=\"submit\"><button class=\"btn btn-primary pull-right\" type=\"submit\" $disabled>Save</button></div>\n";
     echo "<p>Please use the following scale when ranking your interest in the sessions you have chosen:  </p>\n";
     echo "<strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I'd like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong>\n";
@@ -70,7 +70,7 @@ function render_session_interests($session_interest_count,$message,$message_erro
         echo "            <label class=\"inline\">I'd like to moderate this session </label>\n";
         echo "        </span>\n";
         echo "        <span class=\"span4\">\n";
-        echo "            <input type=\"checkbox\" id=\"deleteCHK_$j\" class=\"checkbox\" value=\"1\" name=\"delete$j\" $disabled/>\n";		
+        echo "            <input type=\"checkbox\" id=\"deleteCHK_$j\" class=\"checkbox\" value=\"1\" name=\"delete$j\" $disabled/>\n";
         echo "            <label class=\"inline \">Remove this session from my list </label>\n";
         echo "        </span>\n";
         echo "    </div>\n";
@@ -97,7 +97,7 @@ function render_session_interests($session_interest_count,$message,$message_erro
     }
     echo "</div>\n";
     echo "<div class=\"submit\"><button class=\"btn btn-primary pull-right\" type=\"submit\" $disabled>Save</button></div><br />\n";
-	echo "<input type=\"hidden\" id=\"autosaveHID\" name=\"autosave\" value=\"0\" />\n";
+    echo "<input type=\"hidden\" id=\"autosaveHID\" name=\"autosave\" value=\"0\" />\n";
     echo "</form>\n";
     echo "<div id=\"addButDirtyMOD\" class=\"modal hide\" data-backdrop=\"static\">\n";
     echo "  <div class=\"modal-header\">\n";
