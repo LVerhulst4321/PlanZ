@@ -2,7 +2,7 @@
 // Created by BC Holmes on 2022-03-16.
 
 if (!include ('../config/db_name.php')) {
-	include ('../config/db_name.php');
+    include ('../config/db_name.php');
 }
 
 require_once('./db_support_functions.php');
@@ -15,7 +15,7 @@ function update_participant_confirmation($db, $sessionId, $participantSessionId,
     WHERE participantonsessionid = ?
       AND sessionid = ?
       AND badgeid = ?;
- EOD;
+EOD;
 
     $stmt = mysqli_prepare($db, $query);
     mysqli_stmt_bind_param($stmt, "siis", $confirmValue, $participantSessionId, $sessionId, $badgeId);
@@ -34,7 +34,7 @@ function update_participant_confirmation_notes($db, $sessionId, $participantSess
     WHERE participantonsessionid = ?
       AND sessionid = ?
       AND badgeid = ?;
- EOD;
+EOD;
 
     $stmt = mysqli_prepare($db, $query);
     mysqli_stmt_bind_param($stmt, "siis", $notes, $participantSessionId, $sessionId, $badgeId);

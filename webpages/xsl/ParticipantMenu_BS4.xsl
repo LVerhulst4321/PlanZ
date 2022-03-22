@@ -9,6 +9,7 @@
   <xsl:param name="survey" select="'false'" />
   <xsl:param name="my_suggestions" select="'true'" />
   <xsl:param name="SessionFeedback" select="'true'" />
+  <xsl:param name="SessionInterests" select="'true'" />
   <xsl:template match="/">
     <nav id="participantNav" class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
       <span class="navbar-brand py-1">
@@ -52,7 +53,12 @@
               <a class="nav-link py-1" href="PartSearchSessions.php">Search Sessions</a>
             </li>
           </xsl:if>
-          <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='SessionFeedback']">
+          <xsl:if test="$SessionInterests">
+            <li class="nav-item py-0">
+              <a class="nav-link py-1" href="PartPanelInterests.php">Session Interests</a>
+            </li>
+          </xsl:if>
+          <xsl:if test="$SessionFeedback">
             <li class="nav-item py-0">
               <a class="nav-link py-1" href="SessionFeedback.php">Interest Survey</a>
             </li>
