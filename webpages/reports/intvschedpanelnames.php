@@ -37,7 +37,7 @@ SELECT
                 willmoderate,
                 title,
                 trackname,
-                rank
+                `rank`
             FROM (
                         SELECT
                                 T.trackname,
@@ -74,7 +74,7 @@ SELECT
                         JOIN Rooms R USING(roomid)
                  ) AS Y USING(sessionid)
     ORDER BY
-        SUBSTRING_INDEX(pubsname,' ',-1), pubsname, rank;
+        SUBSTRING_INDEX(pubsname,' ',-1), pubsname, `rank`;
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>

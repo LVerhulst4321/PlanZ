@@ -37,7 +37,7 @@ SELECT
                 willmoderate,
                 title,
                 trackname,
-                rank
+                `rank`
             FROM (
                         SELECT
                                 T.trackname,

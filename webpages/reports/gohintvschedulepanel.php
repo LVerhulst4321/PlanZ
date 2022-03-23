@@ -30,7 +30,7 @@ SELECT
                 moderator,
                 title,
                 trackname,
-                rank
+                `rank`
             FROM (
                         SELECT
                                 T.trackname,
