@@ -312,7 +312,7 @@ function output_locationgrid($link, $grid, $locations, $mode = 'internal') {
 
 
     //get 2 arrays of the rooms using id as the key and display_order as the key
-    $query = "SELECT roomid, display_order, roomname, function, floor, grid_column_span FROM Rooms";               //WHERE display_order = $locationkey
+    $query = "SELECT roomid, display_order, roomname, `function`, floor, grid_column_span FROM Rooms";               //WHERE display_order = $locationkey
     $result=mysqli_query($link, $query);
     $room_disp_arr = array();
     $room_arr = array();
@@ -718,7 +718,7 @@ SELECT
         #AND R.on_public_grid = 1
         AND R.roomid IN ($roomsToDisplayList)
     GROUP BY
-        SCH.sessionid
+        SCH.sessionid, R.display_order, SCH.starttime, SCH.roomid
     ORDER BY
         SCH.starttime;
 EOD;
@@ -750,7 +750,7 @@ SELECT
         AND S.pubstatusid IN (2,4)                  #2-public,4-wobegon
         AND R.roomid IN ($roomsToDisplayList)
     GROUP BY
-        SCH.sessionid
+        SCH.sessionid, SCH.starttime
     ORDER BY
         SCH.starttime;
 EOD;
@@ -781,7 +781,7 @@ SELECT
         S.statusid = 3                        #3 means scheduled
         AND R.roomid IN ($roomsToDisplayList)
     GROUP BY
-        SCH.sessionid
+        SCH.sessionid, SCH.starttime
     ORDER BY
         SCH.starttime;
 EOD;
