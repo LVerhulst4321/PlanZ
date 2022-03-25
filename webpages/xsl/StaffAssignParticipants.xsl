@@ -21,7 +21,6 @@
                 <xsl:value-of select="doc/query[@queryName='sessionInfo']/row/@title" />
             </span>
         </h2>
-        <div class="container">
         <form id="assign-participants-form" method="post" action="StaffAssignParticipants.php">
             <xsl:if test="doc/query[@queryName='sessionInfo']/row/@progguiddesc">
                 <div class="row mp-2">
@@ -132,7 +131,6 @@
                 </xsl:if>
             </div>
         </form>
-        </div>
     </xsl:template>
     <xsl:template match="doc/query[@queryName='participantInterest']/row">
         <xsl:if test="preceding-sibling::*[1]/@attending='1' and @attending='0'">
@@ -154,80 +152,81 @@
                     </xsl:when>
                 </xsl:choose>
             </xsl:attribute>
-        </div>
-        <div class="col col-2">
-            <label class="checkbox">
-                <input type="checkbox" value="1" style="margin-right: 5px;">
-                    <xsl:attribute name="name">
-                        <xsl:text>asgn</xsl:text>
-                        <xsl:value-of select="@badgeid" />
-                    </xsl:attribute>
-                    <xsl:if test="@posbadgeid">
-                        <xsl:attribute name="checked">checked</xsl:attribute>
-                    </xsl:if>
+            <div class="col col-2">
+                <label class="checkbox">
+                    <input type="checkbox" value="1" style="margin-right: 5px;">
+                        <xsl:attribute name="name">
+                            <xsl:text>asgn</xsl:text>
+                            <xsl:value-of select="@badgeid" />
+                        </xsl:attribute>
+                        <xsl:if test="@posbadgeid">
+                            <xsl:attribute name="checked">checked</xsl:attribute>
+                        </xsl:if>
+                    </input>
+                    <xsl:text>Assigned</xsl:text>
+                </label>
+                <input type="hidden" name="row{position()}" value="{@badgeid}" />
+                <input type="hidden" name="wasasgn{@badgeid}">
+                    <xsl:choose>
+                        <xsl:when test="@posbadgeid">
+                            <xsl:attribute name="value">1</xsl:attribute>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="value">0</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </input>
-                <xsl:text>Assigned</xsl:text>
-            </label>
-            <input type="hidden" name="row{position()}" value="{@badgeid}" />
-            <input type="hidden" name="wasasgn{@badgeid}">
+            </div>
+            <div class="col col-1">
+                <xsl:text>ID: </xsl:text>
+                <xsl:value-of select="@badgeid" />
+            </div>
+            <div class="col col-4">
+                <xsl:value-of select="@pubsname" />
+                <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
+                <button type="button" rel="popover" class="btn btn-info btn-sm" data-content="{@bio}" data-original-title="Bio for {@pubsname}">Bio</button>
+                <xsl:if test="@answercount > 0">
+                    <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
+                    <button type="button" class="btn btn-info btn-sm" title="Survey results for {@pubsname}">
+                        <xsl:attribute name="onclick">
+                            <xsl:text>showSurveyResults('</xsl:text>
+                            <xsl:value-of select="@badgeid"/>
+                            <xsl:text>', 'badgeid');</xsl:text>
+                        </xsl:attribute>
+                        Survey
+                    </button>
+                </xsl:if>
+            </div>
+            <div class="col col-2">
+                <xsl:text>Rank: </xsl:text>
                 <xsl:choose>
-                    <xsl:when test="@posbadgeid">
-                        <xsl:attribute name="value">1</xsl:attribute>
+                    <xsl:when test="@rank='99'">
+                        <xsl:text>None</xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:attribute name="value">0</xsl:attribute>
+                        <xsl:value-of select="@rank" />
                     </xsl:otherwise>
                 </xsl:choose>
-            </input>
-        </div>
-        <div class="col col-1">
-            <xsl:value-of select="@badgeid" />
-        </div>
-        <div class="col col-4">
-            <xsl:value-of select="@pubsname" />
-            <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
-            <button type="button" rel="popover" class="btn btn-info btn-sm" data-content="{@bio}" data-original-title="Bio for {@pubsname}">Bio</button>
-            <xsl:if test="@answercount > 0">
-                <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
-                <button type="button" class="btn btn-info btn-sm" title="Survey results for {@pubsname}">
-                    <xsl:attribute name="onclick">
-                        <xsl:text>showSurveyResults('</xsl:text>
-                        <xsl:value-of select="@badgeid"/>
-                        <xsl:text>', 'badgeid');</xsl:text>
-                    </xsl:attribute>
-                    Survey
-                </button>
-            </xsl:if>
-        </div>
-        <div class="col col-2">
-            <xsl:text>Rank: </xsl:text>
-            <xsl:choose>
-                <xsl:when test="@rank='99'">
-                    <xsl:text>None</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="@rank" />
-                </xsl:otherwise>
-            </xsl:choose>
-        </div>
-        <div class="col col-3">
-            <xsl:choose>
-                <xsl:when test="@willmoderate='1' and @roleid">
-                    <xsl:attribute name="title">Volunteered to moderate this panel and in general</xsl:attribute>
-                    <xsl:text>Mod this or any</xsl:text>
-                </xsl:when>
-                <xsl:when test="@willmoderate='1'">
-                    <xsl:attribute name="title">Volunteered to moderate this panel, but not in general</xsl:attribute>
-                    <xsl:text>Mod this</xsl:text>
-                </xsl:when>
-                <xsl:when test="@roleid">
-                    <xsl:attribute name="title">Volunteered to moderate in general, but not this panel in particular</xsl:attribute>
-                    <xsl:text>Mod any</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-                </xsl:otherwise>
-            </xsl:choose>
+            </div>
+            <div class="col col-3">
+                <xsl:choose>
+                    <xsl:when test="@willmoderate='1' and @roleid">
+                        <xsl:attribute name="title">Volunteered to moderate this panel and in general</xsl:attribute>
+                        <xsl:text>Mod this or any</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@willmoderate='1'">
+                        <xsl:attribute name="title">Volunteered to moderate this panel, but not in general</xsl:attribute>
+                        <xsl:text>Mod this</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@roleid">
+                        <xsl:attribute name="title">Volunteered to moderate in general, but not this panel in particular</xsl:attribute>
+                        <xsl:text>Mod any</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </div>
         </div>
         <div>
             <xsl:choose>

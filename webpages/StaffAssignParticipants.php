@@ -4,7 +4,7 @@ global $title;
 $title = "Assign Participants";
 require_once('StaffCommonCode.php');
 require_once('StaffAssignParticipants_FNC.php');
-staff_header($title);
+staff_header($title, true);
 
 $topsectiononly = true; // no room selected -- flag indicates to display only the top section of the page
 if (isset($_POST["numrows"])) {
@@ -32,24 +32,30 @@ SELECT
 EOD;
 $Sresult = mysqli_query_exit_on_error($query);
 ?>
-<form id='selsesform' name='selsesform' class='form-inline zambia-form page-top-spacer' method='get' action='StaffAssignParticipants.php'>
-    <div>
-        <label for='sessionDropdown'>Select Session:</label>
-        <select id='sessionDropdown' name='selsess'>
+<form id='selsesform' name='selsesform' method='get' action='StaffAssignParticipants.php'>
+    <div class="form-group row mt-4">
+        <div class="col-auto">
+            <label for='sessionDropdown'>Select Session:</label>
+        </div>
+        <div class="col col-5">
+            <select id='sessionDropdown' name='selsess'>
 <?php
-            echo "     <option value=0" . (($selsessionid == 0) ? "selected" : "") . ">Select Session</option>\n";
-            while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
-                echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "");
-                echo ">" . htmlspecialchars($trackname) . " - ";
-                echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
-            }
-            mysqli_free_result($Sresult);
+                echo "     <option value=0" . (($selsessionid == 0) ? "selected" : "") . ">Select Session</option>\n";
+                while (list($trackname, $sessionid, $title) = mysqli_fetch_array($Sresult, MYSQLI_NUM)) {
+                    echo "     <option value=\"$sessionid\" " . (($selsessionid == $sessionid) ? "selected" : "");
+                    echo ">" . htmlspecialchars($trackname) . " - ";
+                    echo htmlspecialchars($sessionid) . " - " . htmlspecialchars($title) . "</option>\n";
+                }
+                mysqli_free_result($Sresult);
 ?>
-        </select>
-        <button id='sessionBtn' type='submit' name='submit' class='btn btn-primary'>Select Session</button>
+            </select>
+        </div>
+        <div class="col col-2">
+            <button id='sessionBtn' type='submit' name='submit' class='btn btn-primary'>Select Session</button>
+        </div>
 <?php
 if (isset($_SESSION['return_to_page'])) {
-    echo "<a href=\"" . $_SESSION['return_to_page'] . "\">Return to report</a>";
+    echo "<div class='col col-auto'><a href=\"" . $_SESSION['return_to_page'] . "\">Return to report</a></div>";
 }
 echo "</div></form>\n";
 if ($topsectiononly) {
