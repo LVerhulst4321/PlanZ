@@ -78,29 +78,34 @@ $(function() {
         },
 
         renderAssignments: (data) => {
-            let $table = $('<table class="table" />');
-            let $thead = $('<thead><tr><th>Name</th><th>Mod?</th></tr></thead>')
-            $table.append($thead);
-            let $tbody = $('<tbody />');
-            for (let i = 0; i < data.assignments.length; i++) {
-                let $tr = $('<tr />');
-                let $name = $('<td />');
-                let $a = $('<a />');
-                $a.attr('href', "./AdminParticipants.php?badgeid=" + data.assignments[i].badgeid);
-                $a.text(data.assignments[i].name ? data.assignments[i].name : data.assignments[i].badgeid);
-                $name.append($a);
-                $tr.append($name);
+            if (data.assignments.length > 0) {
+                let $table = $('<table class="table" />');
+                let $thead = $('<thead><tr><th>Name</th><th>Mod?</th></tr></thead>')
+                $table.append($thead);
+                let $tbody = $('<tbody />');
+                for (let i = 0; i < data.assignments.length; i++) {
+                    let $tr = $('<tr />');
+                    let $name = $('<td />');
+                    let $a = $('<a />');
+                    $a.attr('href', "./AdminParticipants.php?badgeid=" + data.assignments[i].badgeid);
+                    $a.text(data.assignments[i].name ? data.assignments[i].name : data.assignments[i].badgeid);
+                    $name.append($a);
+                    $tr.append($name);
 
-                let $mod = $('<td />');
-                $mod.text(data.assignments[i].moderator ? 'Yes' : 'No');
-                $tr.append($mod);
+                    let $mod = $('<td />');
+                    $mod.text(data.assignments[i].moderator ? 'Yes' : 'No');
+                    $tr.append($mod);
 
-                $tbody.append($tr);
+                    $tbody.append($tr);
+                }
+
+                $table.append($tbody);
+                $(".assignment-content").empty();
+                $(".assignment-content").append($table);
+            } else {
+                let $message = $('<p class="text-info">No participants are currently assigned to this session.</p>');
+                $(".assignment-content").append($message);
             }
-
-            $table.append($tbody);
-            $(".assignment-content").empty();
-            $(".assignment-content").append($table);
         }
     };
 
