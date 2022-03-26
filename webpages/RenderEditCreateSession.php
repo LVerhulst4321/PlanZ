@@ -87,7 +87,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-md-5">
+            <div class="form-group col-md-5 offset-md-1">
                 <label for="title">Title:</label>
                 <input type="text" class="form-control" size="50" name="title" value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT);?>" />&nbsp;&nbsp;
             </div>
