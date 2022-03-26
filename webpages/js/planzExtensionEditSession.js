@@ -104,6 +104,7 @@ $(function() {
                 $(".assignment-content").append($table);
             } else {
                 let $message = $('<p class="text-info">No participants are currently assigned to this session.</p>');
+                $(".assignment-content").empty();
                 $(".assignment-content").append($message);
             }
         }
