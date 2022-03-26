@@ -23,7 +23,7 @@ $(function() {
         } else {
             $parent = $('.navbar');
             if ($parent.length > 0) {
-                $parent().first().after($alert);
+                $parent.last().after($alert);
             }
         }
     };
