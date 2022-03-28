@@ -131,6 +131,8 @@
                 </xsl:if>
             </div>
         </form>
+        <script type="text/javascript" src="./js/planzExtension.js"></script>
+        <script type="text/javascript" src="./js/planzExtensionAssignParticipants.js"></script>
     </xsl:template>
     <xsl:template match="doc/query[@queryName='participantInterest']/row">
         <xsl:if test="preceding-sibling::*[1]/@attending='1' and @attending='0'">

@@ -64,7 +64,7 @@ var StaffAssignParticipants = function() {
         var $biographyButton = document.getElementById('BioBtn');
         var $showsurveyButton = document.getElementById("SurveyBtn");
         if ($biographyButton) {
-            $biographyButton.addEventListener('click', this.showPopover.bind(this));
+            // $biographyButton.addEventListener('click', this.showPopover.bind(this));
             $biographyButton.disabled = true;
         }
         if ($showsurveyButton) { 
@@ -116,10 +116,10 @@ var StaffAssignParticipants = function() {
             html: true,
             placement: 'top',
             title: function() {
-                return 'Bio for ' + that.fname + "&nbsp;<i id='popoverClose' class='icon-remove-sign pull-right'></i>";
+                return $(this).attr('title');
             },
             content: function() {
-                return that.bio;
+                return $(this).data('content');
             }
         });
         $('#popoverClose').click(function(e) {
