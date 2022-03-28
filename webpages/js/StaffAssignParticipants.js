@@ -19,39 +19,6 @@ var StaffAssignParticipants = function() {
         }
     };
 
-    this.showPopoverCallback = function(data, textStatus, jqXHR) {
-        var node = data.firstChild.firstChild.firstChild;
-        this.this.bio = node.getAttribute("bio");
-        this.this.fname = node.getAttribute("firstname") + " " + node.getAttribute("lastname");
-
-        $('#BioBtn').button('reset');
-        setTimeout(function() {
-                $("#BioBtn").button().prop("disabled", true);
-            },
-            0);
-
-        this.this.$popoverTarget.popover('show');
-    };
-
-    this.showPopover = function(event) {
-        // Get the bio for the selected participant
-        $('#BioBtn').button('loading');
-        var badgeid = $('#partDropdown').val();
-        $.ajax({
-            url: "SubmitAdminParticipants.php",
-            dataType: "xml",
-            data: ({
-                badgeid : badgeid,
-                ajax_request_action : "fetch_participant"
-            }),
-            success: this.showPopoverCallback,
-            type: "GET",
-            this: this
-        });
-        event.stopPropagation();
-        return false;
-    };
-
     this.onPopoverClose = function() {
         var $biographyButton = document.getElementById('BioBtn');
         if ($biographyButton) {
@@ -64,7 +31,6 @@ var StaffAssignParticipants = function() {
         var $biographyButton = document.getElementById('BioBtn');
         var $showsurveyButton = document.getElementById("SurveyBtn");
         if ($biographyButton) {
-            // $biographyButton.addEventListener('click', this.showPopover.bind(this));
             $biographyButton.disabled = true;
         }
         if ($showsurveyButton) { 
