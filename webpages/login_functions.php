@@ -27,7 +27,9 @@ function get_user_id_prompt() {
 }
 
 function is_logged_in() {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     return (isset($_SESSION['badgeid']));
 }
 
