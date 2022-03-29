@@ -63,6 +63,10 @@
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomSets' or @permatomtag='ce_All']" />
         <xsl:variable name="editRoomHasSet"
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomHasSet' or @permatomtag='ce_All']" />
+        <xsl:variable name="editRoomReportGroups"
+            select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_room_report_group' or @permatomtag='ce_All']" />
+        <xsl:variable name="editRoomReportGroupHasRoom"
+            select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_room_report_group_has_room' or @permatomtag='ce_All']" />
         <xsl:variable name="editRoomColors"
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RoomColors' or @permatomtag='ce_All']" />
         <xsl:variable name="editFeatures"
@@ -73,7 +77,7 @@
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_ServiceTypes' or @permatomtag='ce_All']" />
 
         <xsl:variable name="editAnyFacility"
-            select="$editRooms or $editRoomSets or $editRoomHasSet or $editRoomColors or $editFeatures or $editServices or $editServiceTypes" />
+            select="$editRooms or $editRoomSets or $editRoomHasSet or $editRoomReportGroups or $editRoomReportGroupHasRoom or $editRoomColors or $editFeatures or $editServices or $editServiceTypes" />
 
 
         <xsl:variable name="editEmailFrom"
@@ -493,6 +497,20 @@
                                         </a>
                                     </li>
                                 </xsl:if>
+                                <xsl:if test="$editRoomReportGroups">
+                                    <li class="nav-item">
+                                        <a href="#roomreportgroups" class="nav-link" data-toggle="tab" data-top="facility-top"
+                                           id="t-room_report_group">RoomReportGroups
+                                        </a>
+                                    </li>
+                                </xsl:if>
+                                <xsl:if test="$editRoomReportGroupHasRoom">
+                                    <li class="nav-item">
+                                        <a href="#roomreportgrouphasroom" class="nav-link" data-toggle="tab" data-top="facility-top"
+                                           id="t-room_report_group_has_room">RoomReportGroupHasRoom
+                                        </a>
+                                    </li>
+                                </xsl:if>
                                 <xsl:if test="$editRoomColors">
                                     <li class="nav-item">
                                         <a href="#roomcolors" class="nav-link" data-toggle="tab" data-top="facility-top"
@@ -545,6 +563,14 @@
                                             <li>RoomHasSet</li>
                                             <p>Which rooms can have which RoomSets</p>
                                         </xsl:if>
+                                        <xsl:if test="$editRoomReportGroups">
+                                            <li>RoomReportGroups</li>
+                                            <p>A grouping of rooms for reporting purposes</p>
+                                        </xsl:if>
+                                        <xsl:if test="$editRoomReportGroupHasRoom">
+                                            <li>RoomReportGroupHasRoom</li>
+                                            <p>Which rooms are in which RoomReportGroups</p>
+                                        </xsl:if>
                                         <xsl:if test="$editRoomColors">
                                             <li>RoomColors</li>
                                             <p>Define colors used by rooms on the color grid</p>
@@ -575,6 +601,12 @@
                                 </xsl:if>
                                 <xsl:if test="$editRoomHasSet">
                                     <div class="tab-pane mt-4 fade" id="roomhasset"/>
+                                </xsl:if>
+                                <xsl:if test="$editRoomReportGroups">
+                                    <div class="tab-pane mt-4 fade" id="roomreportgroups"/>
+                                </xsl:if>
+                                <xsl:if test="$editRoomReportGroupHasRoom">
+                                    <div class="tab-pane mt-4 fade" id="roomreportgrouphasroom"/>
                                 </xsl:if>
                                 <xsl:if test="$editRoomColors">
                                     <div class="tab-pane mt-4 fade" id="roomcolors"/>
