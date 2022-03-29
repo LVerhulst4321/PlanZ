@@ -861,11 +861,18 @@ EOD;
  *
  * @access public
  * @params array    $link : to database
+ * @params array    $divlist : list of divisionids
  * @return array    $locations : list of locations display order and id
  * @return array    $locationscss : list of location roomnames and colorcodes
  */
-function build_location_arrays_old($link) {
+function build_location_arrays($link, $divlist = 'all') {
     global $locations, $locationscss;
+
+    if ($divlist == 'all') {
+        $divisionstodisplaylist = '1,2,7,9';
+    } else {
+        $divisionstodisplaylist = $divlist;
+    }
 
     //This query only grabs rooms that have public programming in them.
     $query = <<<EOD
@@ -875,8 +882,8 @@ SELECT
         R.roomname,
         RC.roomcolorcode
     FROM
-        Rooms R
-        JOIN RoomColors RC using (roomcolorid)
+             Rooms R
+        JOIN RoomColors RC USING (roomcolorid)
     WHERE
         ( R.roomid IN
             (SELECT
@@ -889,6 +896,7 @@ SELECT
             )
         OR R.roomname LIKE '%dummy%' )
         AND R.on_public_grid = 1
+        AND R.divisionid IN ($divisionstodisplaylist)
     ORDER BY
         R.display_order
 EOD;
@@ -918,17 +926,17 @@ EOD;
  *
  * @access public
  * @params array    $link : to database
- * @params array    $divlist : list of divisionids
+ * @params array    $roomstodisplaylist : list of roomids to display
  * @return array    $locations : list of locations display order and id
  * @return array    $locationscss : list of location roomnames and colorcodes
  */
-function build_location_arrays($link, $divlist = 'all') {
+function build_location_arrays_new($link, $roomstodisplaylist = 'all') {
     global $locations, $locationscss;
 
-    if ($divlist == 'all') {
-        $divisionstodisplaylist = '1,2,7,9';
+    if ($roomstodisplaylist == 'all') {
+        $sqlroomstodisplaylist = '';
     } else {
-        $divisionstodisplaylist = $divlist;
+        $sqlroomstodisplaylist = 'AND R.roomid IN ($roomstodisplaylist)';
     }
 
     //This query only grabs rooms that have public programming in them.
@@ -939,8 +947,8 @@ SELECT
         R.roomname,
         RC.roomcolorcode
     FROM
-        Rooms R
-        JOIN RoomColors RC using (roomcolorid)
+             Rooms R
+        JOIN RoomColors RC USING (roomcolorid)
     WHERE
         ( R.roomid IN
             (SELECT
@@ -951,9 +959,9 @@ SELECT
                 WHERE
                     S.pubstatusid != 3 # not Do Not Print
             )
-        OR R.roomname LIKE '%dummy%' )
+            OR R.roomname LIKE '%dummy%' )
         AND R.on_public_grid = 1
-        AND R.divisionid IN ($divisionstodisplaylist)
+        $sqlroomstodisplaylist
     ORDER BY
         R.display_order
 EOD;

@@ -27,9 +27,9 @@ $showPublicReports = $row["current"];
 
 if ($showPublicReports) {
     //build_location_arrays returns $locations, $locationscss;
-    $divlist = 'all';
-    //$divlist = '2';
-    if (!build_location_arrays($linki, $divlist)) {
+    $roomstodisplaylist = 'all';
+    //$roomstodisplaylist = '2';
+    if (!build_location_arrays_new($linki, $roomstodisplaylist)) {
         $message_error = "Failed to retrieve location information. " . $message_error;
         RenderError($message_error);
         exit();
