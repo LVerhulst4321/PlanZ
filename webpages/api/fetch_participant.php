@@ -59,8 +59,8 @@ EOD;
     mysqli_stmt_bind_param($stmt, "s", $badgeId);
     $result = null;
     if (mysqli_stmt_execute($stmt)) {
-        $result = mysqli_stmt_get_result($stmt);
-        while ($row = mysqli_fetch_object($result)) {
+        $rs = mysqli_stmt_get_result($stmt);
+        while ($row = mysqli_fetch_object($rs)) {
             $name = PersonName::from($row);
             $result = array( 
                 "badgeId" => $row->badgeid,
