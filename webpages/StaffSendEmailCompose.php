@@ -61,7 +61,8 @@ if (!$result) {
     exit(-1); // Though should have exited already anyway
 }
 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-$emailfrom = [ $row['emailfromaddress'] => $row['emailfromdescription'] ];
+$emailfrom = $row['emailfromaddress'];
+$emailfromfull = [ $row['emailfromaddress'] => $row['emailfromdescription'] ];
 mysqli_free_result($result);
 
 $emailcc = "";
@@ -111,7 +112,7 @@ for ($i=0; $i<$recipient_count; $i++) {
         $emailverify['body'] = str_replace($scheduleTag, $scheduleInfo, $emailverify['body']);
     }
     //Define from address
-    $message->setFrom($emailfrom);
+    $message->setFrom($emailfromfull);
     //Define body
     $message->setBody($emailverify['body'],'text/plain');
     //$message =& new Swift_Message($email['subject'],$emailverify['body']);
