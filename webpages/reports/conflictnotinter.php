@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - People on Panels they are not Interested in';
+$report['multi'] = 'true';
+$report['output_filename'] = 'conflict_not_inter.csv';
 $report['description'] = 'Participants appear on this report only if they have deleted their interest after being assigned to the panel.  Note, this report includes only "Panels".';
 $report['categories'] = array(
     'Conflict Reports' => 100,
@@ -49,20 +51,22 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr style="height:2.6rem">
-                            <th class="report">Track</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">Pubsname</th>
+                            <th>Track</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Pubsname</th>
                             <th></th>
-                            <th class="report">Name</th>
+                            <th>Name</th>
                             <th></th>
-                            <th class="report">Person ID</th>
+                            <th>Person ID</th>
                         </tr>
                     </thead>
-                    <xsl:apply-templates select="/doc/query[@queryName='participants']/row"/>
+                    <tbody>
+                        <xsl:apply-templates select="/doc/query[@queryName='participants']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -73,19 +77,19 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="/doc/query[@queryName='participants']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@trackname"/></td>
-            <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select="@sessionid"/></xsl:call-template></td>
-            <td class="report">
+            <td><xsl:value-of select="@trackname"/></td>
+            <td><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select="@sessionid"/></xsl:call-template></td>
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@pubsname"/></td>
-            <td class="report"><xsl:value-of select="@pubsnameSort"/></td>
-            <td class="report"><xsl:value-of select="@name"/></td>
-            <td class="report"><xsl:value-of select="@nameSort"/></td>
-            <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
+            <td><xsl:value-of select="@pubsname"/></td>
+            <td><xsl:value-of select="@pubsnameSort"/></td>
+            <td><xsl:value-of select="@name"/></td>
+            <td><xsl:value-of select="@nameSort"/></td>
+            <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

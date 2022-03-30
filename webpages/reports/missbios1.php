@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Missing Bios Report 1';
+$report['multi'] = 'true';
+$report['output_filename'] = 'missing_bios.csv';
 $report['description'] = 'Participants with missing or short bios with their Participant Types.';
 $report['categories'] = array(
     'Publication Reports' => 2000,
@@ -51,17 +53,19 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr style="height:4em;">
-                            <th class="report">Person ID</th>
-                            <th class="report">Pubs Name</th>
-                            <th class="report">Pubs Name Sort</th>
-                            <th class="report">Participant Type</th>
-                            <th class="report">Bio</th>
+                            <th>Person ID</th>
+                            <th>Pubs Name</th>
+                            <th>Pubs Name Sort</th>
+                            <th>Participant Type</th>
+                            <th>Bio</th>
                         </tr>
                     </thead>
-                    <xsl:apply-templates select="/doc/query[@queryName='participants']/row" />
+                    <tbody>
+                        <xsl:apply-templates select="/doc/query[@queryName='participants']/row" />
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -73,11 +77,11 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/doc/query[@queryName='participants']/row">
         <xsl:variable name="badgeid" select="@badgeid" />
         <tr>
-            <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
-            <td class="report"><xsl:value-of select="@pubsname"/></td>
-            <td class="report"><xsl:value-of select="@pubsnamesort"/></td>
-            <td class="report"><xsl:value-of select="@permrolename"/></td>
-            <td class="report"><xsl:value-of select="@bio"/></td>
+            <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
+            <td><xsl:value-of select="@pubsname"/></td>
+            <td><xsl:value-of select="@pubsnamesort"/></td>
+            <td><xsl:value-of select="@permrolename"/></td>
+            <td><xsl:value-of select="@bio"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>
