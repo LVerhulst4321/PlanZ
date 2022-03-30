@@ -5,11 +5,25 @@
 ## Created by Leane Verhulst
 ##
 
-
-ALTER TABLE `Rooms` DROP FOREIGN KEY `Rooms_ibfk_2`;        ## Foreign key for divisionid
-ALTER TABLE `Rooms` DROP INDEX  `Rooms_ibfk_2`;             ## Index for divisionid
-ALTER TABLE `Rooms` DROP COLUMN `divisionid`;               ## When this column was added, no patchlog file was created.
-
+DROP PROCEDURE IF EXISTS `?`;
+DELIMITER //
+CREATE PROCEDURE `?`()
+BEGIN
+    IF EXISTS(
+            SELECT * 
+            FROM information_schema.COLUMNS 
+            WHERE 
+                TABLE_SCHEMA = DATABASE() 
+            AND TABLE_NAME = 'Rooms' 
+            AND COLUMN_NAME = 'divisionid') THEN
+        ALTER TABLE `Rooms` DROP FOREIGN KEY `Rooms_ibfk_2`;        ## Foreign key for divisionid
+        ALTER TABLE `Rooms` DROP INDEX  `Rooms_ibfk_2`;             ## Index for divisionid
+        ALTER TABLE `Rooms` DROP COLUMN `divisionid`;               ## When this column was added, no patchlog file was created.
+    END IF;
+END //
+DELIMITER ;
+CALL `?`();
+DROP PROCEDURE `?`;
 
 CREATE TABLE `room_report_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
