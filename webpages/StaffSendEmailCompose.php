@@ -6,6 +6,7 @@
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
+require_once('name.php');
 global $title, $message, $link;
 if (!(isLoggedIn() && may_I("SendEmail"))) {
     exit(0);
@@ -54,22 +55,27 @@ while ($recipientinfo[$i]=mysqli_fetch_array($result,MYSQLI_ASSOC)) {
 }
 mysqli_free_result($result);
 $recipient_count = $i;
-$query = "SELECT emailfromaddress FROM EmailFrom where emailfromid = {$email['sendfrom']};";
+$query = "SELECT emailfromaddress, emailfromdescription FROM EmailFrom where emailfromid = {$email['sendfrom']};";
 $result = mysqli_query_exit_on_error($query);
 if (!$result) {
     exit(-1); // Though should have exited already anyway
 }
 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 $emailfrom = $row['emailfromaddress'];
+$emailfromfull = [ $row['emailfromaddress'] => $row['emailfromdescription'] ];
 mysqli_free_result($result);
-$query="SELECT emailaddress FROM EmailCC where emailccid = {$email['sendcc']};";
-$result = mysqli_query_exit_on_error($query);
-if (!$result) {
-    exit(-1); // Though should have exited already anyway
+
+$emailcc = "";
+if ($email['sendcc']) {
+    $query="SELECT emailaddress FROM EmailCC where emailccid = {$email['sendcc']};";
+    $result = mysqli_query_exit_on_error($query);
+    if (!$result) {
+        exit(-1); // Though should have exited already anyway
+    }
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $emailcc = $row['emailaddress'];
+    mysqli_free_result($result);
 }
-$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-$emailcc = $row['emailaddress'];
-mysqli_free_result($result);
 $status = checkForShowSchedule($email['body']); // "0" don't show schedule; "1" show events schedule; "2" show full schedule; "3" error condition
 if ($status === "1" || $status === "2") {
     $scheduleInfoArray = generateSchedules($status, $recipientinfo);
@@ -79,8 +85,17 @@ for ($i=0; $i<$recipient_count; $i++) {
     //Create the message and set subject
     $message = (new Swift_Message($email['subject']));
 
-    $repl_list = array($recipientinfo[$i]['badgeid'], $recipientinfo[$i]['firstname'], $recipientinfo[$i]['lastname']);
-    $repl_list = array_merge($repl_list, array($recipientinfo[$i]['email'], $recipientinfo[$i]['pubsname'], $recipientinfo[$i]['badgename']));
+    $name = new PersonName();
+    $name->firstName = $recipientinfo[$i]['firstname'];
+    $name->lastName = $recipientinfo[$i]['lastname'];
+    $name->badgeName = $recipientinfo[$i]['badgename'];
+    $name->pubsName = $recipientinfo[$i]['pubsname'];
+    $repl_list = array($recipientinfo[$i]['badgeid'], 
+        $name->firstName, 
+        $name->lastName,
+        $recipientinfo[$i]['email'],
+        $name->getPubsName(),
+        $name->getBadgeName());
     $emailverify['body'] = str_replace($subst_list, $repl_list, $email['body']);
     if ($status === "1" || $status === "2") {
         if ($status === "1") {
@@ -97,18 +112,18 @@ for ($i=0; $i<$recipient_count; $i++) {
         $emailverify['body'] = str_replace($scheduleTag, $scheduleInfo, $emailverify['body']);
     }
     //Define from address
-    $message->setFrom($emailfrom);
+    $message->setFrom($emailfromfull);
     //Define body
     $message->setBody($emailverify['body'],'text/plain');
     //$message =& new Swift_Message($email['subject'],$emailverify['body']);
     echo ($recipientinfo[$i]['pubsname']." - ".$recipientinfo[$i]['email'].": ");
     try {
-        $message->addTo($recipientinfo[$i]['email']);
+        $message->setTo([$recipientinfo[$i]['email'] => $name->getBadgeName()]);
     } catch (Swift_SwiftException $e) {
         echo $e->getMessage()."<br>\n";
 	    $ok=FALSE;
     }
-    if ($emailcc != "") {
+    if ($emailcc != "" && $emailcc != null) {
         $message->addBcc($emailcc);
     }
     if (SMTP_QUEUEONLY === TRUE) {

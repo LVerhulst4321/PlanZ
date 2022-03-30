@@ -55,36 +55,53 @@ function render_send_email($email, $message_warning) {
     $title = "Send Email to Participants";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, true);
 
+    echo "<div class=\"container\">\n";
     if (isset($message_warning) && strlen($message_warning) > 0) {
-        echo "<p class=\"alert\">$message_warning</p>\n";
+        echo "<div class=\"alert alert-warning\">$message_warning</div>\n";
     }
-    echo "<h3>Step 1 -- Compose Email</h3>\n";
     echo "<form name=\"emailform\" method=POST action=\"StaffSendEmailCompose_POST.php\">\n";
-    echo "<table>";
-    echo "    <tr><td><label for=\"sendto\">To: </label></td>\n";
-    echo "    <td><select name=\"sendto\">\n";
+    echo "<div class=\"card\"><div class=\"card-header\">\n";
+    echo "<h3>Step 1 &mdash; Compose Email</h3>\n";
+    echo "</div><div class=\"card-body\">";
+    echo "<div class=\"form-group row\">";
+    echo "  <div class=\"col-md-1\">";
+    echo "    <label for=\"sendto\">To: </label>\n";
+    echo "  </div>";
+    echo "  <div class=\"col-md-6\">";
+    echo "    <select class=\"form-control\" name=\"sendto\">\n";
     populate_select_from_table("EmailTo", $email['sendto'], "", false);
-    echo "    </select></td></tr>";
-    echo "<tr><td><label for=\"sendfrom\">From: </label></td>\n";
-    echo "    <td><select name=\"sendfrom\">\n";
+    echo "    </select>";
+    echo "</div></div>";
+    echo "<div class=\"form-group row\">";
+    echo "  <div class=\"col-md-1\">";
+    echo "    <label for=\"sendfrom\">From: </label>\n";
+    echo "  </div>";
+    echo "  <div class=\"col-md-6\">";
+    echo "    <select class=\"form-control\" name=\"sendfrom\">\n";
     populate_select_from_table("EmailFrom", $email['sendfrom'], "", false);
-    echo "    </select></td></tr>";
-    echo "<tr><td><label for=\"sendcc\">CC: </label></td>\n";
-    echo "    <td><select name=\"sendcc\">\n";
+    echo "    </select>";
+    echo "</div></div>";
+    echo "<div class=\"form-group row\">";
+    echo "  <div class=\"col-md-1\">";
+    echo "    <label for=\"sendcc\">CC: </label>\n";
+    echo "  </div>";
+    echo "  <div class=\"col-md-6\">";
+    echo "    <select class=\"form-control\" name=\"sendcc\">\n";
     populate_select_from_table("EmailCC", $email['sendcc'], "", false);
-    echo "    </select></td></tr>";
-    echo "<tr><td><label for=\"subject\">Subject: </label></td>\n";
-    echo "    <td><input name=\"subject\" type=\"text\" size=\"40\" value=\"";
+    echo "    </select>";
+    echo "</div></div>";
+    echo "<div class=\"form-group\">";
+    echo "    <label for=\"subject\" class=\"sr-only\">Subject: </label>\n";
+    echo "    <input class=\"form-control\" name=\"subject\" type=\"text\" size=\"40\" placeholder=\"Subject...\" value=\"";
     echo htmlspecialchars($email['subject'], ENT_NOQUOTES) . "\">\n";
-    echo "    </td></tr>";
-    echo "</table><br>\n";
-    echo "<textarea name=\"body\" cols=\"80\" rows=\"25\" style=\"width: 1000px;\">";
-    echo htmlspecialchars($email['body'], ENT_NOQUOTES) . "</textarea><br>\n";
-    echo "<button class=\"ib\" type=\"reset\" value=\"reset\">Reset</button>\n";
-    echo "<button class=\"ib\" type=\"submit\" value=\"seeit\">See it</button>\n";
-    echo "</form><br>\n";
+    echo "</div>";
+    echo "<div class=\"form-group\">";
+    echo "    <label for=\"subject\" class=\"sr-only\">Body: </label>\n";
+    echo "<textarea name=\"body\" class=\"form-control\" rows=\"25\" \">";
+    echo htmlspecialchars($email['body'], ENT_NOQUOTES) . "</textarea></div>\n";
+    echo "<br>\n";
     echo "<p>Available substitutions:</p>\n";
     echo "<table class=\"multcol-list\">\n";
     echo "<tr><td>\$BADGEID\$</td><td>\$EMAILADDR\$</td></tr>\n";
@@ -92,6 +109,10 @@ function render_send_email($email, $message_warning) {
     echo "<tr><td>\$LASTNAME\$</td><td>\$BADGENAME\$</td></tr>\n";
     echo "<tr><td>\$EVENTS_SCHEDULE\$</td><td>\$FULL_SCHEDULE\$</td></tr>\n";
     echo "</table>\n";
+    echo "</div><div class=\"card-footer\"><div class=\"text-right\">";
+    echo "<button class=\"btn btn-primary\" type=\"submit\" value=\"seeit\">Review</button>\n";
+    echo "</div></div></div>\n";
+    echo "</form></div>";
     staff_footer();
 }
 
@@ -138,27 +159,39 @@ function render_verify_email($email, $email_verify, $message_warning) {
     $title = "Send Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, true);
 
+    echo "<div class=\"container\">";
     if (strlen($message_warning) > 0) {
-        echo "<p class=\"alert\">$message_warning</p>\n";
+        echo "<p class=\"alert alert-warning\">$message_warning</p>\n";
     }
-    echo "<h3>Step 2 -- Verify </h3>\n";
     echo "<form name=\"emailverifyform\" method=POST action=\"StaffSendEmailCompose.php\">\n";
-    echo "<p>Recipient List:<br>\n";
-    echo "<textarea readonly rows=\"8\" cols=\"70\" style=\"width:400px;\">";
-    echo $email_verify['recipient_list'] . "</textarea></P>\n";
-    echo "<p>Rendering of message body to first recipient:<br>\n";
-    echo "<textarea readonly rows=\"25\" cols=\"80\" style=\"width:1000px;font-family: monospace, Monospaced;\">";
-    echo $email_verify['body'] . "</textarea></p>\n";
+    echo "<div class=\"card\"><div class=\"card-header\">\n";
+    echo "<h3>Step 2 &mdash; Verify </h3>\n";
+    echo "</div>";
+    echo "<div class=\"card-body\">";
+    echo "<div class=\"form-group\">";
+    echo "<label>Recipient List:</label>\n";
+    echo "<textarea class=\"form-control\" readonly rows=\"8\">";
+    echo $email_verify['recipient_list'] . "</textarea></div>\n";
+    echo "<div class=\"form-group\">";
+    echo "<label for=\"message-body\">Rendering of message body to first recipient:</label>\n";
+    echo "<textarea readonly id=\"message-body\" class=\"form-control\" rows=\"25\" style=\"font-family: monospace, Monospaced;\">";
+    echo $email_verify['body'] . "</textarea>";
+    echo "</div>\n";
     echo "<input type=\"hidden\" name=\"sendto\" value=\"" . $email['sendto'] . "\">\n";
     echo "<input type=\"hidden\" name=\"sendfrom\" value=\"" . $email['sendfrom'] . "\">\n";
     echo "<input type=\"hidden\" name=\"sendcc\" value=\"" . $email['sendcc'] . "\">\n";
     echo "<input type=\"hidden\" name=\"subject\" value=\"" . htmlspecialchars($email['subject']) . "\">\n";
     echo "<input type=\"hidden\" name=\"body\" value=\"" . htmlspecialchars($email['body']) . "\">\n";
-    echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"goback\">Go Back</button>\n";
-    echo "<button class=\"ib\" type=\"submit\" name=\"navigate\" value=\"send\">Send</button>\n";
-    echo "</form><br>\n";
+    echo "</div>";
+    echo "<div class=\"card-footer\">";
+    echo "  <div class=\"text-right\">";
+    echo "    <button class=\"btn btn-outline-primary\" type=\"submit\" name=\"navigate\" value=\"goback\">Go Back</button>\n";
+    echo "    <button class=\"btn btn-primary\" type=\"submit\" name=\"navigate\" value=\"send\">Send</button>\n";
+    echo "  </div>"; 
+    echo "</div>";
+    echo "</div></form></div>\n";
     staff_footer();
 }
 
