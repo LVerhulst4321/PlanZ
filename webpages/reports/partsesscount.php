@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Program Participants Session Counts';
+$report['multi'] = 'true';
+$report['output_filename'] = 'participant_sess_count.csv';
 $report['description'] = 'This is a report of program participants only sorted by number of sessions they are on that are actually running, with some registration information. It is useful for cons that comp program participants based on a minimum number of panels. In this case, this report helps make sure people get their comps. Also, participants who have not earned a comp may need some kind of consideration.';
 $report['categories'] = array(
     'Registration Reports' => 385,
@@ -54,17 +56,19 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr style="height:3.2em;">
-                            <th class="report">Person ID</th>
-                            <th class="report">Pubsname</th>
-                            <th class="report">Pubsnamesort</th>
-                            <th class="report">Reg Type</th>
-                            <th class="report">Number of Sessions Assigned</th>
+                            <th>Person ID</th>
+                            <th>Pubsname</th>
+                            <th>Pubsnamesort</th>
+                            <th>Reg Type</th>
+                            <th>Number of Sessions Assigned</th>
                         </tr>
                     </thead>
-                    <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -75,11 +79,11 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='participants']/row">
         <tr>
-            <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
-            <td class="report"><xsl:value-of select="@pubsname"/></td>
-            <td class="report"><xsl:value-of select="@pubsnamesort"/></td>
-            <td class="report"><xsl:value-of select="@regtype"/></td>
-            <td class="report"><xsl:value-of select="@assigned"/></td>
+            <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
+            <td><xsl:value-of select="@pubsname"/></td>
+            <td><xsl:value-of select="@pubsnamesort"/></td>
+            <td><xsl:value-of select="@regtype"/></td>
+            <td><xsl:value-of select="@assigned"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>
