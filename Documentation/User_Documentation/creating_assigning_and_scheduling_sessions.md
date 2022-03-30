@@ -1,6 +1,6 @@
 # Creating, Assigning and Scheduling Sessions
 
-If you're like most cons, eventually you're going to want to schedule things: programming panels, readings, special 
+If your con is like most cons, eventually you're going to want to schedule things: programming panels, readings, special 
 events, costuming competitions, and whatnot. And you may be asking yourself, how do I do this? Hopefully this guide 
 can get you started.
 
@@ -30,7 +30,7 @@ Depending on how your con runs, there are two ways that sessions get created:
    not useful to have folks suggesting new session ideas the day before the con.
    - Sometimes, cons have a brainstorming process, but they manage it outside of PlanZ. Maybe your ConCom 
      really loves Google forms or something. That's totally fine, but in that case you'll want to get those
-     suggestions into PlanZ for subsequent parts of the scheduling process. To do taht, you'll want to enter 
+     suggestions into PlanZ for subsequent parts of the scheduling process. To do that, you'll want to enter 
      those suggestions manually, as we discuss in point 2, below.
 2. The other approach is that Programming comes up with a list of sessions and manually enters them in to
    PlanZ using the "Create New Session" feature:  
@@ -73,7 +73,7 @@ How do you know who should be assigned to a session? There are probably three ap
 1. Maybe you know a lot of people who are coming to the con, and already have a good idea who would be 
    a good participant on a session. You can manually add them.
 2. Maybe you've asked your members to sign up using a Google form or some such mechanism. As in (1), 
-   above, you can manually add the.
+   above, you can manually add them.
 3. PlanZ includes two tools to allow people to express interest:
    - The Session Feedback/Interest Survey allows users to see the list of all relevent sessions, and asks people
      to indicate if they want to be on a particular session.
