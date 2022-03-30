@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Edit History Report - All';
+$report['multi'] = 'true';
+$report['output_filename'] = 'session_edit_history.csv';
 $report['description'] = 'For each session, show the entire edit history.';
 $report['categories'] = array(
     'Events Reports' => 85,
@@ -37,19 +39,23 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='edits']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Track</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                        <th class="report">Status (at that time)</th>
-                        <th class="report">Edit Timestamp</th>
-                        <th class="report">Person ID</th>
-                        <th class="report">Who</th>
-                        <th class="report">Edit Type</th>
-                        <th class="report">Notes</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='edits']/row"/>
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Track</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Status (at that time)</th>
+                            <th>Edit Timestamp</th>
+                            <th>Person ID</th>
+                            <th>Who</th>
+                            <th>Edit Type</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='edits']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -59,30 +65,30 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
     <xsl:template match="doc/query[@queryName='edits']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@trackname" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@trackname" /></td>
+            <td>
                 <xsl:call-template name="showSessionid">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@statusname" /></td>
-            <td class="report"><xsl:value-of select="@timestamp" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@statusname" /></td>
+            <td><xsl:value-of select="@timestamp" /></td>
+            <td>
                 <xsl:call-template name="showBadgeid">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:value-of select="@name" /> (<xsl:value-of select="@email_address" />)
             </td>
-            <td class="report"><xsl:value-of select="@description" /></td>
-            <td class="report"><xsl:value-of select="@editdescription" /></td>
+            <td><xsl:value-of select="@description" /></td>
+            <td><xsl:value-of select="@editdescription" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

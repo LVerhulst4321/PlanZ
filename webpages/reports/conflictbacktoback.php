@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Back-to-back Sessions';
+$report['multi'] = 'true';
+$report['output_filename'] = 'conflict_back_to_back.csv';
 $report['description'] = 'Show all cases where a participant is scheduled for two sessions with 15 minutes or fewer between sessions. (Also includes actual overlaps)';
 $report['categories'] = array(
     'Conflict Reports' => 20,
@@ -62,20 +64,24 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Pubs Name</th>
-                        <th class="report">Session ID 1</th>
-                        <th class="report">Title 1</th>
-                        <th class="report">Room 1</th>
-                        <th class="report">Start Time 1</th>
-                        <th class="report">End Time 1</th>
-                        <th class="report">Session ID 2</th>
-                        <th class="report">Title 2</th>
-                        <th class="report">Room 2</th>
-                        <th class="report">Start Time 2</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Pubs Name</th>
+                            <th>Session ID 1</th>
+                            <th>Title 1</th>
+                            <th>Room 1</th>
+                            <th>Start Time 1</th>
+                            <th>End Time 1</th>
+                            <th>Session ID 2</th>
+                            <th>Title 2</th>
+                            <th>Room 2</th>
+                            <th>Start Time 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -86,21 +92,21 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='sessions']/row">
         <tr>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showPubsname">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@sessionid1" /></td>
-            <td class="report"><xsl:value-of select="@title1" /></td>
-            <td class="report"><xsl:value-of select="@roomname1" /></td>
-            <td class="report"><xsl:value-of select="@starttime1" /></td>
-            <td class="report"><xsl:value-of select="@endtime1" /></td>
-            <td class="report"><xsl:value-of select="@sessionid2" /></td>
-            <td class="report"><xsl:value-of select="@title2" /></td>
-            <td class="report"><xsl:value-of select="@roomname2" /></td>
-            <td class="report"><xsl:value-of select="@starttime2" /></td>
+            <td><xsl:value-of select="@sessionid1" /></td>
+            <td><xsl:value-of select="@title1" /></td>
+            <td><xsl:value-of select="@roomname1" /></td>
+            <td><xsl:value-of select="@starttime1" /></td>
+            <td><xsl:value-of select="@endtime1" /></td>
+            <td><xsl:value-of select="@sessionid2" /></td>
+            <td><xsl:value-of select="@title2" /></td>
+            <td><xsl:value-of select="@roomname2" /></td>
+            <td><xsl:value-of select="@starttime2" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Security Report';
+$report['multi'] = 'true';
+$report['output_filename'] = 'security_req_or_age_restr.csv';
 $report['description'] = 'List all sessions where age is restricted and/or security is explicitly requested';
 $report['categories'] = array(
     'Security Reports' => 20,
@@ -56,22 +58,24 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
-                        <tr style="height:2.6rem">
-                            <th class="report">Start Time</th>
+                        <tr>
+                            <th>Start Time</th>
                             <th></th>
-                            <th class="report">Duration</th>
+                            <th>Duration</th>
                             <th></th>
-                            <th class="report">Room</th>
-                            <th class="report">Track</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">Kids Not Allowed</th>
-                            <th class="report">Security Requested</th>
+                            <th>Room</th>
+                            <th>Track</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Kids Not Allowed</th>
+                            <th>Security Requested</th>
                         </tr>
                     </thead>
-                    <xsl:apply-templates select="doc/query[@queryName='sessions']/row" />
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='sessions']/row" />
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -81,42 +85,42 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
     
     <xsl:template match="doc/query[@queryName='sessions']/row">
-        <tr class="report">
-            <td class="report" >
+        <tr>
+            <td >
                 <xsl:value-of select="@starttime" />
             </td>
             <td><xsl:value-of select="@starttimeraw" /></td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
             <td><xsl:value-of select="@duration" /></td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showRoomName">
                     <xsl:with-param name="roomid" select = "@roomid" />
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:value-of select="@trackname" />
             </td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showSessionid">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:if test="@kidscatid='4'">Yes</xsl:if>
             </td>
-            <td class="report">
+            <td>
                 <xsl:if test="@serviceid">Yes</xsl:if>
             </td>
         </tr>
