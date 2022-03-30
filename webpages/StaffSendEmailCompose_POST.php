@@ -3,6 +3,7 @@
 // Not sure if there is any need to support post/been here before
 require_once('StaffCommonCode.php'); //reset connection to db and check if logged in
 require_once('email_functions.php');
+require_once('name.php');
 global $message, $link, $title;
 $subst_list = array('$BADGEID$', '$FIRSTNAME$', "\$LASTNAME\$", "\$EMAILADDR\$", "\$PUBNAME\$", "\$BADGENAME\$");
 $title = "Send Email (Step 2 - verify)";
@@ -48,6 +49,7 @@ if (!$result) {
 }
 $emailverify['emailfrom'] = (mysqli_fetch_array($result, MYSQLI_ASSOC))["emailfromaddress"];
 mysqli_free_result($result);
+$name = new PersonName();
 $repl_list = array($recipientinfo[0]['badgeid'], $recipientinfo[0]['firstname'], $recipientinfo[0]['lastname']);
 $repl_list = array_merge($repl_list, array($recipientinfo[0]['email'], $recipientinfo[0]['pubsname'], $recipientinfo[0]['badgename']));
 $status = checkForShowSchedule($email['body']); // "0" don't show schedule; "1" show events schedule; "2" show full schedule; "3" error condition
