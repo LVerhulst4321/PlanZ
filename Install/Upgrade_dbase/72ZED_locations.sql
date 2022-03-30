@@ -7,6 +7,7 @@
 CREATE TABLE `Locations` (
   `locationid` int(11) NOT NULL AUTO_INCREMENT,
   `locationname` varchar(30) NOT NULL,
+  `roomname` varchar(30) DEFAULT NULL,
   `locationhours` text DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`locationid`)
