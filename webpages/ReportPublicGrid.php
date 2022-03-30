@@ -27,9 +27,10 @@ $showPublicReports = $row["current"];
 
 if ($showPublicReports) {
     //build_location_arrays returns $locations, $locationscss;
+    //need to add logic to allow user to pick a room report group
     $roomstodisplaylist = 'all';
     //$roomstodisplaylist = '2';
-    if (!build_location_arrays_new($linki, $roomstodisplaylist)) {
+    if (!build_location_arrays($linki, $roomstodisplaylist)) {
         $message_error = "Failed to retrieve location information. " . $message_error;
         RenderError($message_error);
         exit();
@@ -80,6 +81,7 @@ if ($showPublicReports) {
 
 
 <?php
+//Check if Phase is turned on to allow the report to be displayed
 if ($showPublicReports) {
 ?>
 
@@ -95,12 +97,7 @@ if ($showPublicReports) {
     <br />
 
 
-    <?php
-    //Notes for Cap 40 in 2020.
-    //Look for [0] and [1] in the content below and fix them by moving them to the appropriate dummy room and then deleting the appropriate extra cells in the rows after the item so that the rowspan variable works.
-    //Also make sure that the main room item exists when there is an event in the dummy room - current code doesn't handle it well.
-    //Stretch the Blinkie Open Time event to be in the adjoining dummy rooms to make the grid look nicer.
-    ?>
+<!-- Need to add code to look at the number of convention days for this section. -->
 
     <div class="row">
     <div class="col">
@@ -129,6 +126,7 @@ if ($showPublicReports) {
     <br />
     <br />
     <br />
+
 <?php
 } else {
 ?>

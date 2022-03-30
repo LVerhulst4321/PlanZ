@@ -861,76 +861,11 @@ EOD;
  *
  * @access public
  * @params array    $link : to database
- * @params array    $divlist : list of divisionids
- * @return array    $locations : list of locations display order and id
- * @return array    $locationscss : list of location roomnames and colorcodes
- */
-function build_location_arrays($link, $divlist = 'all') {
-    global $locations, $locationscss;
-
-    if ($divlist == 'all') {
-        $divisionstodisplaylist = '1,2,7,9';
-    } else {
-        $divisionstodisplaylist = $divlist;
-    }
-
-    //This query only grabs rooms that have public programming in them.
-    $query = <<<EOD
-SELECT
-        R.roomid,
-        R.display_order,
-        R.roomname,
-        RC.roomcolorcode
-    FROM
-             Rooms R
-        JOIN RoomColors RC USING (roomcolorid)
-    WHERE
-        ( R.roomid IN
-            (SELECT
-                    DISTINCT SCH.roomid
-                FROM
-                         Schedule SCH
-                    JOIN Sessions S USING (sessionid)
-                WHERE
-                    S.pubstatusid != 3 # not Do Not Print
-            )
-        OR R.roomname LIKE '%dummy%' )
-        AND R.on_public_grid = 1
-        AND R.divisionid IN ($divisionstodisplaylist)
-    ORDER BY
-        R.display_order
-EOD;
-    $result=mysqli_query($link, $query);
-
-    if (!$result) {
-        $message2 = mysqli_error($link);
-        $message = $query . "<BR>" . message2 . "<BR>Error querying database. Unable to continue.<BR>";
-        RenderError($message);
-        return false;
-    }
-
-    //Make an array of the rooms/locations that will be in the grid.
-    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-        $locations[$row['display_order']] = $row['roomid'];
-        $locationscss[$row['roomname']] = $row['roomcolorcode'];
-    }
-    mysqli_free_result($result);
-
-    return true;
-}
-
-
-// --------------------------------------------------------------------------------------------
-/**
- * Build two arrays of locations and location css
- *
- * @access public
- * @params array    $link : to database
  * @params array    $roomstodisplaylist : list of roomids to display
  * @return array    $locations : list of locations display order and id
  * @return array    $locationscss : list of location roomnames and colorcodes
  */
-function build_location_arrays_new($link, $roomstodisplaylist = 'all') {
+function build_location_arrays($link, $roomstodisplaylist = 'all') {
     global $locations, $locationscss;
 
     if ($roomstodisplaylist == 'all') {
