@@ -50,8 +50,16 @@ if (!$result) {
 $emailverify['emailfrom'] = (mysqli_fetch_array($result, MYSQLI_ASSOC))["emailfromaddress"];
 mysqli_free_result($result);
 $name = new PersonName();
-$repl_list = array($recipientinfo[0]['badgeid'], $recipientinfo[0]['firstname'], $recipientinfo[0]['lastname']);
-$repl_list = array_merge($repl_list, array($recipientinfo[0]['email'], $recipientinfo[0]['pubsname'], $recipientinfo[0]['badgename']));
+$name->firstName = $recipientinfo[0]['firstname'];
+$name->lastName = $recipientinfo[0]['lastname'];
+$name->badgeName = $recipientinfo[0]['badgename'];
+$name->pubsName = $recipientinfo[0]['pubsname'];
+$repl_list = array($recipientinfo[0]['badgeid'], 
+    $name->firstName, 
+    $name->lastName,
+    $recipientinfo[0]['email'],
+    $name->getPubsName(),
+    $name->getBadgeName());
 $status = checkForShowSchedule($email['body']); // "0" don't show schedule; "1" show events schedule; "2" show full schedule; "3" error condition
 if ($status === "3") {
     render_send_email($email, $message); // $message came from checkForShowSchedule
