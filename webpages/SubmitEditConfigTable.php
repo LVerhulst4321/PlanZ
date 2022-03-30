@@ -200,6 +200,30 @@ function update_table($tablename)
     fetch_table($tablename, $message);
 }
 
+/*
+ *  Return the name of the first column ending with "name" on the table. 
+ */
+function lookupNameColumn($tableName)
+{
+    $db = DBDB;
+    $query = <<<EOD
+        SELECT
+            COLUMN_NAME
+        FROM
+            INFORMATION_SCHEMA.COLUMNS
+        WHERE
+            TABLE_SCHEMA = '$db'
+            AND TABLE_NAME = '$tableName'
+            AND COLUMN_NAME LIKE '%name';
+EOD;
+    $result = mysqli_query_exit_on_error($query);
+    if ($row = $result->fetch_object()) {
+      return $row->COLUMN_NAME;
+    }
+
+    return null;
+}
+
 function fetch_table($tablename, $message) {
     global $schema, $displayorder_found, $json_return, $prikey;
     $db = DBDB;
@@ -323,7 +347,7 @@ EOD;
         $reftable = substr($key, $colonpos + 1, $periodpos - ($colonpos + 1));
         $reffield = substr($key, $periodpos + 1);
 
-        $namefield = str_replace("id", "name", $reffield);
+        $namefield = lookupNameColumn($reftable);
         $data = array();
         $query = "SELECT $reffield AS id, $namefield AS name FROM $reftable ORDER BY display_order;";
         $result = mysqli_query_exit_on_error($query);
