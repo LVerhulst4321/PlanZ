@@ -224,6 +224,30 @@ EOD;
     return null;
 }
 
+/*
+ *  Return the name of the first column of type "varchar" on the table. 
+ */
+function lookupVarcharColumn($tableName)
+{
+    $db = DBDB;
+    $query = <<<EOD
+        SELECT
+            COLUMN_NAME
+        FROM
+            INFORMATION_SCHEMA.COLUMNS
+        WHERE
+            TABLE_SCHEMA = '$db'
+            AND TABLE_NAME = '$tableName'
+            AND DATA_TYPE = 'varchar';
+EOD;
+    $result = mysqli_query_exit_on_error($query);
+    if ($row = $result->fetch_object()) {
+      return $row->COLUMN_NAME;
+    }
+
+    return null;
+}
+
 function fetch_table($tablename, $message) {
     global $schema, $displayorder_found, $json_return, $prikey;
     $db = DBDB;
@@ -348,6 +372,7 @@ EOD;
         $reffield = substr($key, $periodpos + 1);
 
         $namefield = lookupNameColumn($reftable);
+        if (is_null($namefield)) $namefield = lookupVarcharColumn($reftable);
         $data = array();
         $query = "SELECT $reffield AS id, $namefield AS name FROM $reftable ORDER BY display_order;";
         $result = mysqli_query_exit_on_error($query);
