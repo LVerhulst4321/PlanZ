@@ -22,7 +22,6 @@ $(function() {
         },
 
         showBio: (data) => {
-            console.log("okay");
             if (data.participant && data.participant.name && data.participant.bio) {
                 let bio = data.participant.bio.text || "";
                 let name = data.participant.name.badgeName;
