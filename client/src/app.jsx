@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
+import CompositePage from './page/compositePage';
 
 class App extends Component {
     constructor(...args) {
@@ -11,7 +12,7 @@ class App extends Component {
     }
 
     render() {
-        return <div>This is {this.state.name}!</div>;
+        return (<CompositePage />);
     }
 }
 

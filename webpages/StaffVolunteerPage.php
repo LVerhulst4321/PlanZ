@@ -1,6 +1,6 @@
 <?php
     global $title;
-    $title = "Volunteer Shift Setup";
+    $title = "Schedule Volunteer Shifts";
     require_once('StaffCommonCode.php');
     staff_header($title, true);
 ?>
