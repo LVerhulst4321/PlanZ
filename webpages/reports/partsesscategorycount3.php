@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Categorized Session Count Report 3';
+$report['multi'] = 'true';
+$report['output_filename'] = 'category_sess_count_3.csv';
 $report['description'] = 'Show count of how many sessions each participant is scheduled for broken down by division (disregarding signings)';
 $report['categories'] = array(
     'Registration Reports' => 1170,
@@ -140,7 +142,7 @@ $report['xsl'] =<<<'EOD'
                         border-left: none !important;
                         }
                 </style>
-                <table class="report noleftborder">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <col style="width:4.75em;" />
                     <col style="width:12em;" />
                     <col style="width:10em;" />
@@ -154,22 +156,26 @@ $report['xsl'] =<<<'EOD'
                     <col style="width:4.5em;" />
                     <col style="width:4.5em;" />
                     <col style="width:14em;" />
-                    <tr>
-                        <th class="report" >Person ID</th>
-                        <th class="report" >Publication Name</th>
-                        <th class="report" >Last Name</th>
-                        <th class="report" >First Name</th>
-                        <th class="report" >Email</th>
-                        <th class="report" >Registration Type</th>
-                        <th class="report" >Prog. or Youth</th>
-                        <th class="report" >Events</th>
-                        <th class="report" >LARPs</th>
-                        <th class="report" >Board G's</th>
-                        <th class="report" >TT RPG's</th>
-                        <th class="report" >Other</th>
-                        <th class="report" >Participant Role(s)</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
+                    <thead>
+                        <tr>
+                            <th >Person ID</th>
+                            <th >Publication Name</th>
+                            <th >Last Name</th>
+                            <th >First Name</th>
+                            <th >Email</th>
+                            <th >Registration Type</th>
+                            <th >Prog. or Youth</th>
+                            <th >Events</th>
+                            <th >LARPs</th>
+                            <th >Board G's</th>
+                            <th >TT RPG's</th>
+                            <th >Other</th>
+                            <th >Participant Role(s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -180,24 +186,24 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='participants']/row">
         <xsl:variable name="badgeid" select="@badgeid" />
         <tr class="mainrow">
-            <td class="report"><xsl:value-of select="@badgeid" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@badgeid" /></td>
+            <td>
                 <xsl:call-template name="showPubsname">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@lastname" /></td>
-            <td class="report"><xsl:value-of select="@firstname" /></td>
-            <td class="report"><xsl:value-of select="@email" /></td>
-            <td class="report"><xsl:value-of select="@regtype" /></td>
-            <td class="report"><xsl:value-of select="@py" /></td>
-            <td class="report"><xsl:value-of select="@ev" /></td>
-            <td class="report"><xsl:value-of select="@gl" /></td>
-            <td class="report"><xsl:value-of select="@gt" /></td>
-            <td class="report"><xsl:value-of select="@grpg" /></td>
-            <td class="report"><xsl:value-of select="@other" /></td>
-            <td class="report"><xsl:apply-templates select="/doc/query[@queryName='permissionRoles']/row[@badgeid=$badgeid]"/></td>
+            <td><xsl:value-of select="@lastname" /></td>
+            <td><xsl:value-of select="@firstname" /></td>
+            <td><xsl:value-of select="@email" /></td>
+            <td><xsl:value-of select="@regtype" /></td>
+            <td><xsl:value-of select="@py" /></td>
+            <td><xsl:value-of select="@ev" /></td>
+            <td><xsl:value-of select="@gl" /></td>
+            <td><xsl:value-of select="@gt" /></td>
+            <td><xsl:value-of select="@grpg" /></td>
+            <td><xsl:value-of select="@other" /></td>
+            <td><xsl:apply-templates select="/doc/query[@queryName='permissionRoles']/row[@badgeid=$badgeid]"/></td>
         </tr>
         <xsl:if test="@total&gt;0 and @total&lt;3">
             <xsl:apply-templates select="/doc/query[@queryName='sessions']/row[@badgeid=$badgeid]"/>
@@ -209,7 +215,7 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/doc/query[@queryName='sessions']/row">
         <tr>
             <td colspan="2" class="noborder"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></td>
-            <td colspan="11" class="report">
+            <td colspan="11">
                 <span class="day"><xsl:value-of select="@starttime" /></span>
                 <span class="sessionid">
                     <xsl:call-template name="showSessionid">

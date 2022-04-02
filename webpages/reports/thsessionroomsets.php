@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session roomsets';
+$report['multi'] = 'true';
+$report['output_filename'] = 'session_roomsets.csv';
 $report['description'] = 'What roomsets are we using (Sorted by Room then Time)';
 $report['categories'] = array(
     'Events Reports' => 1040,
@@ -54,22 +56,24 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr>
-                            <th class="report">Room</th>
-                            <th class="report">StartTime</th>
+                            <th>Room</th>
+                            <th>StartTime</th>
                             <th></th>
-                            <th class="report">Duration</th>
+                            <th>Duration</th>
                             <th></th>
-                            <th class="report">Track</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">Room Set</th>
-                            <th class="report">Notes for Tech and Hotel</th>
+                            <th>Track</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Room Set</th>
+                            <th>Notes for Tech and Hotel</th>
                         </tr>
                     </thead>
-                    <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -80,35 +84,35 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='sessions']/row">
         <tr>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showRoomName">
                     <xsl:with-param name="roomid" select = "@roomid" />
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@starttime" /></td>
-            <td class="report"><xsl:value-of select="@startTimeSort" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@starttime" /></td>
+            <td><xsl:value-of select="@startTimeSort" /></td>
+            <td>
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@durationSort" /></td>
-            <td class="report"><xsl:value-of select="@trackname" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@durationSort" /></td>
+            <td><xsl:value-of select="@trackname" /></td>
+            <td>
                 <xsl:call-template name="showSessionid">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@roomsetname" /></td>
-            <td class="report"><xsl:value-of select="@servicenotes" /></td>
+            <td><xsl:value-of select="@roomsetname" /></td>
+            <td><xsl:value-of select="@servicenotes" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

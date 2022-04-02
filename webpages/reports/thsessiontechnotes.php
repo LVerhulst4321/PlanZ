@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Session Tech and Hotel notes';
+$report['multi'] = 'true';
+$report['output_filename'] = 'session_tech_notes.csv';
 $report['description'] = 'What notes are in on this panel for tech and hotel? (sorted by room then time)';
 $report['categories'] = array(
     'Events Reports' => 1070,
@@ -55,21 +57,23 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table id="reportTable" class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr>
-                            <th class="report">Room name</th>
-                            <th class="report">Start time</th>
+                            <th>Room name</th>
+                            <th>Start time</th>
                             <th></th>
-                            <th class="report">Duration</th>
+                            <th>Duration</th>
                             <th></th>
-                            <th class="report">Track name</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">Service Notes</th>
+                            <th>Track name</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Service Notes</th>
                         </tr>
                     </thead>
-                    <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='sessions']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -79,30 +83,30 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
     <xsl:template match="doc/query[@queryName='sessions']/row">
         <tr>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showRoomName">
                     <xsl:with-param name="roomid" select = "@roomid" />
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@startTime"/></td>
-            <td class="report"><xsl:value-of select="@startTimeSort"/></td>
-            <td class="report">
+            <td><xsl:value-of select="@startTime"/></td>
+            <td><xsl:value-of select="@startTimeSort"/></td>
+            <td>
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@durationSort"/></td>
-            <td class="report"><xsl:value-of select="@trackname"/></td>
-            <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
-            <td class="report">
+            <td><xsl:value-of select="@durationSort"/></td>
+            <td><xsl:value-of select="@trackname"/></td>
+            <td><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@servicenotes"/></td>
+            <td><xsl:value-of select="@servicenotes"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

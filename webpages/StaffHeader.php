@@ -3,7 +3,7 @@
 global $header_section;
 $header_section = HEADER_STAFF;
 
-function staff_header($title, $bootstrap4 = false, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false) {
+function staff_header($title, $bootstrap4 = false, $is_report = false, $reportColumns = false, $reportAdditionalOptions = false, $isToolbarPresent = false) {
     global $fullPage;
     $isLoggedIn = isLoggedIn();
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
@@ -49,6 +49,7 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
         $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
         $paramArray["AUTO_SCHEDULER"] = AUTO_SCHEDULER === TRUE ? 1 : 0;
         $paramArray["emailAvailable"] = SMTP_ADDRESS == '' ? 0 : 1;
+        $paramArray["isToolbarPresent"] = $isToolbarPresent ? 1 : 0;
         try {
             $reportMenuIncludeFilName = $bootstrap4 ? REPORT_INCLUDE_DIRECTORY . 'ReportMenuBS4Include.php' : REPORT_INCLUDE_DIRECTORY . 'ReportMenuInclude.php';
             $reportMenuIncludeFilHand = fopen ($reportMenuIncludeFilName,  'r');

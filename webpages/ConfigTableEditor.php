@@ -31,6 +31,8 @@ $editAnyTable =
     || may_I('ce_RoomHasSet')
     || may_I('ce_Rooms')
     || may_I('ce_RoomSets')
+    || may_I('ce_room_report_group')
+    || may_I('ce_room_report_group_has_room')
     || may_I('ce_Services')
     || may_I('ce_ServiceTypes')
     || may_I('ce_SessionStatuses')

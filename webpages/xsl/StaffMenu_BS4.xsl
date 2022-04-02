@@ -11,6 +11,7 @@
     <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
     <xsl:param name="AUTO_SCHEDULER" select="'0'"/>
     <xsl:param name="emailAvailable" select="'0'"/>
+    <xsl:param name="isToolbarPresent" select="'0'"/>
     <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
     <xsl:variable name="ConfigureReports"
         select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
@@ -27,7 +28,19 @@
         @permatomtag='ce_RoomHasSet' or @permatomtag='ce_Services' or @permatomtag='ce_ServiceTypes' or @permatomtag='ce_SessionStatuses' or
         @permatomtag='ce_Tags' or @permatomtag='ce_Times' or @permatomtag='ce_Tracks' or @permatomtag='ce_Types']"/>
     <xsl:template match="/">
-        <nav id="staffNav" class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+        <nav id="staffNav">
+            <xsl:choose>
+                <xsl:when test="$isToolbarPresent = 1">
+                    <xsl:attribute name="class">
+                        navbar navbar-expand-lg navbar-dark bg-dark
+                    </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:attribute name="class">
+                        navbar navbar-expand-lg navbar-dark bg-dark mb-3
+                    </xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
             <a class="navbar-brand py-1" href="#">
                 <xsl:value-of select="$title"/>
             </a>

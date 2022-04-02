@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Schedule';
+$report['multi'] = 'true';
+$report['output_filename'] = 'full_print_schedule.csv';
 $report['description'] = 'Show the full printable schedule. Excludes Do Not Print items.';
 $report['categories'] = array(
     'Programming Reports' => 60,
@@ -35,16 +37,20 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='schedule']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report">Start Time</th>
-                        <th class="report">Duration</th>
-                        <th class="report">Room Name</th>
-                        <th class="report">Track Name</th>
-                        <th class="report">Session ID</th>
-                        <th class="report">Title</th>
-                    </tr>
-                    <xsl:apply-templates select="/doc/query[@queryName='schedule']/row"/>
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Start Time</th>
+                            <th>Duration</th>
+                            <th>Room Name</th>
+                            <th>Track Name</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="/doc/query[@queryName='schedule']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -54,22 +60,22 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
     <xsl:template match="/doc/query[@queryName='schedule']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@starttime" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@starttime" /></td>
+            <td>
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showRoomName">
                     <xsl:with-param name="roomid" select = "@roomid" />
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@trackname" /></td>
-            <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
-            <td class="report">
+            <td><xsl:value-of select="@trackname" /></td>
+            <td><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />

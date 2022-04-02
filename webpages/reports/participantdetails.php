@@ -1,6 +1,8 @@
 <?php
 $report = [];
 $report['name'] = 'Participant Details';
+$report['multi'] = 'true';
+$report['output_filename'] = 'category_sess_count_2.csv';
 $report['description'] = 'Details about the panelists such as race and accessibility needs.';
 $report['categories'] = array(
     'Programming Reports' => 1,
@@ -34,19 +36,23 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
-                    <tr>
-                        <th class="report" style="white-space: nowrap;">Person ID</th>
-                        <th class="report" style="white-space: nowrap;">Name for Publications</th>
-                        <th class="report">Race/Ethnicity</th>
-                        <th class="report">Gender</th>
-                        <th class="report">Sexual Orientation</th>
-                        <th class="report">Day Job</th>
-                        <th class="report">Are Range</th>
-                        <th class="report">Accessibility Issues</th>
-                        <th class="report">Website</th>
-                    </tr>
-                    <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="white-space: nowrap;">Person ID</th>
+                            <th style="white-space: nowrap;">Name for Publications</th>
+                            <th>Race/Ethnicity</th>
+                            <th>Gender</th>
+                            <th>Sexual Orientation</th>
+                            <th>Day Job</th>
+                            <th>Age Range</th>
+                            <th>Accessibility Issues</th>
+                            <th>Website</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
+                    </tbody>
                 </table>
             </xsl:when>
             <xsl:otherwise>
@@ -58,19 +64,19 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='participants']/row">
         <xsl:variable name="bagdeid" select="@badgeid" />
         <tr>
-            <td class="report" style="white-space: nowrap;">
+            <td style="white-space: nowrap;">
                 <xsl:call-template name="showBadgeid">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                 </xsl:call-template>
             </td>
-            <td class="report" style="white-space: nowrap;"><xsl:value-of select="@pubsname"/></td>
-            <td class="report"><xsl:value-of select="@ethnicity"/></td>
-            <td class="report"><xsl:value-of select="@gender"/></td>
-            <td class="report"><xsl:value-of select="@sexualorientation"/></td>
-            <td class="report"><xsl:value-of select="@dayjob"/></td>
-            <td class="report"><xsl:value-of select="@agerangename"/></td>
-            <td class="report"><xsl:value-of select="@accessibilityissues"/></td>
-            <td class="report"><xsl:value-of select="@website"/></td>
+            <td style="white-space: nowrap;"><xsl:value-of select="@pubsname"/></td>
+            <td><xsl:value-of select="@ethnicity"/></td>
+            <td><xsl:value-of select="@gender"/></td>
+            <td><xsl:value-of select="@sexualorientation"/></td>
+            <td><xsl:value-of select="@dayjob"/></td>
+            <td><xsl:value-of select="@agerangename"/></td>
+            <td><xsl:value-of select="@accessibilityissues"/></td>
+            <td><xsl:value-of select="@website"/></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>
