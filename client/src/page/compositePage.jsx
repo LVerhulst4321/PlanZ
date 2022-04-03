@@ -1,5 +1,5 @@
 import React from 'react';
-import StaffVolunteerPage from './staffVolunteerPage';
+import StaffVolunteerPage from './volunteer/staffVolunteerPage';
 
 /**
  * Implementing this as a sort-of pauper's version of a Router. We're starting with an 
