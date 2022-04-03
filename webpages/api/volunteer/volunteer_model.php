@@ -7,7 +7,7 @@ class VolunteerJob {
     public $isOnline;
     public $description;
 
-    function __construct(int $id, string $name, $is_online, $description) {
+    function __construct($id, $name, $is_online, $description) {
         $this->id = $id;
         $this->name = $name;
         $this->isOnline = $is_online;
@@ -35,6 +35,28 @@ class VolunteerJob {
             }
             mysqli_stmt_close($stmt);
             return $records;
+        } else {
+            throw new DatabaseSqlException("Query could not be executed: $query");
+        }
+    }
+
+    public static function fromJson($json) {
+        $job = new VolunteerJob(null, $json["name"], $json["isOnline"], $json["description"]);
+        return $job;
+    }
+
+    public static function persist($db, $volunteerJob) {
+        $query = <<<EOD
+        INSERT INTO volunteer_job
+                (job_name, is_online, job_description)
+         VALUES (?, ?, ?);
+        EOD;
+        
+        $stmt = mysqli_prepare($db, $query);
+        $isOnline = $volunteerJob->isOnline ? 1 : 0;
+        mysqli_stmt_bind_param($stmt, "sis", $volunteerJob->name, $isOnline, $volunteerJob->description);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
         } else {
             throw new DatabaseSqlException("Query could not be executed: $query");
         }

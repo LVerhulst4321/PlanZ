@@ -24,7 +24,6 @@ const volunteering = (state = volunteerInitialState, action) => {
                 }
             }
         case SHOW_CREATE_JOB_MODAL: 
-        console.log("show the modal!");
             return {
                 ...state,
                 jobs: {

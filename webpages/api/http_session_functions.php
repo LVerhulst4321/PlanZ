@@ -19,5 +19,9 @@ function isProgrammingStaff() {
     return isLoggedIn() && may_I("Staff");
 }
 
+function isVolunteerSetUpAllowed() {
+    return isLoggedIn() && may_I("Volunteering Set-up");
+}
+
 
 ?>
