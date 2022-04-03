@@ -30,7 +30,7 @@ class VolunteerJob {
         if (mysqli_stmt_execute($stmt)) {
             $result = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_object($result)) {
-                $record = new VolunteerJob($row->id, $row->department_name, $row->is_online ? true : false, $row->job_description);
+                $record = new VolunteerJob($row->id, $row->job_name, $row->is_online ? true : false, $row->job_description);
                 $records[] = $record;
             }
             mysqli_stmt_close($stmt);

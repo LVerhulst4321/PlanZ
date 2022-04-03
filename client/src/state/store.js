@@ -1,8 +1,14 @@
 import { createStore, combineReducers } from 'redux'
 
+export const SET_VOLUNTEER_JOBS = 'SET_VOLUNTEER_JOBS';
+export const SHOW_CREATE_JOB_MODAL = 'SHOW_CREATE_JOB_MODAL';
+
 const volunteerInitialState = {
-    loading: true,
-    jobs: []
+    jobs: {
+        showModal: false,
+        loading: true,
+        list: []
+    }
 }
 
 const volunteering = (state = volunteerInitialState, action) => {
@@ -10,9 +16,21 @@ const volunteering = (state = volunteerInitialState, action) => {
         case SET_VOLUNTEER_JOBS: 
             return {
                 ...state,
-                loading: false,
                 message: action.payload.message,
-                jobs: action.payload.jobs || []
+                jobs: {
+                    ...state.jobs,
+                    list: action.payload.jobs || [],
+                    loading: false
+                }
+            }
+        case SHOW_CREATE_JOB_MODAL: 
+        console.log("show the modal!");
+            return {
+                ...state,
+                jobs: {
+                    ...state.jobs,
+                    showModal: action.payload.show
+                }
             }
         default:
             return state;
