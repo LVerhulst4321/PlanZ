@@ -8,7 +8,7 @@ class StaffVolunteerPage extends React.Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-7">
                         <div className="card">
                             <div className="card-header">
                                 <h4>Schedule Volunteer Shifts</h4>
@@ -18,7 +18,7 @@ class StaffVolunteerPage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-5">
                         <div className="border-left border-light pl-3">
                             <VolunteerJobsWidget />
                         </div>

@@ -16,6 +16,7 @@
     <xsl:variable name="ConfigureReports"
         select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
     <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+    <xsl:variable name="ShowVolunteer" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Volunteering Set-up']"/>
     <xsl:variable name="Administrator"
         select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
     <xsl:variable name="ExportSchedule" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ExportSchedule']"/>
@@ -121,6 +122,9 @@
                             <a class="dropdown-item" href="MaintainRoomSched.php">Maintain Room Schedule</a>
                             <a class="dropdown-item" href="StaffMaintainSchedule.php">Grid Scheduler</a>
                             <a class="dropdown-item" href="CurrentSchedule.php">Current Schedule</a>
+                            <xsl:if test="$ShowVolunteer">
+                                <a class="dropdown-item" href="StaffVolunteerPage.php">Create Volunteer Schedule</a>
+                            </xsl:if>
                         </div>
                     </li>
                     <li class="nav-item py-0 mr-2">

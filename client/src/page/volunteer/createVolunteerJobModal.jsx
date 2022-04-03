@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
-import { showCreateJobModal } from '../../state/volunteerActions';
+import { fetchJobs, showCreateJobModal } from '../../state/volunteerActions';
 
 class CreateVolunteerJobModal extends React.Component {
 
@@ -135,10 +135,11 @@ class CreateVolunteerJobModal extends React.Component {
                     loading: false,
                     message: null
                 });
-
                 store.dispatch(showCreateJobModal(false));
+                fetchJobs();
             })
             .catch(error => {
+                console.log(error);
                 this.setState({
                     ...this.state,
                     loading: false,
