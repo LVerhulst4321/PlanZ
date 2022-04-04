@@ -42,3 +42,17 @@ from `PermissionRoles`;
 insert into `Permissions` (permatomid, phaseid, permroleid)
 select max(permatomid), max(phaseid), max(permroleid) 
 from PermissionAtoms, Phases, PermissionRoles;
+
+
+CREATE TABLE `volunteer_shift` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `volunteer_job_id` int(11) NOT NULL,
+  `min_volunteer_count` int(11) NOT NULL,
+  `max_volunteer_count` int(11) NOT NULL,
+  `from_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `to_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_volunteer_shift_to_volunteer_job` FOREIGN KEY (`volunteer_job_id`) REFERENCES `volunteer_job` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+

@@ -9,7 +9,7 @@ require_once('../http_session_functions.php');
 require_once('../db_support_functions.php');
 require_once('../format_functions.php');
 require_once('../../data_functions.php');
-require_once('./volunteer_model.php');
+require_once('./volunteer_job_model.php');
 
 function is_input_data_valid($json) {
     return array_key_exists("name", $json) && array_key_exists("description", $json);
