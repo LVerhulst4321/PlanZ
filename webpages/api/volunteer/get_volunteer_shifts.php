@@ -23,7 +23,7 @@ try {
         }
 
         header('Content-type: application/json; charset=utf-8');
-        $json_string = json_encode(array("shifts" => $result));
+        $json_string = json_encode(array("shifts" => $result, "context" => array("timezone" => PHP_DEFAULT_TIMEZONE)));
         echo $json_string;
 
     } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {

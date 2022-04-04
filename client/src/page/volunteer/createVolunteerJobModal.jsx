@@ -5,7 +5,8 @@ import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
-import { fetchJobs, showCreateJobModal } from '../../state/volunteerActions';
+import { showCreateJobModal } from '../../state/volunteerActions';
+import { fetchJobs } from '../../state/volunteerFunctions';
 
 class CreateVolunteerJobModal extends React.Component {
 

@@ -1,17 +1,6 @@
-import store, { SET_VOLUNTEER_JOBS, SHOW_CREATE_JOB_MODAL } from './store';
-import axios from 'axios';
-
-export function fetchJobs() {
-    axios.get('/api/volunteer/get_volunteer_jobs.php')
-        .then(res => {
-            store.dispatch(setVolunteerJobs(res.data));
-        })
-        .catch(error => {
-            let message = "The list of offerings could not be downloaded."
-            store.dispatch(setVolunteerJobs({}, message));
-        }
-    );
-}
+export const SET_VOLUNTEER_JOBS = 'SET_VOLUNTEER_JOBS';
+export const SHOW_CREATE_JOB_MODAL = 'SHOW_CREATE_JOB_MODAL';
+export const SET_VOLUNTEER_SHIFTS = 'SET_VOLUNTEER_SHIFTS';
 
 export function setVolunteerJobs(jobs, message = null) {
     let payload = {
@@ -23,6 +12,18 @@ export function setVolunteerJobs(jobs, message = null) {
         payload
     }
 }
+
+export function setVolunteerShifts(shifts, message = null) {
+    let payload = {
+        ...shifts,
+        message: message
+    }
+    return {
+        type: SET_VOLUNTEER_SHIFTS,
+        payload
+    }
+}
+
 
 export function showCreateJobModal(show = true) {
     let payload = {

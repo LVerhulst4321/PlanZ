@@ -1,6 +1,7 @@
 import React from 'react';
 import CreateVolunteerJobModal from './createVolunteerJobModal';
 import VolunteerJobsWidget from './volunteerJobsWidget';
+import VolunteerShiftWidget from './volunteerShiftWidget';
 
 class StaffVolunteerPage extends React.Component {
 
@@ -8,19 +9,19 @@ class StaffVolunteerPage extends React.Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-md-7">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4>Schedule Volunteer Shifts</h4>
-                            </div>
+                    <div className="col-xl-7">
+                        <div className="card mb-3">
                             <div className="card-body">
+                                <VolunteerShiftWidget />
 
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-5">
-                        <div className="border-left border-light pl-3">
-                            <VolunteerJobsWidget />
+                    <div className="col-xl-5">
+                        <div className="card mb-3">
+                            <div className="card-body">
+                                <VolunteerJobsWidget />
+                            </div>
                         </div>
                     </div>
                 </div>
