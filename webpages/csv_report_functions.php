@@ -8,13 +8,15 @@ function render_query_result_as_csv($result) {
             if ($betweenValues) {
                 echo ",";
             }
-            if (strpos($value, "\"") !== false) {
-                $value = str_replace("\"", "\"\"", $value);
-                echo "\"$value\"";
-            } elseif (strpos($value, ",") !== false or strpos($value, "\n") !== false) {
-                echo "\"$value\"";
-            } else {
-                echo $value;
+            if (!empty($value)) {
+                if (strpos($value, "\"") !== false) {
+                    $value = str_replace("\"", "\"\"", $value);
+                    echo "\"$value\"";
+                } elseif (strpos($value, ",") !== false or strpos($value, "\n") !== false) {
+                    echo "\"$value\"";
+                } else {
+                    echo $value;
+                }
             }
             $betweenValues = true;
         }

@@ -2,42 +2,38 @@
 // Copyright (c) 2009-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Pocket Program';
-$report['description'] = 'Export CSV file of public schedule for generating pocket program';
+$report['multi'] = 'true';
+$report['output_filename'] = 'pocketprogram.csv';
+$report['description'] = 'Public schedule for generating pocket program';
 $report['categories'] = array(
     'Reports downloadable as CSVs' => 80,
     'Publication Reports' => 40
 );
-$report['csv_output'] = true;
 $report['group_concat_expand'] = true;
 $report['queries'] = [];
-$report['queries']['master'] =<<<'EOD'
+$report['queries']['pocket_program'] =<<<'EOD'
 SELECT
         S.sessionid,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a') AS Day,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%l:%i %p') AS 'Time',
-        CONCAT(IF(LEFT(S.duration,2)=00, '',
-                  IF(LEFT(S.duration,1)=0,
-                     CONCAT(RIGHT(LEFT(S.duration,2),1), 'hr '),
-                     CONCAT(LEFT(S.duration,2),'hr '))),
-               IF(DATE_FORMAT(S.duration,'%i')=00, '',
-                  IF(LEFT(DATE_FORMAT(S.duration,'%i'),1)=0,
-                     CONCAT(RIGHT(DATE_FORMAT(S.duration,'%i'),1),'min'),
-                     CONCAT(DATE_FORMAT(S.duration,'%i'),'min')))
-               ) Duration,
+        ADDTIME('$ConStartDatim$',SCH.starttime) as sorttime,
+        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
+        DATE_FORMAT(S.duration,'%i') AS durationmin,
+        DATE_FORMAT(S.duration,'%k') AS durationhrs,
+        R.roomid,
         R.roomname,
-        T.trackname AS TRACK,
-        TY.typename AS TYPE,
+        T.trackname,
+        TY.typename,
         K.kidscatname,
         S.title,
-        S.progguiddesc AS 'Long Text',
-        group_concat(' ',P.pubsname, if (POS.moderator=1,' (m)','')) AS 'PARTIC'
+        S.progguiddesc,
+        group_concat(' ',P.pubsname, if (POS.moderator=1,' (m)','')) AS 'participants',
+        (select max(timestamp) from SessionEditHistory SEH where SEH.sessionid=S.sessionid) as last_updated
     FROM
-                Sessions S
-           JOIN Schedule SCH USING (sessionid)
-           JOIN Rooms R USING (roomid)
-           JOIN Tracks T USING (trackid)
-           JOIN Types TY USING (typeid)
-           JOIN KidsCategories K USING (kidscatid)
+        Sessions S
+      INNER JOIN Schedule SCH USING (sessionid)
+      INNER JOIN Rooms R USING (roomid)
+      INNER JOIN Tracks T USING (trackid)
+      INNER JOIN Types TY USING (typeid)
+      INNER JOIN KidsCategories K USING (kidscatid)
       LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid 
       LEFT JOIN Participants P ON POS.badgeid=P.badgeid
     WHERE 
@@ -48,5 +44,75 @@ SELECT
         SCH.starttime, 
         R.roomname;
 EOD;
-$report['output_filename'] = 'pocketprogram.csv';
-$report['column_headings'] = 'sessionid,day,time,duration,room,track,type,"kids category",title,description,participants';
+$report['xsl'] =<<<'EOD'
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output encoding="UTF-8" indent="yes" method="html" />
+    <xsl:include href="xsl/reportInclude.xsl" />
+    <xsl:template match="/">
+        <xsl:choose>
+            <xsl:when test="doc/query[@queryName='pocket_program']/row">
+                <table id="reportTable" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Session ID</th>
+                            <th>Sort Time</th>
+                            <th>Start Time</th>
+                            <th>Duration</th>
+                            <th>Room</th>
+                            <th>Track</th>
+                            <th>Type</th>
+                            <th>Kids Category</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Participants</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="doc/query[@queryName='pocket_program']/row"/>
+                    </tbody>
+                </table>
+            </xsl:when>
+            <xsl:otherwise>
+                <div class="alert alert-danger">No results found.</div>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <xsl:template match="doc/query[@queryName='pocket_program']/row">
+        <tr>
+            <td>
+              <xsl:call-template name="showSessionid">
+                <xsl:with-param name="sessionid" select="@sessionid" />
+              </xsl:call-template>
+            </td>
+            <td><xsl:value-of select="@sorttime" /></td>
+            <td><xsl:value-of select="@starttime" /></td>
+            <td>
+                <xsl:call-template name="showDuration">
+                    <xsl:with-param name="durationhrs" select = "@durationhrs" />
+                    <xsl:with-param name="durationmin" select = "@durationmin" />
+                </xsl:call-template>
+            </td>
+            <td>
+            <xsl:call-template name="showRoomName">
+              <xsl:with-param name="roomid" select="@roomid" />
+              <xsl:with-param name="roomname" select="@roomname" />
+            </xsl:call-template>
+          </td>
+          <td><xsl:value-of select="@typename" /></td>
+          <td><xsl:value-of select="@trackname" /></td>
+          <td><xsl:value-of select="@kidscatname" /></td>
+          <td>
+            <xsl:call-template name="showSessionTitle">
+              <xsl:with-param name="sessionid" select="@sessionid" />
+              <xsl:with-param name="title" select="@title" />
+            </xsl:call-template>
+          </td>
+          <td><xsl:value-of select="@progguiddesc" /></td>
+          <td><xsl:value-of select="@participants" /></td>
+          <td><xsl:value-of select="@last_updated" /></td>                              
+        </tr>
+    </xsl:template>
+</xsl:stylesheet>
+EOD;
