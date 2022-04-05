@@ -6,12 +6,18 @@ class VolunteerShift {
     public $job;
     public $minPeople;
     public $maxPeople;
+    public $location;
+    public $fromTime;
+    public $toTime;
 
-    function __construct($id, $job, $minPeople, $maxPeople) {
+    function __construct($id, $job, $minPeople, $maxPeople, $fromTime, $toTime, $location) {
         $this->id = $id;
         $this->job = $job;
         $this->minPeople = $minPeople;
         $this->maxPeople = $maxPeople;
+        $this->location = $location;
+        $this->fromTime = $fromTime;
+        $this->toTime = $toTime;
     }
 
     public static function findAll($db) {
@@ -20,6 +26,9 @@ class VolunteerShift {
                 S.id as id,
                 S.min_volunteer_count,
                 S.max_volunteer_count,
+                S.from_time,
+                S.to_time,
+                S.location,
                 J.id as job_id,
                 J.job_name,
                 J.is_online,
@@ -42,7 +51,9 @@ class VolunteerShift {
                 } else {
                     $jobs[$job_id] = $job;
                 }
-                $record = new VolunteerShift($row->id, $job, $row->min_volunteer_count, $row->max_volunteer_count);
+                $record = new VolunteerShift($row->id, $job, $row->min_volunteer_count, $row->max_volunteer_count, 
+                    convert_database_date_to_date($row->from_time), convert_database_date_to_date($row->to_time),
+                    $row->location);
                 $records[] = $record;
             }
             mysqli_stmt_close($stmt);
@@ -78,7 +89,11 @@ class VolunteerShift {
         return array("id" => $this->id, 
             "job" => $this->job ? $this->job->asArray() : null, 
             "minPeople" => $this->minPeople, 
-            "maxPeople" => $this->maxPeople);
+            "maxPeople" => $this->maxPeople,
+            "fromTime" => ($this->fromTime ? $this->fromTime->format('c') : null),
+            "toTime" => ($this->toTime ? $this->toTime->format('c') : null),
+            "location" => $this->location
+        );
     }
 }
 ?>

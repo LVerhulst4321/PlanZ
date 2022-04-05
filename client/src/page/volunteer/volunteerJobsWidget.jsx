@@ -36,7 +36,7 @@ class VolunteerJobsWidget extends React.Component {
             return (<p>No jobs have been created.</p>)
         } else {
             let jobs = this.props.jobs.list.map(j => {
-                let type = j.isOnline ? (<small class="text-nowrap">(Online)</small>) : (<small class="text-nowrap">(In-Person)</small>);
+                let type = j.isOnline ? (<small className="text-nowrap">(Online)</small>) : (<small className="text-nowrap">(In-Person)</small>);
                 return (<div className="col mb-4" key={'job-' + j.id}>
                     <div className="card">
                         <div className="card-header">

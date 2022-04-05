@@ -49,6 +49,7 @@ CREATE TABLE `volunteer_shift` (
   `volunteer_job_id` int(11) NOT NULL,
   `min_volunteer_count` int(11) NOT NULL,
   `max_volunteer_count` int(11) NOT NULL,
+  `location` varchar(100) NOT NULL,
   `from_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `to_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

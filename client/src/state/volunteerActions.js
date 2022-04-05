@@ -1,6 +1,7 @@
 export const SET_VOLUNTEER_JOBS = 'SET_VOLUNTEER_JOBS';
 export const SHOW_CREATE_JOB_MODAL = 'SHOW_CREATE_JOB_MODAL';
 export const SET_VOLUNTEER_SHIFTS = 'SET_VOLUNTEER_SHIFTS';
+export const SHOW_CREATE_SHIFT_MODAL = 'SHOW_CREATE_SHIFT_MODAL';
 
 export function setVolunteerJobs(jobs, message = null) {
     let payload = {
@@ -31,6 +32,16 @@ export function showCreateJobModal(show = true) {
     }
     return {
         type: SHOW_CREATE_JOB_MODAL,
+        payload
+    }
+}
+
+export function showCreateShiftModal(show = true) {
+    let payload = {
+        show: show
+    }
+    return {
+        type: SHOW_CREATE_SHIFT_MODAL,
         payload
     }
 }

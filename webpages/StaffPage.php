@@ -3,6 +3,7 @@
 global $participant, $message_error, $message2, $congoinfo, $title;
 $title = "Staff Overview";
 require_once('StaffCommonCode.php');
+require_once('con_data.php');
 staff_header($title,  true);
 ?>
 
@@ -13,16 +14,10 @@ staff_header($title,  true);
         <h2><?php echo CON_NAME; ?></h2>
         <p>
 <?php 
-        $timeZone = PHP_DEFAULT_TIMEZONE;
-        $dateSrc = CON_START_DATIM;
-
-        $dateTime = new DateTime($dateSrc, new DateTimeZone($timeZone));
-        $endTime = new DateTime($dateSrc, new DateTimeZone($timeZone));
-        $endTime->add(new DateInterval('P'.CON_NUM_DAYS.'D'));
-        $endTime->sub(new DateInterval('PT1H'));
-        echo $dateTime->format('D, d M Y');
+        $conData = ConData::fromEnvironmentDefinition();
+        echo $conData->startDate->format('D, j M Y');
         echo ' - ';
-        echo $endTime->format('D, d M Y');
+        echo $conData->endDate->format('D, j M Y');
         if (DEFAULT_DURATION == "1:00" || DEFAULT_DURATION == "60") {
             $DEFAULT_DURATION = "1 hour";
         } else {

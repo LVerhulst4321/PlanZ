@@ -1,11 +1,12 @@
 import { createStore, combineReducers } from 'redux'
-import { SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL } from './volunteerActions';
+import { SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL, SHOW_CREATE_SHIFT_MODAL } from './volunteerActions';
 
 const volunteerInitialState = {
     shifts: {
         showModal: false,
         loading: true,
-        list: []
+        list: [],
+        context: null
     },
     jobs: {
         showModal: false,
@@ -30,9 +31,10 @@ const volunteering = (state = volunteerInitialState, action) => {
             return {
                 ...state,
                 message: action.payload.message,
-                jobs: {
+                shifts: {
                     ...state.shifts,
                     list: action.payload.shifts || [],
+                    context: action.payload.context,
                     loading: false
                 }
             }
@@ -41,6 +43,14 @@ const volunteering = (state = volunteerInitialState, action) => {
                 ...state,
                 jobs: {
                     ...state.jobs,
+                    showModal: action.payload.show
+                }
+            }
+        case SHOW_CREATE_SHIFT_MODAL: 
+            return {
+                ...state,
+                shifts: {
+                    ...state.shifts,
                     showModal: action.payload.show
                 }
             }

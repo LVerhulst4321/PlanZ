@@ -16,13 +16,13 @@ class VolunteerJob {
 
     public static function findAll($db) {
         $query = <<<EOD
-        SELECT
-                V.id,
+        SELECT  V.id,
                 V.job_name,
                 V.is_online,
                 V.job_description
-            FROM
-                volunteer_job V;
+          FROM
+                volunteer_job V
+         ORDER BY job_name;
         EOD;
         
         $stmt = mysqli_prepare($db, $query);
