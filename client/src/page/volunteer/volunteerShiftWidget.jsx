@@ -2,6 +2,7 @@ import React from 'react';
 import { Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import store from '../../state/store';
+import { showCreateShiftModal } from '../../state/volunteerActions';
 import { fetchShifts } from '../../state/volunteerFunctions';
 import VolunteerShiftCard from './volunteerShiftCard';
 

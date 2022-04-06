@@ -53,7 +53,7 @@ CREATE TABLE `volunteer_shift` (
   `from_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `to_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_volunteer_shift_to_volunteer_job` FOREIGN KEY (`volunteer_job_id`) REFERENCES `volunteer_job` (`id`)
+  CONSTRAINT `fk_volunteer_shift_to_volunteer_job` FOREIGN KEY (`volunteer_job_id`) REFERENCES `volunteer_job` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

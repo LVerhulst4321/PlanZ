@@ -27,7 +27,7 @@ class VolunteerShiftCard extends React.Component {
         return (<div className="col mb-4">
             <div className="card">
                 <div className="card-header">
-                    <b>{this.props.shift.job.name}</b>: {fromString}
+                    <b>{this.props.shift.job.name}:</b> {fromString}
                 </div>
                 <div className="card-body">
                     <div><b>Shift:</b> {fromString}&ndash;{toString}</div>

@@ -7,8 +7,9 @@ import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
 import { showCreateJobModal } from '../../state/volunteerActions';
 import { fetchJobs } from '../../state/volunteerFunctions';
+import FormComponent from './formComponent';
 
-class CreateVolunteerJobModal extends React.Component {
+class CreateVolunteerJobModal extends FormComponent {
 
     constructor(props) {
         super(props);
@@ -38,8 +39,8 @@ class CreateVolunteerJobModal extends React.Component {
                         <Form.Check
                             type="checkbox"
                             label="Is this an online job?"
-                            checked={this.getFormValue("online")}
-                            onChange={(e) => this.setFormValue("online", e.target.checked)}
+                            checked={this.getFormValue("isOnline")}
+                            onChange={(e) => this.setFormValue("isOnline", e.target.checked)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="description">
@@ -59,39 +60,6 @@ class CreateVolunteerJobModal extends React.Component {
         store.dispatch(showCreateJobModal(false));
     }
 
-    isFieldInError(name) {
-        let errors = this.state.errors;
-        if (errors) {
-            return errors[name];
-        } else {
-            return false;
-        }
-    }
-
-    getFormValue(formName) {
-        if (this.state.values) {
-            return this.state.values[formName] || '';
-        } else {
-            return '';
-        }
-    }
-
-    setFormValue(formName, formValue) {
-        let state = this.state;
-        let value = state.values || {};
-        let newValue = { ...value };
-        let errors = this.state.errors || {};
-        newValue[formName] = formValue;
-        errors[formName] = !this.validateValue(formName, formValue);
-
-        this.setState((state) => ({
-            ...state,
-            values: newValue,
-            message: null,
-            errors: errors
-        }));
-    }
-
     validateValue(formName, formValue) {
         if (formName === 'name') {
             return formValue != null && formValue !== '';
@@ -99,19 +67,6 @@ class CreateVolunteerJobModal extends React.Component {
             return formValue != null && formValue != '';
         } else {
             return true;
-        }
-    }
-
-    getErrorClass(name) {
-        return this.isFieldInError(name) ? "is-invalid" : "";
-    }
-
-    isFieldInError(name) {
-        let errors = this.state.errors;
-        if (errors) {
-            return errors[name];
-        } else {
-            return false;
         }
     }
 
@@ -153,31 +108,9 @@ class CreateVolunteerJobModal extends React.Component {
         }
     }
 
-    isValidForm() {
-        let formKeys = ["name", "description"];
-        let errors = this.state.errors || {};
-        let valid = true
-        formKeys.forEach(element => {
-            let v = this.validateValue(element, this.state.values[element]);
-            valid &= v;
-            errors[element] = !v;
-        });
-
-        let message = null;
-        if (!valid) {
-            message = { severity: "danger", text: "Gosh willikers! It looks like some of this information isn't right."}
-        }
-        this.setState({
-            ...this.state,
-            errors: errors,
-            message: message
-        })
-        return valid;
+    getFormFields() {
+        return ["name", "description"];
     }
-
-    getAllFormValues() {
-        return this.state.values;
-    }    
 }
 
 function mapStateToProps(state) {

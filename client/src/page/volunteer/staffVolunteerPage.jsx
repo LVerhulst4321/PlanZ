@@ -1,5 +1,6 @@
 import React from 'react';
 import CreateVolunteerJobModal from './createVolunteerJobModal';
+import CreateVolunteerShiftModal from './createVolunteerShiftModal';
 import VolunteerJobsWidget from './volunteerJobsWidget';
 import VolunteerShiftWidget from './volunteerShiftWidget';
 
@@ -26,6 +27,7 @@ class StaffVolunteerPage extends React.Component {
                     </div>
                 </div>
                 <CreateVolunteerJobModal />
+                <CreateVolunteerShiftModal />
             </div>
         )
     }
