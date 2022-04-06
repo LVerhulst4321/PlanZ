@@ -25,8 +25,8 @@ class VolunteerShiftCard extends React.Component {
         }
 
         return (<div className="col mb-4">
-            <div className="card">
-                <div className="card-header">
+            <div className="card border-primary">
+                <div className="card-header bg-primary text-white">
                     <b>{this.props.shift.job.name}:</b> {fromString}
                 </div>
                 <div className="card-body">
