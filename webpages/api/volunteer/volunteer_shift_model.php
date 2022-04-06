@@ -35,7 +35,8 @@ class VolunteerShift {
                 J.job_description
             FROM
                 volunteer_shift S
-            JOIN volunteer_job J ON (J.id = S.volunteer_job_id);
+            JOIN volunteer_job J ON (J.id = S.volunteer_job_id)
+           ORDER BY S.from_time, J.job_name;
         EOD;
         
         $stmt = mysqli_prepare($db, $query);
@@ -64,20 +65,25 @@ class VolunteerShift {
     }
 
     public static function fromJson($json) {
-        $job = new VolunteerJob(null, $json["name"], $json["isOnline"], $json["description"]);
-        return $job;
+        $job = new VolunteerJob($json['job'], null, null, null);
+        $shift = new VolunteerShift(null, $job, $json['minPeople'], $json['maxPeople'], 
+            convert_iso_date_to_date($json['fromTime']), 
+            convert_iso_date_to_date($json['toTime']), $json['location']);
+        return $shift;
     }
 
-    public static function persist($db, $volunteerJob) {
+    public static function persist($db, $volunteerShift) {
         $query = <<<EOD
-        INSERT INTO volunteer_job
-                (job_name, is_online, job_description)
-         VALUES (?, ?, ?);
+        INSERT INTO volunteer_shift
+                (volunteer_job_id, from_time, to_time, location, min_volunteer_count, max_volunteer_count)
+         VALUES (?, ?, ?, ?, ?, ?);
         EOD;
         
         $stmt = mysqli_prepare($db, $query);
-        $isOnline = $volunteerJob->isOnline ? 1 : 0;
-        mysqli_stmt_bind_param($stmt, "sis", $volunteerJob->name, $isOnline, $volunteerJob->description);
+        $fromTime = $volunteerShift->fromTime->format("Y-m-d H:i:s");
+        $toTime = $volunteerShift->toTime->format("Y-m-d H:i:s");
+        mysqli_stmt_bind_param($stmt, "isssii", $volunteerShift->job->id, $fromTime, $toTime, 
+            $volunteerShift->location, $volunteerShift->minPeople, $volunteerShift->maxPeople);
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
         } else {
