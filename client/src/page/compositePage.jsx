@@ -1,5 +1,6 @@
 import React from 'react';
 import StaffVolunteerPage from './volunteer/staffVolunteerPage';
+import VolunteerSignUpPage from './volunteer/volunteerSignUpPage';
 
 /**
  * Implementing this as a sort-of pauper's version of a Router. We're starting with an 
@@ -16,6 +17,8 @@ class CompositePage extends React.Component {
         let url = new URL(window.location.href);
         if (url.pathname === '/StaffVolunteerPage.php') {
             return (<StaffVolunteerPage />);
+        } else if (url.pathname === '/volunteering.php') {
+            return (<VolunteerSignUpPage />);
         } else {
             return (<h4>Unknown Page</h4>);
         }

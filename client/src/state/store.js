@@ -1,7 +1,12 @@
 import { createStore, combineReducers } from 'redux'
-import { SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL, SHOW_CREATE_SHIFT_MODAL } from './volunteerActions';
+import { SET_SHIFT_ASSIGNMENTS, SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL, SHOW_CREATE_SHIFT_MODAL } from './volunteerActions';
 
 const volunteerInitialState = {
+    assignments: {
+        showModal: false,
+        loading: true,
+        list: []
+    },
     shifts: {
         showModal: false,
         loading: true,
@@ -33,6 +38,17 @@ const volunteering = (state = volunteerInitialState, action) => {
                 message: action.payload.message,
                 shifts: {
                     ...state.shifts,
+                    list: action.payload.shifts || [],
+                    context: action.payload.context,
+                    loading: false
+                }
+            }
+        case SET_SHIFT_ASSIGNMENTS: 
+            return {
+                ...state,
+                message: action.payload.message,
+                assignments: {
+                    ...state.assignments,
                     list: action.payload.shifts || [],
                     context: action.payload.context,
                     loading: false

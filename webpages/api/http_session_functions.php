@@ -7,6 +7,10 @@ function start_session_if_necessary() {
     }
 }
 
+function getBadgeId() {
+    return isLoggedIn() ? $_SESSION['badgeid'] : null;
+}
+
 function isLoggedIn() {
     return isset($_SESSION['badgeid']);
 }

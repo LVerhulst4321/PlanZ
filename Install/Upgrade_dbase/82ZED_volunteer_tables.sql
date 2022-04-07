@@ -56,4 +56,12 @@ CREATE TABLE `volunteer_shift` (
   CONSTRAINT `fk_volunteer_shift_to_volunteer_job` FOREIGN KEY (`volunteer_job_id`) REFERENCES `volunteer_job` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `participant_has_volunteer_shift` (
+  `badgeid` varchar(15) NOT NULL,
+  `volunteer_shift_id` int(11) NOT NULL,
+  PRIMARY KEY (`badgeid`, `volunteer_shift_id`),
+  CONSTRAINT `fk_participant_to_participant_has_shift` FOREIGN KEY (`badgeid`) REFERENCES `Participants` (`badgeid`) ON DELETE CASCADE,
+  CONSTRAINT `fk_participant_has_shift_to_shift` FOREIGN KEY (`volunteer_shift_id`) REFERENCES `volunteer_shift` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO PatchLog (patchname) VALUES ('82ZED_volunteer_tables.sql');

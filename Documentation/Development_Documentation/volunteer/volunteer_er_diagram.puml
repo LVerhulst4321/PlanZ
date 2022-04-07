@@ -1,0 +1,36 @@
+@startuml
+title Zambia Entity Relationship Diagram
+'hide the spot
+hide circle
+
+'avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity volunteer_job {
+* id : int(11) <<auto increment>>
+--
+* job_name : varchar(64)
+* is_online : tinyint
+  description : text
+}
+
+entity volunteer_shift {
+* id : int(11) <<auto increment>>
+--
+* volunteer_job_id : int
+* location : int
+* min_volunteer_count : int
+* max_volunteer_count : int
+* from_time : timestamp
+* to_time : timestamp
+}
+
+entity Participants {
+* badgeid : int(11) <<auto increment>>
+--
+}
+
+volunteer_shift }o--|| volunteer_job
+
+
+@enduml

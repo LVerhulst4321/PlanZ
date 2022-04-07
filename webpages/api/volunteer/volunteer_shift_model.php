@@ -40,28 +40,65 @@ class VolunteerShift {
         EOD;
         
         $stmt = mysqli_prepare($db, $query);
-        $records = [];
-        $jobs = array();
         if (mysqli_stmt_execute($stmt)) {
-            $result = mysqli_stmt_get_result($stmt);
-            while ($row = mysqli_fetch_object($result)) {
-                $job_id = $row->job_id;
-                $job = new VolunteerJob($job_id, $row->job_name, $row->is_online ? true : false, $row->job_description);
-                if (array_key_exists($job_id, $jobs)) {
-                    $job = $jobs[$job_id];
-                } else {
-                    $jobs[$job_id] = $job;
-                }
-                $record = new VolunteerShift($row->id, $job, $row->min_volunteer_count, $row->max_volunteer_count, 
-                    convert_database_date_to_date($row->from_time), convert_database_date_to_date($row->to_time),
-                    $row->location);
-                $records[] = $record;
-            }
+            $records = VolunteerShift::convertResultSetToShifts($stmt);
             mysqli_stmt_close($stmt);
             return $records;
         } else {
             throw new DatabaseSqlException("Query could not be executed: $query");
         }
+    }
+
+    public static function findAllAssignedToParticipant($db, $badgeid) {
+        $query = <<<EOD
+        SELECT
+                S.id as id,
+                S.min_volunteer_count,
+                S.max_volunteer_count,
+                S.from_time,
+                S.to_time,
+                S.location,
+                J.id as job_id,
+                J.job_name,
+                J.is_online,
+                J.job_description
+            FROM
+                volunteer_shift S
+            JOIN volunteer_job J ON (J.id = S.volunteer_job_id)
+           WHERE S.id in (select volunteer_shift_id from participant_has_volunteer_shift where badgeid = ?)
+           ORDER BY S.from_time, J.job_name;
+        EOD;
+        
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "s", $badgeid); 
+        if (mysqli_stmt_execute($stmt)) {
+            $records = VolunteerShift::convertResultSetToShifts($stmt);
+            mysqli_stmt_close($stmt);
+            return $records;
+        } else {
+            throw new DatabaseSqlException("Query could not be executed: $query");
+        }
+    }
+
+    static function convertResultSetToShifts($stmt) {
+        $records = [];
+        $jobs = array();
+        $result = mysqli_stmt_get_result($stmt);
+        while ($row = mysqli_fetch_object($result)) {
+            $job_id = $row->job_id;
+            $job = new VolunteerJob($job_id, $row->job_name, $row->is_online ? true : false, $row->job_description);
+            if (array_key_exists($job_id, $jobs)) {
+                $job = $jobs[$job_id];
+            } else {
+                $jobs[$job_id] = $job;
+            }
+            $record = new VolunteerShift($row->id, $job, $row->min_volunteer_count, $row->max_volunteer_count, 
+                convert_database_date_to_date($row->from_time), convert_database_date_to_date($row->to_time),
+                $row->location);
+            $records[] = $record;
+        }
+        mysqli_stmt_close($stmt);
+        return $records;
     }
 
     public static function fromJson($json) {
@@ -87,7 +124,64 @@ class VolunteerShift {
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
         } else {
-            throw new DatabaseSqlException("Query could not be executed: $query");
+            throw new DatabaseSqlException("Insert could not be executed: $query");
+        }
+    }
+
+    public static function exists($db, $shiftId) {
+        $query = <<<EOD
+        SELECT
+                count(*) as c
+            FROM
+                volunteer_shift S 
+           WHERE id = ?;
+        EOD;
+        
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "i", $shiftId);
+        $exists = 0;
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_get_result($stmt);
+            while ($row = mysqli_fetch_object($result)) {
+                $exists = $row->c;
+            }
+            mysqli_stmt_close($stmt);
+            return $exists > 0;
+        } else {
+            throw new DatabaseSqlException("Select count(*) command could not be executed: $query");
+        }
+    }
+
+
+    public static function deleteAssignment($db, $badgeId, $shiftId) {
+        $query = <<<EOD
+        DELETE FROM participant_has_volunteer_shift WHERE badgeid = ? and volunteer_shift_id = ?;
+        EOD;
+        
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "si", $badgeId, $shiftId);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
+        } else {
+            throw new DatabaseSqlException("Delete command could not be executed: $query");
+        }
+    }
+
+    public static function createAssignment($db, $badgeId, $shiftId) {
+        $query = <<<EOD
+        INSERT INTO participant_has_volunteer_shift (badgeid, volunteer_shift_id) values (?, ?);
+        EOD;
+        
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "si", $badgeId, $shiftId);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
+        } else {
+            if ($db->errno == 1062) {
+                throw new DatabaseDuplicateKeyException("Duplicate key");
+            } else {
+                throw new DatabaseSqlException("Insert command could not be executed: $query");
+            }
         }
     }
 
