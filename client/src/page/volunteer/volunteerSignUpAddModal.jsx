@@ -102,7 +102,7 @@ class VolunteerSignUpAddModal extends React.Component {
             return (<div className={'card mb-3 ' + (emphasis ? 'border-primary' : '')} key={'shift-' + s.id}>
                 <div className="card-body">
                     <div className="row">
-                        <div className="col-md-6"><b>{s.job.name}:</b> {renderDateRange(s.fromTime, s.toTime, this.props.shifts.context.timestamp)}</div>                        
+                        <div className="col-md-6"><b>{s.job.name}:</b> {renderDateRange(s.fromTime, s.toTime, this.props.shifts.context.timezone)}</div>                        
                         <div className="col-md-6"><b>Location:</b> {s.location} </div>
                     </div>
                     <div className="row">
