@@ -70,7 +70,7 @@ try {
         if (is_input_data_valid($db, $json)) {
             try {
                 VolunteerShift::createAssignment($db, $badgeId, $json["shiftId"]);
-                http_response_code(204);
+                http_response_code(201);
             } catch (DatabaseDuplicateKeyException $e) {
                 http_response_code(409);
             }

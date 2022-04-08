@@ -7,6 +7,7 @@ import store from '../../state/store';
 import { fetchMyShiftAssignments } from '../../state/volunteerFunctions';
 
 import { renderDateRange } from '../../util/dateUtil';
+import VolunteerSignUpAddModal from './volunteerSignUpAddModal';
 
 class VolunteerSignUpPage extends React.Component {
 
@@ -22,16 +23,16 @@ class VolunteerSignUpPage extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.shifts.loading) {
+        if (this.props.assignments.loading) {
             fetchMyShiftAssignments()
         }
     }
 
     render() {
         let shifts = (<p>You do not currently have any shifts.</p>);
-        if (this.props.shifts && this.props.shifts.list && this.props.shifts.list.length > 0) {
-            shifts = this.props.shifts.list.map((s,i) => {
-                let dateRange = renderDateRange(s.fromTime, s.toTime, this.props.shifts.context ? this.props.shifts.context.timezone : null);
+        if (this.props.assignments && this.props.assignments.list && this.props.assignments.list.length > 0) {
+            shifts = this.props.assignments.list.map((s,i) => {
+                let dateRange = renderDateRange(s.fromTime, s.toTime, this.props.assignments.context ? this.props.assignments.context.timezone : null);
                 return (<div className="mb-4 visible-on-hover" key={'shift-' + i}>
                     <div className="d-flex align-items-center">
                         <div className="mr-3 mb-1"><b>{s.job.name}:</b> {dateRange}</div>
@@ -70,14 +71,7 @@ class VolunteerSignUpPage extends React.Component {
                         <LoadingButton variant="danger" onClick={(e) => this.performDelete()} loading={this.state.deleteLoading} enabled="true">Remove</LoadingButton>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={this.state.showAddModal} onHide={() => this.showAddModal(false)} size="lg">
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add Shift</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p>Select a shift to add it to your schedule</p>
-                    </Modal.Body>
-                </Modal>
+                <VolunteerSignUpAddModal show={this.state.showAddModal} onClose={() => this.showAddModal(false)} />
             </div>
         )
     }
@@ -126,7 +120,7 @@ class VolunteerSignUpPage extends React.Component {
 
 function mapStateToProps(state) {
     return { 
-        shifts: state.volunteering.assignments || {}
+        assignments: state.volunteering.assignments || {}
     };
 }
 

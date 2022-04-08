@@ -35,9 +35,10 @@ class VolunteerShiftWidget extends React.Component {
     }
     render() {
         return (<div>
-            <div className="d-flex mb-2 align-items-baseline">
+            <div className="d-flex mb-2 align-items-baseline justify-content-between">
                     <h4 className="mr-3 mb-0">Schedule Volunteer Shifts</h4>
-                    <button className="btn btn-link" onClick={(e) => {this.openCreateModal()}}><i className="bi bi-plus-circle"></i></button>
+                    <button className="btn btn-primary" onClick={(e) => {this.openCreateModal()}} 
+                        disabled={!(this.props.jobs && this.props.jobs.length > 0)}>Create Shift</button>
                 </div>
             {this.renderMain()}
         </div>);

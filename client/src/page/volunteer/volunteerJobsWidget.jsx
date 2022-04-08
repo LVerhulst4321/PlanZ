@@ -40,7 +40,7 @@ class VolunteerJobsWidget extends React.Component {
                 return (<div className="col mb-4" key={'job-' + j.id}>
                     <div className="card visible-on-hover">
                         <div className="card-header">
-                            <div className="d-flex align-items-top justify-content-between">
+                            <div className="d-flex align-items-start justify-content-between">
                                 <div className="mb-1">
                                     <b>{j.name}</b> {type}
                                 </div>
@@ -55,7 +55,7 @@ class VolunteerJobsWidget extends React.Component {
             });
 
             return (
-                <div className="row row-cols-1 row-cols-lg-3 mt-3">
+                <div className="row row-cols-1 row-cols-lg-2 mt-3">
                     {jobs}
                 </div>
             );

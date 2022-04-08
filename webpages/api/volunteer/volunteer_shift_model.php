@@ -9,6 +9,7 @@ class VolunteerShift {
     public $location;
     public $fromTime;
     public $toTime;
+    public $currentSignupCount;
 
     function __construct($id, $job, $minPeople, $maxPeople, $fromTime, $toTime, $location) {
         $this->id = $id;
@@ -32,10 +33,13 @@ class VolunteerShift {
                 J.id as job_id,
                 J.job_name,
                 J.is_online,
-                J.job_description
-            FROM
-                volunteer_shift S
-            JOIN volunteer_job J ON (J.id = S.volunteer_job_id)
+                J.job_description,
+                sum((case when PHVS.badgeid is not null then 1 else 0 end)) as signup_count
+             FROM volunteer_shift S
+             JOIN volunteer_job J ON (J.id = S.volunteer_job_id)
+        LEFT JOIN participant_has_volunteer_shift PHVS ON (PHVS.volunteer_shift_id = S.id)
+           GROUP BY S.id, S.min_volunteer_count, S.max_volunteer_count, S.from_time,
+                    S.to_time, S.location, J.id, J.job_name, J.is_online, J.job_description
            ORDER BY S.from_time, J.job_name;
         EOD;
         
@@ -61,11 +65,15 @@ class VolunteerShift {
                 J.id as job_id,
                 J.job_name,
                 J.is_online,
-                J.job_description
+                J.job_description,
+                sum((case when PHVS.badgeid is not null then 1 else 0 end)) as signup_count
             FROM
                 volunteer_shift S
             JOIN volunteer_job J ON (J.id = S.volunteer_job_id)
-           WHERE S.id in (select volunteer_shift_id from participant_has_volunteer_shift where badgeid = ?)
+        LEFT JOIN participant_has_volunteer_shift PHVS ON (PHVS.volunteer_shift_id = S.id)
+        WHERE S.id in (select volunteer_shift_id from participant_has_volunteer_shift where badgeid = ?)
+        GROUP BY S.id, S.min_volunteer_count, S.max_volunteer_count, S.from_time,
+                    S.to_time, S.location, J.id, J.job_name, J.is_online, J.job_description
            ORDER BY S.from_time, J.job_name;
         EOD;
         
@@ -95,36 +103,57 @@ class VolunteerShift {
             $record = new VolunteerShift($row->id, $job, $row->min_volunteer_count, $row->max_volunteer_count, 
                 convert_database_date_to_date($row->from_time), convert_database_date_to_date($row->to_time),
                 $row->location);
+            if (isset($row->signup_count)) {
+                $record->currentSignupCount = $row->signup_count;
+            }
             $records[] = $record;
         }
-        mysqli_stmt_close($stmt);
         return $records;
     }
 
     public static function fromJson($json) {
+        $id = array_key_exists("id", $json) ? $json["id"] : null;
         $job = new VolunteerJob($json['job'], null, null, null);
-        $shift = new VolunteerShift(null, $job, $json['minPeople'], $json['maxPeople'], 
+        $shift = new VolunteerShift($id, $job, $json['minPeople'], $json['maxPeople'], 
             convert_iso_date_to_date($json['fromTime']), 
             convert_iso_date_to_date($json['toTime']), $json['location']);
         return $shift;
     }
 
     public static function persist($db, $volunteerShift) {
-        $query = <<<EOD
-        INSERT INTO volunteer_shift
-                (volunteer_job_id, from_time, to_time, location, min_volunteer_count, max_volunteer_count)
-         VALUES (?, ?, ?, ?, ?, ?);
-        EOD;
-        
-        $stmt = mysqli_prepare($db, $query);
         $fromTime = $volunteerShift->fromTime->format("Y-m-d H:i:s");
         $toTime = $volunteerShift->toTime->format("Y-m-d H:i:s");
-        mysqli_stmt_bind_param($stmt, "isssii", $volunteerShift->job->id, $fromTime, $toTime, 
-            $volunteerShift->location, $volunteerShift->minPeople, $volunteerShift->maxPeople);
-        if (mysqli_stmt_execute($stmt)) {
-            mysqli_stmt_close($stmt);
+
+        if ($volunteerShift->id == null) {
+            $query = <<<EOD
+            INSERT INTO volunteer_shift
+                    (volunteer_job_id, from_time, to_time, location, min_volunteer_count, max_volunteer_count)
+            VALUES (?, ?, ?, ?, ?, ?);
+            EOD;
+            
+            $stmt = mysqli_prepare($db, $query);
+            mysqli_stmt_bind_param($stmt, "isssii", $volunteerShift->job->id, $fromTime, $toTime, 
+                $volunteerShift->location, $volunteerShift->minPeople, $volunteerShift->maxPeople);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Insert could not be executed: $query");
+            }
         } else {
-            throw new DatabaseSqlException("Insert could not be executed: $query");
+            $query = <<<EOD
+            UPDATE volunteer_shift
+               SET volunteer_job_id = ?, from_time = ?, to_time = ?, location = ?, min_volunteer_count = ?, max_volunteer_count = ?
+             WHERE id = ?;
+            EOD;
+            
+            $stmt = mysqli_prepare($db, $query);
+            mysqli_stmt_bind_param($stmt, "isssiii", $volunteerShift->job->id, $fromTime, $toTime, 
+                $volunteerShift->location, $volunteerShift->minPeople, $volunteerShift->maxPeople, $volunteerShift->id);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Insert could not be executed: $query");
+            }
         }
     }
 
@@ -167,6 +196,20 @@ class VolunteerShift {
         }
     }
 
+    public static function deleteShift($db, $shiftId) {
+        $query = <<<EOD
+        DELETE FROM volunteer_shift WHERE volunteer_shift_id = ?;
+        EOD;
+        
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "i", $shiftId);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
+        } else {
+            throw new DatabaseSqlException("Delete command could not be executed: $query");
+        }
+    }
+
     public static function createAssignment($db, $badgeId, $shiftId) {
         $query = <<<EOD
         INSERT INTO participant_has_volunteer_shift (badgeid, volunteer_shift_id) values (?, ?);
@@ -192,7 +235,8 @@ class VolunteerShift {
             "maxPeople" => $this->maxPeople,
             "fromTime" => ($this->fromTime ? $this->fromTime->format('c') : null),
             "toTime" => ($this->toTime ? $this->toTime->format('c') : null),
-            "location" => $this->location
+            "location" => $this->location,
+            "currentSignupCount" => $this->currentSignupCount
         );
     }
 }

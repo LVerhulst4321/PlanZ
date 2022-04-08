@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "dependencies": {
-        "axios": "^0.22.0",
+        "axios": "^0.26.0",
         "dayjs": "1.10.7",
         "es6-promise": "^3.2.1",
         "react": "^17.0.2",

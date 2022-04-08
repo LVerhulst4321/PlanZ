@@ -25,12 +25,11 @@ SELECT
         VJ.job_name,
         VJ.is_online
 
-    FROM
-             CongoDump CD
-        JOIN Participants P USING (badgeid)
-        JOIN participant_has_volunteer_shift PHVS USING (badgeid)
-        JOIN volunteer_shift VS ON (PHVS.volunteer_shift_id = VS.id)
-        JOIN volunteer_job VJ ON (VS.volunteer_job_id = VJ.id);
+    FROM      volunteer_shift VS
+         JOIN volunteer_job VJ ON (VS.volunteer_job_id = VJ.id)
+    LEFT JOIN participant_has_volunteer_shift PHVS ON (PHVS.volunteer_shift_id = VS.id)
+    LEFT JOIN CongoDump CD ON (PHVS.badgeid = CD.badgeid)
+    LEFT JOIN Participants P ON (PHVS.badgeid = P.badgeid);
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -43,9 +42,9 @@ $report['xsl'] =<<<'EOD'
                 <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr style="height:2.6rem">
-                            <th>Person</th>
                             <th>Job</th>
                             <th>Shift</th>
+                            <th>Person</th>
                             <th>Needs</th>
                             <th>Online?</th>
                             <th>Location</th>
@@ -63,18 +62,29 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
     <xsl:template match="/doc/query[@queryName='shifts']/row">
         <tr>
-            <td>
-                <xsl:call-template name="showLinkedPubsname">
-                    <xsl:with-param name="badgeid" select = "@badgeid" />
-                    <xsl:with-param name="pubsname" select = "@pubsname" />
-                    <xsl:with-param name="badgename" select = "@badgename" />
-                    <xsl:with-param name="name" select = "@name" />
-                </xsl:call-template>
-            </td>
             <td><xsl:value-of select="@job_name"/></td>
             <td><xsl:value-of select="@from_time"/> - <xsl:value-of select="@to_time"/></td>
+            <td>
+                <xsl:if test="@badgeid != ''">
+                    <xsl:call-template name="showLinkedPubsname">
+                        <xsl:with-param name="badgeid" select = "@badgeid" />
+                        <xsl:with-param name="pubsname" select = "@pubsname" />
+                        <xsl:with-param name="badgename" select = "@badgename" />
+                        <xsl:with-param name="name" select = "@name" />
+                    </xsl:call-template>
+                </xsl:if>
+            </td>
             <td><xsl:value-of select="@min_volunteer_count"/> to <xsl:value-of select="@max_volunteer_count"/></td>
-            <td><xsl:value-of select="@is_online"/></td>
+            <td>
+                <xsl:choose>
+                    <xsl:when test="@is_online = 1">
+                        Yes
+                    </xsl:when>
+                    <xsl:otherwise>
+                        No
+                    </xsl:otherwise>
+                </xsl:choose>
+            </td>
             <td><xsl:value-of select="@location"/></td>
         </tr>
     </xsl:template>

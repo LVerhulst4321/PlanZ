@@ -36,7 +36,17 @@ try {
             http_response_code(400);
         }
 
-    } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isVolunteerSetUpAllowed()) {
+        $json_string = file_get_contents('php://input');
+        $json = json_decode($json_string, true);
+
+        if (array_key_exists("id", $json)) {
+            VolunteerShift::deleteShift($db, $json["id"]);
+            http_response_code(204);
+        } else {
+            http_response_code(400);
+        }
+    } else if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'DELETE') {
         http_response_code(401);
     } else {
         http_response_code(405);
