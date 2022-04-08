@@ -9,6 +9,7 @@ const volunteerInitialState = {
     },
     shifts: {
         showModal: false,
+        selectedShift: null,
         loading: true,
         list: [],
         context: null
@@ -69,7 +70,8 @@ const volunteering = (state = volunteerInitialState, action) => {
                 ...state,
                 shifts: {
                     ...state.shifts,
-                    showModal: action.payload.show
+                    showModal: action.payload.show,
+                    selectedShift: action.payload.selectedShift
                 }
             }
         default:

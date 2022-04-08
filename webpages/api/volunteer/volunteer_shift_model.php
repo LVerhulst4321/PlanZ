@@ -198,7 +198,7 @@ class VolunteerShift {
 
     public static function deleteShift($db, $shiftId) {
         $query = <<<EOD
-        DELETE FROM volunteer_shift WHERE volunteer_shift_id = ?;
+        DELETE FROM volunteer_shift WHERE id = ?;
         EOD;
         
         $stmt = mysqli_prepare($db, $query);

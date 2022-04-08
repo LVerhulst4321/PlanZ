@@ -48,9 +48,10 @@ export function showCreateJobModal(show = true, job = null) {
     }
 }
 
-export function showCreateShiftModal(show = true) {
+export function showCreateShiftModal(show = true, shift = null) {
     let payload = {
-        show: show
+        show: show,
+        selectedShift: shift
     }
     return {
         type: SHOW_CREATE_SHIFT_MODAL,

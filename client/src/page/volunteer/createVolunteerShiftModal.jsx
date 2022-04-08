@@ -26,7 +26,42 @@ class CreateVolunteerShiftModal extends FormComponent {
         this.state = {
             loading: false,
             values: {},
-            errors: {}
+            errors: {},
+            confirmDelete: false,
+            message: false
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.showModal === false && this.props.showModal === true) {
+            if (this.props.selectedShift == null) {
+                this.setState((state) => ({
+                    ...state,
+                    values: {},
+                    errors: {},
+                    confirmDelete: false,
+                    message: null
+                }));
+            } else {
+                this.setState((state) => ({
+                    ...state,
+                    values: {
+                        job: this.props.selectedShift.job.id,
+                        min: this.props.selectedShift.minPeople,
+                        max: this.props.selectedShift.maxPeople,
+                        location: this.props.selectedShift.location,
+                        fromDay: dayjs(this.props.selectedShift.fromTime).tz(this.props.timezone).format("YYYY-MM-DD"),
+                        fromTime: dayjs(this.props.selectedShift.fromTime).tz(this.props.timezone).format("hh:mm"),
+                        fromAmPm: dayjs(this.props.selectedShift.fromTime).tz(this.props.timezone).format("A"),
+                        toDay: dayjs(this.props.selectedShift.toTime).tz(this.props.timezone).format("YYYY-MM-DD"),
+                        toTime: dayjs(this.props.selectedShift.toTime).tz(this.props.timezone).format("hh:mm"),
+                        toAmPm: dayjs(this.props.selectedShift.toTime).tz(this.props.timezone).format("A"),
+                    },
+                    errors: {},
+                    confirmDelete: false,
+                    message: null
+                }));
+            }
         }
     }
 
@@ -34,6 +69,22 @@ class CreateVolunteerShiftModal extends FormComponent {
         let message = this.state.message ? (<Alert variant={this.state.message.severity}>{this.state.message.text}</Alert>) : undefined;
         let jobOptions = this.props.jobs ? this.props.jobs.map((j) => { return (<option value={j.id} key={j.id}>{j.name}</option>); }) : undefined;
         let dayOptions = this.props.days ? this.props.days.map((d) => { return (<option value={d} key={'day-' + d}>{this.formatDay(d)}</option>)}) : undefined;
+
+        let buttons = (<LoadingButton loading={this.state.loading} variant="primary" enabled={true} onClick={() => this.submitForm()}>Create</LoadingButton>);
+        if (this.state.confirmDelete) {
+            buttons = [
+                <button className="btn btn-link" onClick={() => this.setState((state) => ({...state, confirmDelete: false }))} key="btn-cancel">Cancel</button>,
+                <LoadingButton loading={this.state.loading} variant="danger" enabled={true} onClick={() => this.deleteShift()} key="btn-delete">Confirm Delete</LoadingButton>];
+        } else if (this.props.selectedShift != null) {
+            buttons = [
+                <button className="btn btn-outline-danger" onClick={() => this.setState((state) => ({...state, confirmDelete: true }))} key="btn-delete">Delete</button>,
+                <LoadingButton loading={this.state.loading} variant="primary" enabled={true} onClick={() => this.submitForm()} key="btn-save">Save</LoadingButton>];
+        }
+
+        let confirmMessage = this.state.confirmDelete 
+            ? (<p>Are you sure you want to delete this shift? All related sign-ups will also be deleted.</p>) 
+            : undefined;
+
         return (
             <Modal show={this.props.showModal} onHide={() => this.handleClose()} size="lg">
                 <Modal.Header closeButton>
@@ -114,9 +165,10 @@ class CreateVolunteerShiftModal extends FormComponent {
                             value={this.getFormValue("location")} onChange={(e) => this.setFormValue("location", e.target.value)}/>
                     </Form.Group>
 
+                    {confirmMessage}
                 </Modal.Body>
                 <Modal.Footer>
-                    <LoadingButton loading={this.state.loading} type="submit" variant="primary" enabled={true} onClick={() => this.submitForm()}>Create</LoadingButton>
+                    {buttons}
                 </Modal.Footer>
             </Modal>);
     }
@@ -198,6 +250,46 @@ class CreateVolunteerShiftModal extends FormComponent {
         }
     }
 
+    deleteShift() {
+        if (this.isValidForm()) {
+            this.setState((state) => ({
+                ...state,
+                loading: true,
+                message: null
+            }));
+
+            axios.delete('/api/volunteer/create_volunteer_shift.php', {
+                headers: {},
+                data: {
+                    "id": this.props.selectedShift.id
+                }
+            })
+            .then(res => {
+                this.setState({
+                    ...this.state,
+                    values: {},
+                    errors: {},
+                    loading: false,
+                    message: null,
+                    confirmDelete: false
+                });
+                store.dispatch(showCreateShiftModal(false));
+                fetchShifts();
+            })
+            .catch(error => {
+                console.log(error);
+                this.setState({
+                    ...this.state,
+                    loading: false,
+                    confirmDelete: false,
+                    message: {
+                        severity: "danger",
+                        text: "Sorry. We've had a bit of a technical problem. Try again?"
+                    }
+                });
+            });
+        }
+    }
     isValidForm() {
         let valid = super.isValidForm();
         if (valid) {
@@ -212,6 +304,24 @@ class CreateVolunteerShiftModal extends FormComponent {
                 errors['toAmPm'] = true;
 
                 let message = { severity: "danger", text: "The 'from' date must be earlier than the 'to' date."}
+                this.setState((state) => ({
+                    ...state,
+                    errors: errors,
+                    message: message
+                }));
+            }
+
+            let minPeople = this.getFormValue("min");
+            let maxPeople = this.getFormValue("max");
+
+            if (parseInt(minPeople) > parseInt(maxPeople)) {
+                valid = false;
+
+                let errors = this.state.errors;
+                errors['min'] = true;
+                errors['max'] = true;
+
+                let message = { severity: "danger", text: "There's a problem with the volunteer counts"}
                 this.setState((state) => ({
                     ...state,
                     errors: errors,
@@ -237,7 +347,7 @@ class CreateVolunteerShiftModal extends FormComponent {
     }
 
     getAllFormValues() {
-        return {
+        let result = {
             job: this.state.values['job'],
             location: this.state.values['location'],
             fromTime: this.getDateFromParts('from'),
@@ -245,6 +355,11 @@ class CreateVolunteerShiftModal extends FormComponent {
             minPeople: this.state.values['min'],
             maxPeople: this.state.values['max'],
         };
+
+        if (this.props.selectedShift != null) {
+            result['id'] = this.props.selectedShift.id;
+        }
+        return result;
     }
 
     getFormFields() {
@@ -257,7 +372,8 @@ function mapStateToProps(state) {
         showModal: state.volunteering.shifts.showModal, 
         days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
         timezone: state.volunteering.shifts.context ? state.volunteering.shifts.context.timezone : null,
-        jobs: state.volunteering.jobs ? state.volunteering.jobs.list : []
+        jobs: state.volunteering.jobs ? state.volunteering.jobs.list : [],
+        selectedShift: state.volunteering.shifts.selectedShift
     };
 }
 export default connect(mapStateToProps)(CreateVolunteerShiftModal);

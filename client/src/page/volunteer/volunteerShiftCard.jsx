@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import store from '../../state/store';
+import { showCreateShiftModal } from '../../state/volunteerActions';
 
 import { renderDateRange } from '../../util/dateUtil';
 
@@ -13,7 +15,7 @@ class VolunteerShiftCard extends React.Component {
                         <div className="mb-1">
                             <b>{this.props.shift.job.name}:</b> {renderDateRange(this.props.shift.fromTime, null, this.props.timezone)}
                         </div>
-                        <button className="btn p-0" onClick={() => {}}><i className="bi bi-pencil text-white"></i></button>
+                        <button className="btn p-0" onClick={() => { this.openModal()}}><i className="bi bi-pencil text-white"></i></button>
                     </div>
                 </div>
                 <div className="card-body">
@@ -31,6 +33,10 @@ class VolunteerShiftCard extends React.Component {
                 </div>
             </div>
         </div>)
+    }
+
+    openModal() {
+        store.dispatch(showCreateShiftModal(true, this.props.shift));
     }
 }
 
