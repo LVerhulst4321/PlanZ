@@ -233,7 +233,7 @@ class CreateVolunteerShiftModal extends FormComponent {
         }
 
         let date = this.state.values[prefix + 'Day'] + ' ' + time + ' ' + this.state.values[prefix + 'AmPm'];
-        return dayjs(date, 'YYYY-MM-DD hh:mm A').tz(this.props.timezone).toISOString();
+        return dayjs.tz(date, 'YYYY-MM-DD hh:mm A', this.props.timezone).toISOString();
     }
 
     getAllFormValues() {

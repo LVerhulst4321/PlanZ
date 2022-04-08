@@ -37,9 +37,10 @@ export function setShiftAssignements(assignments, message = null) {
     }
 }
 
-export function showCreateJobModal(show = true) {
+export function showCreateJobModal(show = true, job = null) {
     let payload = {
-        show: show
+        show: show,
+        selectedJob: job
     }
     return {
         type: SHOW_CREATE_JOB_MODAL,

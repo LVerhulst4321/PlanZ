@@ -15,6 +15,7 @@ const volunteerInitialState = {
     },
     jobs: {
         showModal: false,
+        selectedJob: null,
         loading: true,
         list: []
     }
@@ -59,7 +60,8 @@ const volunteering = (state = volunteerInitialState, action) => {
                 ...state,
                 jobs: {
                     ...state.jobs,
-                    showModal: action.payload.show
+                    showModal: action.payload.show,
+                    selectedJob: action.payload.selectedJob
                 }
             }
         case SHOW_CREATE_SHIFT_MODAL: 

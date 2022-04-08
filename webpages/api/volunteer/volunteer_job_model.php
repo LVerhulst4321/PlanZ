@@ -41,24 +41,56 @@ class VolunteerJob {
     }
 
     public static function fromJson($json) {
-        $job = new VolunteerJob(null, $json["name"], $json["isOnline"], $json["description"]);
+        $job = new VolunteerJob(array_key_exists("id", $json) ? $json["id"] : null, $json["name"], 
+            array_key_exists("isOnline", $json) ? $json["isOnline"] : false, $json["description"]);
         return $job;
     }
 
-    public static function persist($db, $volunteerJob) {
+    public static function deleteJob($db, $id) {
         $query = <<<EOD
-        INSERT INTO volunteer_job
-                (job_name, is_online, job_description)
-         VALUES (?, ?, ?);
+        DELETE FROM volunteer_job WHERE id = ?;
         EOD;
         
         $stmt = mysqli_prepare($db, $query);
-        $isOnline = $volunteerJob->isOnline ? 1 : 0;
-        mysqli_stmt_bind_param($stmt, "sis", $volunteerJob->name, $isOnline, $volunteerJob->description);
+        mysqli_stmt_bind_param($stmt, "i", $id);
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
         } else {
-            throw new DatabaseSqlException("Query could not be executed: $query");
+            throw new DatabaseSqlException("Delete command could not be executed: $query");
+        }
+    }
+
+    public static function persist($db, $volunteerJob) {
+        if ($volunteerJob->id == null) {
+            $query = <<<EOD
+            INSERT INTO volunteer_job
+                    (job_name, is_online, job_description)
+            VALUES (?, ?, ?);
+            EOD;
+            
+            $stmt = mysqli_prepare($db, $query);
+            $isOnline = $volunteerJob->isOnline ? 1 : 0;
+            mysqli_stmt_bind_param($stmt, "sis", $volunteerJob->name, $isOnline, $volunteerJob->description);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Query could not be executed: $query");
+            }
+        } else {
+            $query = <<<EOD
+            UPDATE volunteer_job
+               SET job_name = ?, is_online = ?, job_description = ?
+             WHERE id = ?;
+            EOD;
+            
+            $stmt = mysqli_prepare($db, $query);
+            $isOnline = $volunteerJob->isOnline ? 1 : 0;
+            mysqli_stmt_bind_param($stmt, "sisi", $volunteerJob->name, $isOnline, $volunteerJob->description, $volunteerJob->id);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Query could not be executed: $query");
+            }
         }
     }
 

@@ -16,9 +16,9 @@ class VolunteerJobsWidget extends React.Component {
     render() {
         return (
             <div>
-                <div className="d-flex mb-2 align-items-baseline">
+                <div className="d-flex mb-2 align-items-baseline justify-content-between">
                     <h5 className="mr-3 mb-0">Volunteer Jobs</h5>
-                    <button className="btn btn-link" onClick={(e) => {this.openCreateModal()}}><i className="bi bi-plus-circle"></i></button>
+                    <button className="btn btn-outline-primary" onClick={(e) => {this.openModal()}}>Create Job</button>
                 </div>
                 {this.renderMain()}
             </div>
@@ -38,9 +38,14 @@ class VolunteerJobsWidget extends React.Component {
             let jobs = this.props.jobs.list.map(j => {
                 let type = j.isOnline ? (<small className="text-nowrap">(Online)</small>) : (<small className="text-nowrap">(In-Person)</small>);
                 return (<div className="col mb-4" key={'job-' + j.id}>
-                    <div className="card">
+                    <div className="card visible-on-hover">
                         <div className="card-header">
-                            <b>{j.name}</b> {type}
+                            <div className="d-flex align-items-top justify-content-between">
+                                <div className="mb-1">
+                                    <b>{j.name}</b> {type}
+                                </div>
+                                <button className="btn p-0" onClick={() => this.openModal(j)}><i className="bi bi-pencil text-primary"></i></button>
+                            </div>
                         </div>
                         <div className="card-body small">
                             {j.description}
@@ -57,8 +62,8 @@ class VolunteerJobsWidget extends React.Component {
         }
     }
 
-    openCreateModal() {
-        store.dispatch(showCreateJobModal(true));
+    openModal(job = null) {
+        store.dispatch(showCreateJobModal(true, job));
     }
 }
 
