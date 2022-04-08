@@ -1,11 +1,22 @@
 import axios from 'axios';
 import React from 'react';
-import { Modal, Spinner } from 'react-bootstrap';
+import { Form, Modal, Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import SimpleAlert from '../../common/simpleAlert';
 import { fetchMyShiftAssignments, fetchShifts } from '../../state/volunteerFunctions';
 import { renderDateRange } from '../../util/dateUtil';
+
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import advancedFormat from "dayjs/plugin/advancedFormat"
+import customParseFormat from "dayjs/plugin/customParseFormat"
+import { formatDay } from '../../util/dateUtil';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(customParseFormat);
+dayjs.extend(advancedFormat);
 
 class VolunteerSignUpAddModal extends React.Component {
 
@@ -13,14 +24,53 @@ class VolunteerSignUpAddModal extends React.Component {
         super(props);
         this.state = {
             loadingId: null,
-            message: null
+            message: null,
+            filter: {
+                day: "",
+                job: ""
+            }
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.show === false && this.props.show === true) {
+            this.setState((state) => ({...state, 
+                loadingId: null,
+                message: null,
+                filter: {
+                    day: "",
+                    job: ""
+                }
+            }));
             fetchShifts();
         }
+    }
+
+    renderFilterSection() {
+        let dayOptions = this.props.days ? this.props.days.map((d) => { return (<option value={d} key={'day-' + d}>{formatDay(d)}</option>)}) : undefined;
+        let jobOptions = this.props.jobs ? this.props.jobs.map((j) => { return (<option value={j.id} key={j.id}>{j.name}</option>); }) : undefined;
+
+        return (
+            <fieldset className="border p-3 mb-3 rounded">
+            <legend className="w-auto px-2 text-muted small">Filter</legend>
+            <div className="row">
+                <Form.Group className="col-md-3 col-md-6" controlId="job">
+                    <Form.Label className="sr-only">Job</Form.Label>
+                    <Form.Control as="select" onChange={(e) => this.filterJob(e.target.value)} value={this.getFilterJob()}>
+                        <option value="">All jobs</option>
+                        {jobOptions}
+                    </Form.Control>
+                </Form.Group>
+                <Form.Group className="col-md-3 col-md-6" controlId="day">
+                    <Form.Label className="sr-only">Day</Form.Label>
+                    <Form.Control as="select" onChange={(e) => this.filterDay(e.target.value)} value={this.getFilterDay()}>
+                        <option value="">All days</option>
+                        {dayOptions}
+                    </Form.Control>
+                </Form.Group>
+            </div>
+        </fieldset>                
+        );
     }
 
     render() {
@@ -40,13 +90,14 @@ class VolunteerSignUpAddModal extends React.Component {
             <Modal.Body>
                 <SimpleAlert message={this.state.message} />
                 <p>Select a shift to add it to your schedule</p>
+                {this.renderFilterSection()}
                 {list}
             </Modal.Body>
         </Modal>);
     }
 
     renderListOfShifts(shifts) {
-        return shifts.filter(s => !this.isExistingAssignment(s)).map((s, i) => {
+        return shifts.filter(s => !this.isExistingAssignment(s) && this.matchesFilter(s)).map((s, i) => {
             let emphasis = this.highNeed(s);
             return (<div className={'card mb-3 ' + (emphasis ? 'border-primary' : '')} key={'shift-' + s.id}>
                 <div className="card-body">
@@ -62,6 +113,44 @@ class VolunteerSignUpAddModal extends React.Component {
                 </div>
             </div>)
         });
+    }
+
+    matchesFilter(shift) {
+        let matches = true;
+        let filterDay = this.getFilterDay();
+        let filterJob = this.getFilterJob();
+
+        if (filterDay === "") {
+            // skip it
+        } else if (!(dayjs(shift.fromTime).format('YYYY-MM-DD') === filterDay) &&
+            !(dayjs(shift.toTime).format('YYYY-MM-DD') === filterDay)) {
+
+            matches = false;
+        } 
+
+        if (filterJob === "" || !matches) {
+            // skip it
+        } else if (filterJob != shift.job.id) {
+            matches = false;
+        }
+
+        return matches;
+    }
+
+    filterDay(day) {
+        this.setState((state) => ({...state, filter: {...state.filter, day: day }}));
+    }
+
+    filterJob(job) {
+        this.setState((state) => ({...state, filter: {...state.filter, job: job }}));
+    }
+
+    getFilterDay() {
+        return this.state.filter && this.state.filter.day != null ? this.state.filter.day : "";
+    }
+
+    getFilterJob() {
+        return this.state.filter && this.state.filter.job != null ? this.state.filter.job : "";
     }
 
     addShiftToMyAssignments(shift) {
@@ -107,7 +196,9 @@ class VolunteerSignUpAddModal extends React.Component {
 function mapStateToProps(state) {
     return { 
         assignments: state.volunteering.assignments,
-        shifts: state.volunteering.shifts || {}
+        shifts: state.volunteering.shifts || {},
+        days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
+        jobs: state.volunteering.jobs ? state.volunteering.jobs.list : []
     };
 }
 

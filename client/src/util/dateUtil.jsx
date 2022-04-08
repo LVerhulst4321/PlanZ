@@ -29,3 +29,7 @@ export function renderDateRange(fromTime, toTime, timezone) {
         return (<span>{fromString}</span>);
     }
 }
+
+export function formatDay(day) {
+    return dayjs(day).format('dddd (MMM D)');
+}

@@ -11,6 +11,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import customParseFormat from "dayjs/plugin/customParseFormat"
+import { formatDay } from '../../util/dateUtil';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
@@ -55,7 +56,7 @@ class VolunteerShiftWidget extends React.Component {
             return (<p>No shifts have been created.</p>)
         } else {
             let shifts = this.getFilteredShifts();
-            let dayOptions = this.props.days ? this.props.days.map((d) => { return (<option value={d} key={'day-' + d}>{this.formatDay(d)}</option>)}) : undefined;
+            let dayOptions = this.props.days ? this.props.days.map((d) => { return (<option value={d} key={'day-' + d}>{formatDay(d)}</option>)}) : undefined;
             let jobOptions = this.props.jobs ? this.props.jobs.map((j) => { return (<option value={j.id} key={j.id}>{j.name}</option>); }) : undefined;
             return (
                 <div>
@@ -131,9 +132,6 @@ class VolunteerShiftWidget extends React.Component {
         return this.state.filter && this.state.filter.job != null ? this.state.filter.job : "";
     }
 
-    formatDay(day) {
-        return dayjs(day).format('dddd (MMM D)');
-    }
     openCreateModal() {
         store.dispatch(showCreateShiftModal(true));
     }

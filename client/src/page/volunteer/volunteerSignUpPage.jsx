@@ -3,8 +3,7 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
-import store from '../../state/store';
-import { fetchMyShiftAssignments } from '../../state/volunteerFunctions';
+import { fetchJobs, fetchMyShiftAssignments } from '../../state/volunteerFunctions';
 
 import { renderDateRange } from '../../util/dateUtil';
 import VolunteerSignUpAddModal from './volunteerSignUpAddModal';
@@ -24,7 +23,8 @@ class VolunteerSignUpPage extends React.Component {
 
     componentDidMount() {
         if (this.props.assignments.loading) {
-            fetchMyShiftAssignments()
+            fetchMyShiftAssignments();
+            fetchJobs();
         }
     }
 
@@ -33,11 +33,12 @@ class VolunteerSignUpPage extends React.Component {
         if (this.props.assignments && this.props.assignments.list && this.props.assignments.list.length > 0) {
             shifts = this.props.assignments.list.map((s,i) => {
                 let dateRange = renderDateRange(s.fromTime, s.toTime, this.props.assignments.context ? this.props.assignments.context.timezone : null);
-                return (<div className="mb-4 visible-on-hover" key={'shift-' + i}>
+                return (<div className="mb-5 visible-on-hover" key={'shift-' + i}>
                     <div className="d-flex align-items-center">
-                        <div className="mr-3 mb-1"><b>{s.job.name}:</b> {dateRange}</div>
+                        <div className="mr-3 mb-1"><b>{s.job.name}</b> <small>{s.job.isOnline ? '(Online)' : '(In-Person)'}</small></div>
                         <button className="btn p-0" onClick={() => this.showDeleteModal(true, s)}><i className="bi-trash text-danger"></i></button>
                     </div>
+                    <div><b>When:</b> {dateRange}</div>
                     <div><b>Where:</b> {s.location}</div>
                     <div>{s.job.description}</div>
                 </div>);
@@ -55,7 +56,7 @@ class VolunteerSignUpPage extends React.Component {
                         </div>
                         <div className="card-body">
                             <p>Fan-run cons are only possible because of the incredible effort of volunteers. Please consider signing up for a volunteer shift.</p>
-                            <h5>Your Shifts</h5>
+                            <h5 className="mb-3">Your Shifts</h5>
                             {shifts}
                         </div>
                     </div>
