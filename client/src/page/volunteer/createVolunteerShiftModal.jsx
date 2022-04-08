@@ -218,6 +218,24 @@ class CreateVolunteerShiftModal extends FormComponent {
                     message: message
                 }));
             }
+
+            let minPeople = this.getFormValue("minPeople");
+            let maxPeople = this.getFormValue("maxPeople");
+
+            if (parseInt(minPeople) < parseInt(maxPeople)) {
+                valid = false;
+
+                let errors = this.state.errors;
+                errors['minPeople'] = true;
+                errors['maxPeople'] = true;
+
+                let message = { severity: "danger", text: "There's a problem with the volunteer counts"}
+                this.setState((state) => ({
+                    ...state,
+                    errors: errors,
+                    message: message
+                }));
+            }
         }
         return valid;
     }
