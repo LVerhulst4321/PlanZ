@@ -13,3 +13,5 @@ found in the [README file for the React client code](../../../client/README.md).
 ## Database and Tables
 
 The following diagram shows the tables that were created specifically to support volunteering functionality.
+
+![Volunteer Tables](./volunteer_er_diagram.png)

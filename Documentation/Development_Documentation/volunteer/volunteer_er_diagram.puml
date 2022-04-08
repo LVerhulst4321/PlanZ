@@ -1,10 +1,27 @@
-@startuml
-title Zambia Entity Relationship Diagram
+@startuml volunteer_er_diagram
+title PlanZ Volunteer DB Entity Relationship Diagram
 'hide the spot
 hide circle
 
 'avoid problems with angled crows feet
 skinparam linetype ortho
+
+skinparam roundCorner 10
+
+skinparam Arrow {
+    Color #4a4a4a
+    FontColor #4a4a4a
+    FontSize 12
+}
+
+skinparam class {
+    BorderColor #222222
+    FontColor #222222
+    BackgroundColor #fcf6e4
+    FontSize 12
+    AttributeFontColor #4a4a4a
+}
+
 
 entity volunteer_job {
 * id : int(11) <<auto increment>>
@@ -25,12 +42,20 @@ entity volunteer_shift {
 * to_time : timestamp
 }
 
+entity participant_has_volunteer_shift {
+* badgeid : varchar(15)
+* volunteer_shift_id : int(11)
+--
+}
+
 entity Participants {
-* badgeid : int(11) <<auto increment>>
+* badgeid : varchar(15)
 --
 }
 
 volunteer_shift }o--|| volunteer_job
+participant_has_volunteer_shift }o--|| volunteer_shift
+participant_has_volunteer_shift }o--|| Participants
 
 
 @enduml
