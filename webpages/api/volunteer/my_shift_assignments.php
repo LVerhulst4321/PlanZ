@@ -32,7 +32,7 @@ function get_potential_days() {
 }
 
 function is_input_data_valid($db, $json) {
-    return array_key_exists("shift_id", $json) && VolunteerShift::exists($db, $json['shift_id']);
+    return array_key_exists("shiftId", $json) && VolunteerShift::exists($db, $json['shiftId']);
 }
 
 start_session_if_necessary();
@@ -56,7 +56,7 @@ try {
         $json = json_decode($json_string, true);
         
         if (is_input_data_valid($db, $json)) {
-            VolunteerShift::deleteAssignment($db, $badgeId, $json["shift_id"]);
+            VolunteerShift::deleteAssignment($db, $badgeId, $json["shiftId"]);
             http_response_code(204);
         } else {
             http_response_code(400);
@@ -69,7 +69,7 @@ try {
         
         if (is_input_data_valid($db, $json)) {
             try {
-                VolunteerShift::createAssignment($db, $badgeId, $json["shift_id"]);
+                VolunteerShift::createAssignment($db, $badgeId, $json["shiftId"]);
                 http_response_code(204);
             } catch (DatabaseDuplicateKeyException $e) {
                 http_response_code(409);
