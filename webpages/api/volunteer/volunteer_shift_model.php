@@ -41,7 +41,7 @@ class VolunteerShift {
            GROUP BY S.id, S.min_volunteer_count, S.max_volunteer_count, S.from_time,
                     S.to_time, S.location, J.id, J.job_name, J.is_online, J.job_description
            ORDER BY S.from_time, J.job_name;
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         if (mysqli_stmt_execute($stmt)) {
@@ -75,7 +75,7 @@ class VolunteerShift {
         GROUP BY S.id, S.min_volunteer_count, S.max_volunteer_count, S.from_time,
                     S.to_time, S.location, J.id, J.job_name, J.is_online, J.job_description
            ORDER BY S.from_time, J.job_name;
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "s", $badgeid); 
@@ -129,7 +129,7 @@ class VolunteerShift {
             INSERT INTO volunteer_shift
                     (volunteer_job_id, from_time, to_time, location, min_volunteer_count, max_volunteer_count)
             VALUES (?, ?, ?, ?, ?, ?);
-            EOD;
+EOD;
             
             $stmt = mysqli_prepare($db, $query);
             mysqli_stmt_bind_param($stmt, "isssii", $volunteerShift->job->id, $fromTime, $toTime, 
@@ -144,7 +144,7 @@ class VolunteerShift {
             UPDATE volunteer_shift
                SET volunteer_job_id = ?, from_time = ?, to_time = ?, location = ?, min_volunteer_count = ?, max_volunteer_count = ?
              WHERE id = ?;
-            EOD;
+EOD;
             
             $stmt = mysqli_prepare($db, $query);
             mysqli_stmt_bind_param($stmt, "isssiii", $volunteerShift->job->id, $fromTime, $toTime, 
@@ -164,7 +164,7 @@ class VolunteerShift {
             FROM
                 volunteer_shift S 
            WHERE id = ?;
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "i", $shiftId);
@@ -185,7 +185,7 @@ class VolunteerShift {
     public static function deleteAssignment($db, $badgeId, $shiftId) {
         $query = <<<EOD
         DELETE FROM participant_has_volunteer_shift WHERE badgeid = ? and volunteer_shift_id = ?;
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "si", $badgeId, $shiftId);
@@ -199,7 +199,7 @@ class VolunteerShift {
     public static function deleteShift($db, $shiftId) {
         $query = <<<EOD
         DELETE FROM volunteer_shift WHERE id = ?;
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "i", $shiftId);
@@ -213,7 +213,7 @@ class VolunteerShift {
     public static function createAssignment($db, $badgeId, $shiftId) {
         $query = <<<EOD
         INSERT INTO participant_has_volunteer_shift (badgeid, volunteer_shift_id) values (?, ?);
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "si", $badgeId, $shiftId);

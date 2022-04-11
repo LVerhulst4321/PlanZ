@@ -23,7 +23,7 @@ class VolunteerJob {
           FROM
                 volunteer_job V
          ORDER BY job_name;
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         $records = [];
@@ -49,7 +49,7 @@ class VolunteerJob {
     public static function deleteJob($db, $id) {
         $query = <<<EOD
         DELETE FROM volunteer_job WHERE id = ?;
-        EOD;
+EOD;
         
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
@@ -66,7 +66,7 @@ class VolunteerJob {
             INSERT INTO volunteer_job
                     (job_name, is_online, job_description)
             VALUES (?, ?, ?);
-            EOD;
+EOD;
             
             $stmt = mysqli_prepare($db, $query);
             $isOnline = $volunteerJob->isOnline ? 1 : 0;
@@ -81,7 +81,7 @@ class VolunteerJob {
             UPDATE volunteer_job
                SET job_name = ?, is_online = ?, job_description = ?
              WHERE id = ?;
-            EOD;
+EOD;
             
             $stmt = mysqli_prepare($db, $query);
             $isOnline = $volunteerJob->isOnline ? 1 : 0;
