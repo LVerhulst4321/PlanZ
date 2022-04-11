@@ -7,6 +7,10 @@ function start_session_if_necessary() {
     }
 }
 
+function getBadgeId() {
+    return isLoggedIn() ? $_SESSION['badgeid'] : null;
+}
+
 function isLoggedIn() {
     return isset($_SESSION['badgeid']);
 }
@@ -17,6 +21,10 @@ function getLoggedInUserBadgeId() {
 
 function isProgrammingStaff() {
     return isLoggedIn() && may_I("Staff");
+}
+
+function isVolunteerSetUpAllowed() {
+    return isLoggedIn() && may_I("Volunteering Set-up");
 }
 
 

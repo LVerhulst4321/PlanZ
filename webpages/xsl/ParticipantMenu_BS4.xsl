@@ -73,6 +73,11 @@
               <a class="nav-link py-1" href="MySchedule.php">My Schedule</a>
             </li>
           </xsl:if>
+          <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='Volunteering']">
+            <li class="nav-item py-0">
+              <a class="nav-link py-1" href="./volunteering.php">Volunteering</a>
+            </li>
+          </xsl:if>          
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']">
             <li class="nav-item py-0 ml-4">
               <a class="nav-link py-1" href="./brainstorm/">Suggest a Session</a>

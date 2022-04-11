@@ -1,11 +1,11 @@
 <?php
 
-function determine_con_start_date() {
-    $timeZone = PHP_DEFAULT_TIMEZONE;
-    $dateSrc = CON_START_DATIM;
+define('__ROOT__', dirname(__FILE__)); 
+require_once(__ROOT__.'/con_data.php');
 
-    $dateTime = new DateTime($dateSrc, new DateTimeZone($timeZone));
-    return $dateTime;
+function determine_con_start_date() {
+    $conData = ConData::fromEnvironmentDefinition();
+    return $conData->startDate;
 }
 
 interface ScheduleCellData {

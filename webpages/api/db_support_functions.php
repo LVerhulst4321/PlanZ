@@ -4,6 +4,7 @@
 
 class DatabaseException extends Exception {};
 class DatabaseSqlException extends DatabaseException {};
+class DatabaseDuplicateKeyException extends DatabaseException {};
 
 function connect_to_db($set_timezone = false) {
     $db = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);

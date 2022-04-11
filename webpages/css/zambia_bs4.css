@@ -268,3 +268,13 @@ table.dataTable.table-sm thead th {
 table.dataTable.table-sm tbody th, table.dataTable.table-sm tbody td {
   padding: 0.3rem;
 }
+@media (pointer: fine) {
+  .visible-on-hover button.btn {
+      display: none;
+      transition: 1s;
+  }
+  .visible-on-hover:hover button.btn {
+      display: inline;
+      transition: 1s;
+  }
+}

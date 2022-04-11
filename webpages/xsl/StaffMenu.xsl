@@ -15,6 +15,7 @@
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
   <xsl:variable name="ExportSchedule" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ExportSchedule']"/>
+  <xsl:variable name="ShowVolunteer" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Volunteering Set-up']"/>
   <xsl:variable name="EditAnyTable" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_All' or
         @permatomtag='ce_AgeRanges' or @permatomtag='ce_BioEditStatuses' or @permatomtag='ce_Credentials' or @permatomtag='ce_Divisions' or
         @permatomtag='ce_EmailCC' or @permatomtag='ce_EmailFrom' or @permatomtag='ce_EmailTo' or @permatomtag='ce_Features' or
@@ -143,6 +144,12 @@
                   <li>
                     <a href="CurrentSchedule.php">Current Schedule</a>
                   </li>
+                  <xsl:if test="$ShowVolunteer">
+                    <li>
+                      <a class="dropdown-item" href="StaffVolunteerPage.php">Create Volunteer Schedule</a>
+                    </li>
+                  </xsl:if>
+
                 </ul>
               </li>
               <li class="divider-vertical"/>
