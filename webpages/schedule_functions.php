@@ -80,11 +80,12 @@ function get_scheduled_events_with_participants_as_xml() {
 }
 
 function get_scheduled_events_with_participants() {
-    $query1 =<<<'EOD'
+    $ConStartDatim = CON_START_DATIM;
+    $query1 =<<<EOD
 SELECT
         S.sessionid, S.title, S.progguiddesc, R.roomname, SCH.roomid, PS.pubstatusname,
-        DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
-        ADDTIME('$ConStartDatim$',SCH.starttime) as starttimeraw,
+        DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+        ADDTIME('$ConStartDatim',SCH.starttime) as starttimeraw,
         DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
         T.trackname, KC.kidscatname, S.hashtag
     FROM
@@ -111,7 +112,7 @@ EOD;
         $session->trackname = $row["trackname"];
         $session->hashtag = $row["hashtag"];
         $session->starttime = $row["starttime"];
-        $session->starttime_unformatted = DateTime::createFromFormat ( "Y-m-d H:i:s", $row["starttimeraw"] );
+        $session->starttime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row["starttimeraw"] );
         $session->participants = array();
 
 
