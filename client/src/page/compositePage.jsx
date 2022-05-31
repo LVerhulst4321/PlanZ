@@ -1,4 +1,5 @@
 import React from 'react';
+import AdminModulesPage from './admin/adminModulesPage';
 import StaffVolunteerPage from './volunteer/staffVolunteerPage';
 import VolunteerSignUpPage from './volunteer/volunteerSignUpPage';
 
@@ -17,6 +18,8 @@ class CompositePage extends React.Component {
         let url = new URL(window.location.href);
         if (url.pathname === '/StaffVolunteerPage.php') {
             return (<StaffVolunteerPage />);
+        } else if (url.pathname === '/AdminModules.php') {
+            return (<AdminModulesPage />);
         } else if (url.pathname === '/volunteering.php') {
             return (<VolunteerSignUpPage />);
         } else {

@@ -7,7 +7,7 @@ import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
 import { showCreateJobModal } from '../../state/volunteerActions';
 import { fetchJobs, fetchShifts } from '../../state/volunteerFunctions';
-import FormComponent from './formComponent';
+import FormComponent from '../../common/formComponent';
 
 class CreateVolunteerJobModal extends FormComponent {
 

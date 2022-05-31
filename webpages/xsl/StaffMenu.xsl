@@ -13,6 +13,7 @@
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
   <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+  <xsl:variable name="AdminModules" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminModules']"/>
   <xsl:variable name="Administrator" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
   <xsl:variable name="ExportSchedule" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ExportSchedule']"/>
   <xsl:variable name="ShowVolunteer" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Volunteering Set-up']"/>
@@ -204,6 +205,11 @@
                     <xsl:if test="$ExportSchedule">
                       <li>
                         <a href="StaffCreateKonOpas.php">Update KonOpas and ConClar</a>
+                      </li>
+                    </xsl:if>
+                    <xsl:if test="$AdminModules">
+                      <li>
+                        <a href="AdminModules.php">Administer Modules</a>
                       </li>
                     </xsl:if>
                   </ul>
