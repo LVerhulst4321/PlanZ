@@ -278,3 +278,11 @@ table.dataTable.table-sm tbody th, table.dataTable.table-sm tbody td {
       transition: 1s;
   }
 }
+
+table.table tr.highlight td {
+  background-color: #f6ebc8;
+}
+
+table.table.table-striped tr.highlight:nth-child(odd) td {
+  background-color: #d1c7a6;
+}

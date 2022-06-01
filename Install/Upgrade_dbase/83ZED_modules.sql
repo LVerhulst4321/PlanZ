@@ -29,3 +29,6 @@ values ('AdminModules', 'Admin Modules', 'Enables admin folks to activate module
 
 insert into `Permissions` (permatomid, phaseid, permroleid)
 select max(permatomid), null, 1 from PermissionAtoms;
+
+
+INSERT INTO PatchLog (patchname) VALUES ('83ZED_modules.sql');

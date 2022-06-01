@@ -15,6 +15,7 @@ class LoadingButton extends Component {
         />) : undefined;
         return (<Button variant={this.props.variant ? this.props.variant : "primary"} 
             onClick={() => this.props.onClick()} 
+            type={this.props.type ? this.props.type : 'button'}
             disabled={!this.props.enabled || this.props.loading}>{spinner} {this.props.children}</Button>);
     }
 }

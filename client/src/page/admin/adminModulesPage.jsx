@@ -1,9 +1,22 @@
+import axios from 'axios';
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import LoadingButton from '../../common/loadingButton';
+import { redirectToLogin } from '../../common/redirectToLogin';
+import SimpleAlert from '../../common/simpleAlert';
 import { fetchModules } from '../../state/moduleFunctions';
 
 class AdminModulesPage extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            modules: [],
+            loading: false,
+            message: null
+        };
+    }
 
     componentDidMount() {
         if (this.props.modules.loading) {
@@ -12,14 +25,22 @@ class AdminModulesPage extends React.Component {
     }
 
     render() {
-        return (            
-            <div className="card mb-3">
-                <div className="card-header">
-                    <h2>Administer Modules</h2>
-                </div>
-                <div className="card-body">
-                    <p>This page allows administrators to decide which modules are available for their instance of PlanZ.</p>
-                    {this.renderModulesTable()}
+        return (       
+            <div>
+                <SimpleAlert message={this.state.message} />
+                <div className="card mb-3">
+                    <div className="card-header">
+                        <h2>Administer Modules</h2>
+                    </div>
+                    <div className="card-body">
+                        <p>This page allows administrators to decide which modules are available for their instance of PlanZ.</p>
+                        {this.renderModulesTable()}
+                    </div>
+                    <div className="card-footer text-right">
+                        <LoadingButton variant="primary" type="button" onClick={() => this.saveChanges()} 
+                            enabled={this.state.modules.length !== 0}
+                            loading={this.state.loading}>Save</LoadingButton>
+                    </div>
                 </div>
             </div>
         )
@@ -28,10 +49,11 @@ class AdminModulesPage extends React.Component {
     renderModulesTable() {
         if (this.props.modules && this.props.modules.list) {
             const rows = this.props.modules.list.map((m) => { 
-                return (<tr key={'module-' + m.id}>
-                        <td className="align-middle">{m.id}</td>
+                let highlight = this.state.modules.indexOf(m.id) >= 0;
+                return (<tr key={'module-' + m.id} className={highlight ? 'highlight' : ''}>
+                        <td className="align-middle text-center">{m.id}</td>
                         <td className="align-middle">
-                            <Form.Control as="select" value={this.getEnabledValue(m)} onChange={(e) => this.setEnabledValue(e.target.value, value)}>
+                            <Form.Control as="select" value={this.getEnabledValue(m)} onChange={(e) => this.setEnabledValue(e.target.value, m)}>
                                 <option value={'false'}>Not enabled</option>
                                 <option value={'true'}>Enabled</option>
                             </Form.Control>
@@ -41,10 +63,10 @@ class AdminModulesPage extends React.Component {
                     </tr>); 
             });
 
-            return (<table className="table table-sm table-striped">
+            return (<table className="table table-striped">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th className="text-center">Id</th>
                         <th>Status</th>
                         <th>Name</th>
                         <th>Description</th>
@@ -59,18 +81,73 @@ class AdminModulesPage extends React.Component {
         }
     }
 
-    getEnabledValue(module) {
-        return "true";
+    getEnabledValue(planzModule) {
+        let result = false;
+        this.props.modules.list.forEach((m) => { if (m.id === planzModule.id) result = m.isEnabled });
+        return (this.state.modules.indexOf(planzModule.id) >= 0) ? !result : result;
     }
 
-    setEnabledValue(moddule) {
+    setEnabledValue(value, planzModule) {
+        if (this.state.modules.indexOf(planzModule.id) >= 0) {
+            this.setState((state) => {
+                let temp = [ ...state.modules ];
+                temp.splice(temp.indexOf(planzModule.id), 1);
+                return {...state, modules: temp, message: null };
+            });
+        } else {
+            this.setState((state) => ({...state, message: null, modules: [...state.modules, planzModule.id ]}));
+        }
 
+    }
+
+    saveChanges() {
+        let data = {};
+        this.props.modules.list.forEach((m) => {
+            if (this.state.modules.indexOf(m.id) >= 0) {
+                data[m.packageName] = !m.isEnabled;
+            }
+        });
+
+        this.setState((state) => ({
+            ...state,
+            loading: true,
+            message: null
+        }));
+
+        axios.post('/api/admin/modules.php', data)
+            .then(res => {
+                this.setState({
+                    ...this.state,
+                    loading: false,
+                    message: {
+                        severity: "success",
+                        text: "Ok. Your changes have been saved."
+                    },
+                    modules: []
+                });
+                fetchModules();
+            })
+            .catch(error => {
+                console.log(error);
+                if (error.response && error.response.status === 401) {
+                    redirectToLogin();
+                } else {
+                    this.setState({
+                        ...this.state,
+                        loading: null,
+                        message: {
+                            severity: "danger",
+                            text: "Sorry. We've had a bit of a technical problem. Try again?"
+                        }
+                    });
+                }
+            });
     }
 }
 
 function mapStateToProps(state) {
     return { 
-        modules: state.modules || {}
+        modules: state.modules || []
     };
 }
 export default connect(mapStateToProps)(AdminModulesPage);

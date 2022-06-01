@@ -8,8 +8,15 @@ export function fetchModules() {
             store.dispatch(setModules(res.data.modules));
         })
         .catch(error => {
-            let message = "The list of modeules could not be downloaded."
-            store.dispatch(setModules({}, message));
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = {
+                    severity: "danger",
+                    text: "The list of modeules could not be downloaded."
+                };
+                store.dispatch(setModules({ list: [] }, message));
+            }
         }
     );
 }
