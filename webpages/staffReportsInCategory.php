@@ -29,13 +29,7 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     exit();
 }
 
-require_once('api/db_support_functions.php');
-require_once('api/admin/module_model.php');
-
-$modules = array();
-foreach (PlanzModule::findAllEnabledModules($linki) as $m) {
-    $modules[] = $m->packageName;
-}
+$modules = $_SESSION['modules'];
 
 staff_header($title, true);
 ?>

@@ -30,5 +30,10 @@ values ('AdminModules', 'Admin Modules', 'Enables admin folks to activate module
 insert into `Permissions` (permatomid, phaseid, permroleid)
 select max(permatomid), null, 1 from PermissionAtoms;
 
+ALTER TABLE `PermissionAtoms` 
+  ADD COLUMN `module_id` int(11) REFERENCES `module`(id) ON DELETE CASCADE; 
+
+UPDATE `PermissionAtoms` SET module_id = (select max(id) from `module`) WHERE `permatomtag` in ('Volunteering', 'Volunteering Set-up');
+
 
 INSERT INTO PatchLog (patchname) VALUES ('83ZED_modules.sql');

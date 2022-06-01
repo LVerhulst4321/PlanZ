@@ -1114,7 +1114,9 @@ SELECT DISTINCT
         LEFT JOIN UserHasPermissionRole UHPR ON P.permroleid = UHPR.permroleid AND UHPR.badgeid='$badgeid'
     WHERE
             (PH.phaseid IS NOT NULL OR P.phaseid IS NULL)
-        AND (UHPR.badgeid IS NOT NULL OR P.badgeid='$badgeid');
+        AND (UHPR.badgeid IS NOT NULL OR P.badgeid='$badgeid')
+        AND (PA.module_id is null 
+			OR PA.module_id in (select id from module where is_enabled = 1));
 EOD;
     if (!$result = mysqli_query_with_error_handling($query, true)) {
         return false;
