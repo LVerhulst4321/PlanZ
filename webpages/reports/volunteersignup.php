@@ -4,6 +4,7 @@ $report = [];
 $report['name'] = 'Volunteer Shift Sign Up';
 $report['multi'] = 'true';
 $report['output_filename'] = 'volunteer_shifts.csv';
+$report['module'] = 'planz.volunteering';
 $CON_NAME = CON_NAME;
 $report['description'] = 'Participants who have signed up for volunteer shifts';
 $report['categories'] = array(
