@@ -53,6 +53,7 @@ EOD;
     $_SESSION['badgeid'] = $badgeid;
     $_SESSION['hashedPassword'] = $dbpassword;
     set_permission_set($badgeid);
+    set_modules();
     set_login_time($badgeid);
 } else {
     $badgeid = $_SESSION['badgeid'];

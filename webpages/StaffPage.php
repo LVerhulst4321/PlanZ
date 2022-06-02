@@ -64,7 +64,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 mysqli_free_result($result);
 echo "</ul>\n";
 
-$query = "SELECT * FROM Phases WHERE current=0 AND implemented=1 ORDER BY display_order";
+$query = "SELECT * FROM Phases WHERE current=0 AND implemented=1 AND (module_id is null OR module_id in (select id from module where is_enabled = 1)) ORDER BY display_order";
 if (!$result = mysqli_query_exit_on_error($query)) {
     exit(); // Should have exited already
 }

@@ -66,12 +66,14 @@ EOD;
 	$paramArray = array();
 
 	$query=<<<EOD
-SELECT
-		phaseid, phasename, notes, current
+  SELECT    phaseid, phasename, notes, current
 	FROM
 			Phases
 	WHERE
 			implemented = 1
+	  AND
+	        (module_id is null 
+			OR module_id in (select id from module where is_enabled = 1))
 	ORDER BY display_order ASC;
 EOD;
 

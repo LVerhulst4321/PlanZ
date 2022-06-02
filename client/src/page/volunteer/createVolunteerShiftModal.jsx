@@ -7,7 +7,7 @@ import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
 import { showCreateShiftModal } from '../../state/volunteerActions';
 import { fetchShifts } from '../../state/volunteerFunctions';
-import FormComponent from './formComponent';
+import FormComponent from '../../common/formComponent';
 
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';

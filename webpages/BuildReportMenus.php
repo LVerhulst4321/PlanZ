@@ -29,8 +29,13 @@ function process_all_files_in_directory($basePath, $subDirectoryName, &$allRepor
                 if (isset($report)) {
                     // preserve only data needed for menu generation
                     $key = $subDirectoryName == "" ? $reportFileName : ($subDirectoryName . '/' . $reportFileName);
-                    $allReports[$key] = array('name' => $report['name'], 'description' => $report['description'], 'categories' => $report['categories']);
+                    $temp = array('name' => $report['name'], 'description' => $report['description'], 'categories' => $report['categories']);
+                    if (array_key_exists('module', $report)) {
+                        $temp['module'] = $report['module'];
+                    }
+                    $allReports[$key] = $temp;
                     unset($report);
+                    unset($temp);
                 } else {
                     error_log("cannot work with : $path/$reportFileName");
                 }
@@ -80,14 +85,30 @@ function build_report_menus($path, $alphabeticSort = false) {
         }
         fwrite($staffReportsICIFilHand, ");\n");
     }
-    fwrite($staffReportsICIFilHand, "\$reportNames = array();\n");
+    // write report item entry
+    fwrite($staffReportsICIFilHand, "\$reportItem = array();\n");
     foreach($allReports as $reportName => $reportArray) {
-        fwrite($staffReportsICIFilHand, "\$reportNames['$reportName'] = '{$reportArray['name']}';\n");
-    }
-    fwrite($staffReportsICIFilHand, "\$reportDescriptions = array();\n");
-    foreach($allReports as $reportName => $reportArray) {
+        $name = addslashes($reportArray['name']);
         $description = addslashes($reportArray['description']);
-        fwrite($staffReportsICIFilHand, "\$reportDescriptions['$reportName'] = \"{$description}\";\n");
+        fwrite($staffReportsICIFilHand, "\$reportItem['$reportName'] = array(\"name\" => \"$name\", \"description\" => \"$description\"");
+
+        $separator = "";
+        fwrite($staffReportsICIFilHand, ", \"categories\" => array(");
+        foreach($reportArray['categories'] as $category => $sortOrder) {
+            if ($category && $category != "" && mb_strlen($category) > 0) {
+                $categoryName = addslashes($category);
+                fwrite($staffReportsICIFilHand, "$separator\"$categoryName\"");
+                $separator = ", ";
+            }
+        }
+        fwrite($staffReportsICIFilHand, ")");
+
+        if (array_key_exists("module", $reportArray)) {
+            $planzModule = addslashes($reportArray['module']);
+            fwrite($staffReportsICIFilHand, ", \"module\" => \"$planzModule\"");
+        }
+
+        fwrite($staffReportsICIFilHand, ");\n");
     }
     fwrite($staffReportsICIFilHand, "\$reportOrdering = " . ($alphabeticSort ? "'ALPHA'" : "'CATEGORY'") . ";\n");
     fclose($reportMenuFilHand);

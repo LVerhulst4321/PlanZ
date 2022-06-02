@@ -16,6 +16,7 @@
     <xsl:variable name="ConfigureReports"
         select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
     <xsl:variable name="AdminPhases" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminPhases']"/>
+    <xsl:variable name="AdminModules" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AdminModules']"/>
     <xsl:variable name="ShowVolunteer" select="/doc/query[@queryname='permission_set']/row[@permatomtag='Volunteering Set-up']"/>
     <xsl:variable name="Administrator"
         select="/doc/query[@queryname='permission_set']/row[@permatomtag='Administrator']"/>
@@ -169,6 +170,9 @@
                                 </xsl:if>
                                 <xsl:if test="$ExportSchedule">
                                     <a class="dropdown-item" href="StaffCreateKonOpas.php">Update KonOpas and ConClar</a>
+                                </xsl:if>
+                                <xsl:if test="$AdminModules">
+                                    <a class="dropdown-item" href="AdminModules.php">Administer Modules</a>
                                 </xsl:if>
                             </div>
                         </div>

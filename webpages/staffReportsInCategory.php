@@ -1,6 +1,6 @@
 <?php
 // Copyright (c) 2015-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-global $message_error, $title;
+global $message_error, $title, $linki;
 $title = "Reports in Category";
 require_once('StaffCommonCode.php');
 $CON_NAME = CON_NAME;
@@ -28,6 +28,9 @@ if ($reportcategoryid !== "" && !isset($reportCategories[$reportcategoryid])) {
     RenderError($message_error);
     exit();
 }
+
+$modules = $_SESSION['modules'];
+
 staff_header($title, true);
 ?>
 <div class="container">
@@ -36,13 +39,11 @@ staff_header($title, true);
             <div class="list-group">
 <?php 
 $reportList = array();
-if ($reportcategoryid === "") {
-    foreach ($reportNames as $reportFileName => $reportName) {
-        $reportList[] = array("fileName" => $reportFileName, "name" => $reportName, "description" => $reportDescriptions[$reportFileName]);
-    }
-} else {
-    foreach ($reportCategories[$reportcategoryid] as $reportFileName) {
-        $reportList[] = array("fileName" => $reportFileName, "name" => $reportNames[$reportFileName], "description" => $reportDescriptions[$reportFileName]);
+foreach ($reportItem as $reportFileName => $item) {
+    if ($reportcategoryid === "" || in_array($reportcategoryid, $item['categories'])) {
+        if (!array_key_exists('module', $item) || in_array($item['module'], $modules)) {
+            $reportList[] = array("fileName" => $reportFileName, "name" => $item['name'], "description" => $item['description']);
+        }
     }
 }
 

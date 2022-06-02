@@ -1079,6 +1079,23 @@ EOD;
     return $participantAvailability;
 }
 
+// Function set_modules()
+// This function gets a list of all of the enabled modules
+//
+function set_modules() {
+    $_SESSION['modules'] = array();
+    $query = <<<EOD
+SELECT package_name, is_enabled FROM module;
+EOD;
+    if (!$result = mysqli_query_with_error_handling($query, true)) {
+        return false;
+    }
+    while ($row = mysqli_fetch_object($result)) {
+        $_SESSION['modules'][$row->package_name] = $row->is_enabled;
+    }
+    mysqli_free_result($result);
+}
+
 // Function set_permission_set($badgeid)
 // Performs complicated join to get the set of permission atoms available to the user
 // Stores them in global variable $permission_set
@@ -1097,7 +1114,9 @@ SELECT DISTINCT
         LEFT JOIN UserHasPermissionRole UHPR ON P.permroleid = UHPR.permroleid AND UHPR.badgeid='$badgeid'
     WHERE
             (PH.phaseid IS NOT NULL OR P.phaseid IS NULL)
-        AND (UHPR.badgeid IS NOT NULL OR P.badgeid='$badgeid');
+        AND (UHPR.badgeid IS NOT NULL OR P.badgeid='$badgeid')
+        AND (PA.module_id is null 
+			OR PA.module_id in (select id from module where is_enabled = 1));
 EOD;
     if (!$result = mysqli_query_with_error_handling($query, true)) {
         return false;
