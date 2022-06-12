@@ -1012,7 +1012,7 @@ LOCK TABLES `Participants` WRITE;
 /*!40000 ALTER TABLE `Participants` DISABLE KEYS */;
 INSERT INTO `Participants` (`badgeid`, `password`, `bestway`, `interested`, `bio`, `pubsname`, `sortedpubsname`, `share_email`, `staff_notes`, `use_photo`, `data_retention`) VALUES
     ('1','$2y$10$yE56xXk2bbcbyzlOSrOWvePLyfRqG0DFy9jsdMs97mKpdCzaFauh.',NULL,1,NULL,'Joe Staff','Staff,Joe',1,NULL,NULL, 0),
-    ('2','$2y$10$/j8Xcw5jMuN/MbZ63GHJw.hG76rg./Fkf5gnORqoldRo3bqVaRbaG',NULL,1,NULL,'Jane Participant','Participant,Jane',1,NULL,NULL, 0),
+    ('2','$2y$10$/j8Xcw5jMuN/MbZ63GHJw.hG76rg./Fkf5gnORqoldRo3bqVaRbaG',NULL,1,NULL,'Jane Participant','Participant,Jane',1,NULL,NULL, 0);
 /*!40000 ALTER TABLE `Participants` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2292,7 +2292,7 @@ CREATE TABLE `room_availability_slot` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `availability_schedule_id` INT NOT NULL,
     `start_time` time NOT NULL,
-    `end_time time` NOT NULL,
+    `end_time` time NOT NULL,
     `divisionid` INT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2869,7 +2869,7 @@ INSERT INTO `SurveyQuestionTypeDefaults` (`typeid`, `ordinal`, `value`, `display
     (130,55,'CD',55,'Congo, (Kinshasa)',NULL,0),
     (130,56,'CK',56,'Cook Islands',NULL,0),
     (130,57,'CR',57,'Costa Rica',NULL,0),
-    (130,58,'CI',58,'Côte dNULLIvoire','',0),
+    (130,58,'CI',58,'Cï¿½te dNULLIvoire','',0),
     (130,59,'HR',59,'Croatia',NULL,0),
     (130,60,'CU',60,'Cuba',NULL,0),
     (130,61,'CY',61,'Cyprus',NULL,0),
@@ -2993,11 +2993,11 @@ INSERT INTO `SurveyQuestionTypeDefaults` (`typeid`, `ordinal`, `value`, `display
     (130,179,'PT',179,'Portugal',NULL,0),
     (130,180,'PR',180,'Puerto Rico',NULL,0),
     (130,181,'QA',181,'Qatar',NULL,0),
-    (130,182,'RE',182,'Réunion',NULL,0),
+    (130,182,'RE',182,'Rï¿½union',NULL,0),
     (130,183,'RO',183,'Romania',NULL,0),
     (130,184,'RU',184,'Russian Federation',NULL,0),
     (130,185,'RW',185,'Rwanda',NULL,0),
-    (130,186,'BL',186,'Saint-Barthélemy',NULL,0),
+    (130,186,'BL',186,'Saint-Barthï¿½lemy',NULL,0),
     (130,187,'SH',187,'Saint Helena',NULL,0),
     (130,188,'KN',188,'Saint Kitts and Nevis',NULL,0),
     (130,189,'LC',189,'Saint Lucia',NULL,0),
