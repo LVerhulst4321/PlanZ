@@ -13,6 +13,10 @@
 .table-tent-body {
     margin: 0px;
 }
+.table-tent .page {
+    page-break-after: always;
+    page-break-inside: avoid;
+}
 .table-tent.paper-letter .page {
     height: 8.5in;
     width: 11in;
@@ -21,14 +25,30 @@
     height: 210mm;
     width: 297mm;
 }
+.table-tent.tent-type-fold-2 .front,
+.table-tent.tent-type-fold-2 .back {
+    height: 50%;
+}
+.table-tent.tent-type-fold-3 .front,
+.table-tent.tent-type-fold-3 .back {
+    height: 33%;
+}
+.table-tent.fold-lines-yes .front {
+    border-top: .1mm solid black;
+}
+
+.table-tent.tent-type-fold-3.fold-lines-yes .back {
+    border-bottom: .1mm solid black;
+}
+
 .table-tent .front {
     box-sizing: border-box;
-    height: 50%;
     display: flex; 
     justify-content: center;
     align-items: center;
     text-align:center; 
     font-weight: bold;
+    transform: rotate(-180deg);
     -webkit-transform: rotate(-180deg);
     -moz-transform: rotate(-180deg); 
     overflow: hidden;
@@ -36,7 +56,6 @@
 }
 .table-tent .back {
     box-sizing: border-box;
-    height: 50%;
     display: flex; 
     justify-content: center;
     align-items: center;
