@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="fold-3 hidden">
-                        <p>These tents are self supporting. Fold in 3 and display with guest name facing forwards.</p>
+                        <p>These tents are self supporting. Fold in 3 and display with participant's name facing forwards.</p>
 
                         <div class="text-center">
                             <img src="./images/table-tent-fold3.svg" style="height: 325px; width: 500px;" />
@@ -77,6 +77,12 @@
                             No
                         </label>
                     </div>
+                    <div class="separator-pages-yes">
+                        <p>A separator page will be printed before each session's table tents to help group them.</p>
+                    </div>                    
+                    <div class="separator-pages-no hidden">
+                        <p>No separator page will be printed. You will have to separate each session's tents by the session title on each tent.</p>
+                    </div>                    
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Generate</button>

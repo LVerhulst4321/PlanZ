@@ -15,4 +15,17 @@ window.addEventListener("load", () => {
             }
         })
     );
+
+    document.querySelectorAll(".separator-pages").forEach((el) =>
+        el.addEventListener("change", (e) => {
+            if (e.target.value == "yes") {
+                document.querySelector(".separator-pages-yes").classList.remove("hidden");
+                document.querySelector(".separator-pages-no").classList.add("hidden");
+            }
+            else {
+                document.querySelector(".separator-pages-yes").classList.add("hidden");
+                document.querySelector(".separator-pages-no").classList.remove("hidden");
+            }
+        })
+    );
 });
