@@ -25,13 +25,21 @@
     <xsl:template match="doc/session">
         <section>
             <xsl:attribute name="class">
-                <xsl:value-of select="'table-tent paper-'" /> 
+                <xsl:value-of select="'table-tent tent-type-'" /> 
+                <xsl:value-of select="$tentType" />
+                <xsl:value-of select="' paper-'" /> 
                 <xsl:value-of select="$paper" />
+                <xsl:value-of select="' fold-lines-'" /> 
+                <xsl:value-of select="$foldLines" />
+                <xsl:value-of select="' separator-pages-'" /> 
+                <xsl:value-of select="$separatorPages" />
             </xsl:attribute>
-            <div class="page">
-                <div class="front"><h1 class="title"><xsl:value-of select="@title" disable-output-escaping="yes"/></h1></div>
-                <div class="back"><h1 class="title"><xsl:value-of select="@title" disable-output-escaping="yes"/></h1></div>
-            </div>
+            <xsl:if test="$separatorPages = 'yes'">
+                <div class="page">
+                    <div class="front"><h1 class="title"><xsl:value-of select="@title" disable-output-escaping="yes"/></h1></div>
+                    <div class="back"><h1 class="title"><xsl:value-of select="@title" disable-output-escaping="yes"/></h1></div>
+                </div>
+            </xsl:if>
             <xsl:if test="not(@hashtag = '')">
                 <div class="page">
                     <div class="front"><h1 class="title"><xsl:value-of select="@hashtag" /></h1></div>

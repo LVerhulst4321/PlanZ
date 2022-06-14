@@ -109,6 +109,9 @@ function load_internal_javascript($title, $isDataTables = false) {
             echo "<script src=\"external/tabulator-4.9.3/js/tabulator.js\"></script>\n";
             echo "<script src=\"js/EditConfigTables.js\"></script>\n";
             break;
+        case "Table Tents":
+            echo "<script src=\"js/tabletents.js\"></script>\n";
+            break;
         default:
             if ($isDataTables) {
                 echo "<script src=\"js/Reports.js\"></script>\n";

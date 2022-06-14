@@ -12,23 +12,77 @@
                     In many cons, the tents are printed out in the Green Room, and the panel moderator picks them up just before the panel 
                     is scheduled to begin.</p>
 
-                    <p>To use these, you'll need a prism-shaped stand. The stands are reusable, and can remain in a room. When a new group of
-                    session participants comes in, they can fold the tents in half and lay them over the stand, with the name portion visible to
-                    the audience.</p>
-
-                    <div class="text-center">
-                        <img src="./images/table-tent.svg" style="height: 325px; width: 500px;" />
+                    <div class="row">
+                        <label class="col-md-3">Type of table tent:</label>
+                        <label class="radio col-md-2">
+                            <input type="radio" id="fold-2" class="tent-type" name="tent-type" value="fold-2" checked="checked" />
+                            Fold in 2
+                        </label>
+                        <label class="radio col-md-2">
+                            <input type="radio" id="fold-3" class="tent-type" name="tent-type" value="fold-3" />
+                            Fold in 3
+                        </label>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-6">
+                    <div class="fold-2">
+                        <p>To use these, you'll need a prism-shaped stand. The stands are reusable, and can remain in a room. When a new group of
+                        session participants comes in, they can fold the tents in half and lay them over the stand, with the name portion visible to
+                        the audience.</p>
+
+                        <div class="text-center">
+                            <img src="./images/table-tent.svg" style="height: 325px; width: 500px;" />
+                        </div>
+                    </div>
+
+                    <div class="fold-3 hidden">
+                        <p>These tents are self supporting. Fold in 3 and display with participant's name facing forwards.</p>
+
+                        <div class="text-center">
+                            <img src="./images/table-tent-fold3.svg" style="height: 325px; width: 500px;" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-md-3">
                             <label for="paper">Paper type:</label>
+                        </div>
+                        <div class="col-md-4">
                             <select id="paper" name="paper" class="form-control">
                                 <option value="LETTER">Letter-sized</option>
                                 <option value="A4">A4-sized</option>
                             </select>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <label class="col-md-3">Print fold lines:</label>
+                        <label class="radio col-md-1">
+                            <input type="radio" id="fold-yes" class="fold-lines" name="fold-lines" value="yes" checked="checked" />
+                            Yes
+                        </label>
+                        <label class="radio col-md-1">
+                            <input type="radio" id="fold-no" class="fold-lines" name="fold-lines" value="no" />
+                            No
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <label class="col-md-3">Print separator pages:</label>
+                        <label class="radio col-md-1">
+                            <input type="radio" id="separator-yes" class="separator-pages" name="separator-pages" value="yes" checked="checked" />
+                            Yes
+                        </label>
+                        <label class="radio col-md-1">
+                            <input type="radio" id="separator-no" class="separator-pages" name="separator-pages" value="no" />
+                            No
+                        </label>
+                    </div>
+                    <div class="separator-pages-yes">
+                        <p>A separator page will be printed before each session's table tents to help group them.</p>
+                    </div>                    
+                    <div class="separator-pages-no hidden">
+                        <p>No separator page will be printed. You will have to separate each session's tents by the session title on each tent.</p>
+                    </div>                    
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Generate</button>
