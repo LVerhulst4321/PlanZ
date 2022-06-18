@@ -105,13 +105,13 @@ EOD;
 
     while ($row = mysqli_fetch_assoc($result)) {
         $session = new ScheduledSession();
-        $session->title = $row["title"];
-        $session->sessionid = $row["sessionid"];
-        $session->progguiddesc = $row["progguiddesc"];
-        $session->roomname = $row["roomname"];
-        $session->trackname = $row["trackname"];
-        $session->hashtag = $row["hashtag"];
-        $session->starttime = $row["starttime"];
+        $session->title = $row["title"] ?? '';
+        $session->sessionid = $row["sessionid"] ?? '';
+        $session->progguiddesc = $row["progguiddesc"] ?? '';
+        $session->roomname = $row["roomname"] ?? '';
+        $session->trackname = $row["trackname"] ?? '';
+        $session->hashtag = $row["hashtag"] ?? '';
+        $session->starttime = $row["starttime"] ?? '';
         $session->starttime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row["starttimeraw"] );
         $session->participants = array();
 
@@ -140,10 +140,10 @@ EOD;
     while ($row = mysqli_fetch_assoc($result)) {
         $session = $sessionsById[$row["sessionid"]];
         $participant = new ScheduledParticipant();
-        $participant->pubsname = array_key_exists('pubsname', $row) ? $row["pubsname"] : '';
-        $participant->moderator = array_key_exists('moderator', $row) ? $row["moderator"] : '';
-        $participant->badgeid = array_key_exists('badgeid', $row) ? $row["badgeid"] : '';
-        $participant->pronouns = array_key_exists('pronouns', $row) ? $row["pronouns"] : '';
+        $participant->pubsname = $row["pubsname"] ?? '';
+        $participant->moderator = $row["moderator"] ?? '';
+        $participant->badgeid = $row["badgeid"] ?? '';
+        $participant->pronouns = $row["pronouns"] ?? '';
 
         $session->participants[] = $participant;
     }
