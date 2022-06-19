@@ -43,29 +43,29 @@ function render_sessions_as_xml($sessions) {
 
     foreach ($sessions as $s) {
         $panel = $xml -> createElement("session");
-        $panel->setAttribute("title", isset($s->starttime) ? $s->title : '');
-        $panel->setAttribute("progguiddesc", isset($s->progguiddesc) ? $s->progguiddesc : '');
-        $panel->setAttribute("roomname", isset($s->roomname) ? $s->roomname : '');
-        $panel->setAttribute("trackname", isset($s->trackname) ? $s->trackname : '');
-        $panel->setAttribute("hashtag", isset($s->hashtag) ? $s->hashtag : '');
-        $panel->setAttribute("starttime", isset($s->starttime) ? $s->starttime : '');
+        $panel->setAttribute("title", $s->title ?: '');
+        $panel->setAttribute("progguiddesc", $s->progguiddesc ?: '');
+        $panel->setAttribute("roomname", $s->roomname ?: '');
+        $panel->setAttribute("trackname", $s->trackname ?: '');
+        $panel->setAttribute("hashtag", $s->hashtag ?: '');
+        $panel->setAttribute("starttime", $s->starttime ?: '');
         
         foreach ($s->participants as $p) {
             $particpant = $xml -> createElement("participant");
-            $particpant->setAttribute("pubsname", isset($p->pubsname) ? $p->pubsname : '');
-            $particpant->setAttribute("badgeid", isset($p->badgeid) ? $p->badgeid : '');
-            $particpant->setAttribute("moderator", isset($p->moderator) ? $p->moderator : '');
-            $particpant->setAttribute("pronouns", isset($p->pronouns) ? $p->pronouns : '');
+            $particpant->setAttribute("pubsname", $p->pubsname ?: '');
+            $particpant->setAttribute("badgeid", $p->badgeid ?: '');
+            $particpant->setAttribute("moderator", $p->moderator ?: '');
+            $particpant->setAttribute("pronouns", $p->pronouns ?: '');
 
             $panel -> appendChild($particpant);
 
             if (!is_null($p->nextSession)) {
                 $next = $xml -> createElement("nextSession");
-                $next->setAttribute("title", isset($p->title) ? $p->nextSession->title : '');
-                $next->setAttribute("progguiddesc", isset($p->progguiddesc) ? $p->nextSession->progguiddesc : '');
-                $next->setAttribute("roomname", isset($p->roomname) ? $p->nextSession->roomname : '');
-                $next->setAttribute("trackname", isset($p->trackname) ? $p->nextSession->trackname : '');
-                $next->setAttribute("starttime", isset($p->starttime) ? $p->nextSession->starttime : '');
+                $next->setAttribute("title", $p->nextSession->title ?: '');
+                $next->setAttribute("progguiddesc", $p->nextSession->progguiddesc ?: '');
+                $next->setAttribute("roomname", $p->nextSession->roomname ?: '');
+                $next->setAttribute("trackname", $p->nextSession->trackname ?: '');
+                $next->setAttribute("starttime", $p->nextSession->starttime ?: '');
                 $particpant -> appendChild($next);
             }
         }
@@ -105,13 +105,13 @@ EOD;
 
     while ($row = mysqli_fetch_assoc($result)) {
         $session = new ScheduledSession();
-        $session->title = $row["title"];
-        $session->sessionid = $row["sessionid"];
-        $session->progguiddesc = $row["progguiddesc"];
-        $session->roomname = $row["roomname"];
-        $session->trackname = $row["trackname"];
-        $session->hashtag = $row["hashtag"];
-        $session->starttime = $row["starttime"];
+        $session->title = $row["title"] ?? '';
+        $session->sessionid = $row["sessionid"] ?? '';
+        $session->progguiddesc = $row["progguiddesc"] ?? '';
+        $session->roomname = $row["roomname"] ?? '';
+        $session->trackname = $row["trackname"] ?? '';
+        $session->hashtag = $row["hashtag"] ?? '';
+        $session->starttime = $row["starttime"] ?? '';
         $session->starttime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row["starttimeraw"] );
         $session->participants = array();
 
@@ -140,10 +140,10 @@ EOD;
     while ($row = mysqli_fetch_assoc($result)) {
         $session = $sessionsById[$row["sessionid"]];
         $participant = new ScheduledParticipant();
-        $participant->pubsname = array_key_exists('pubsname', $row) ? $row["pubsname"] : '';
-        $participant->moderator = array_key_exists('moderator', $row) ? $row["moderator"] : '';
-        $participant->badgeid = array_key_exists('badgeid', $row) ? $row["badgeid"] : '';
-        $participant->pronouns = array_key_exists('pronouns', $row) ? $row["pronouns"] : '';
+        $participant->pubsname = $row["pubsname"] ?? '';
+        $participant->moderator = $row["moderator"] ?? '';
+        $participant->badgeid = $row["badgeid"] ?? '';
+        $participant->pronouns = $row["pronouns"] ?? '';
 
         $session->participants[] = $participant;
     }
