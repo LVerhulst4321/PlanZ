@@ -8,7 +8,6 @@
   <!-- Page title -->
   <xsl:param name="reportMenuList" select="''"/>
   <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
-  <xsl:param name="AUTO_SCHEDULER" select="'0'"/>
   <xsl:param name="emailAvailable" select="'0'"/>
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
@@ -25,6 +24,7 @@
         @permatomtag='ce_RegTypes' or @permatomtag='ce_Roles' or @permatomtag='ce_RoomColors' or @permatomtag='ce_Rooms' or @permatomtag='ce_RoomSets' or
         @permatomtag='ce_RoomHasSet' or @permatomtag='ce_Services' or @permatomtag='ce_ServiceTypes' or @permatomtag='ce_SessionStatuses' or
         @permatomtag='ce_Tags' or @permatomtag='ce_Times' or @permatomtag='ce_Tracks' or @permatomtag='ce_Types']"/>
+  <xsl:variable name="AutoScheduler" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AutoScheduler']"/>
   <xsl:template match="/">
     <nav id="staffNav" class="navbar navbar-inverse">
       <div class="navbar-inner">
@@ -131,7 +131,7 @@
                   <b class="caret"/>
                 </a>
                 <ul class="dropdown-menu">
-                  <xsl:if test="$AUTO_SCHEDULER = '1'">
+                  <xsl:if test="$AutoScheduler">
                     <li>
                       <a href="Autoscheduler.php">Auto-Scheduler</a>
                     </li>

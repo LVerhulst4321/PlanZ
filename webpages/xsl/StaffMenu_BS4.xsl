@@ -9,7 +9,6 @@
     <xsl:param name="reportMenuList" select="''"/>
     <xsl:param name="badgename" select="'Current User'"/>
     <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
-    <xsl:param name="AUTO_SCHEDULER" select="'0'"/>
     <xsl:param name="emailAvailable" select="'0'"/>
     <xsl:param name="isToolbarPresent" select="'0'"/>
     <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
@@ -29,6 +28,7 @@
         @permatomtag='ce_RegTypes' or @permatomtag='ce_Roles' or @permatomtag='ce_RoomColors' or @permatomtag='ce_Rooms' or @permatomtag='ce_RoomSets' or
         @permatomtag='ce_RoomHasSet' or @permatomtag='ce_Services' or @permatomtag='ce_ServiceTypes' or @permatomtag='ce_SessionStatuses' or
         @permatomtag='ce_Tags' or @permatomtag='ce_Times' or @permatomtag='ce_Tracks' or @permatomtag='ce_Types']"/>
+    <xsl:variable name="AutoScheduler" select="/doc/query[@queryname='permission_set']/row[@permatomtag='AutoScheduler']"/>
     <xsl:template match="/">
         <nav id="staffNav">
             <xsl:choose>
@@ -117,7 +117,7 @@
                             Scheduling
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarSchedulingDropdown">
-                            <xsl:if test="$AUTO_SCHEDULER = '1'">
+                            <xsl:if test="$AutoScheduler">
                                 <a class="dropdown-item" href="Autoscheduler.php">Auto-Scheduler</a>
                             </xsl:if>
                             <a class="dropdown-item" href="MaintainRoomSched.php">Maintain Room Schedule</a>
