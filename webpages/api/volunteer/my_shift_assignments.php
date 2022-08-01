@@ -6,12 +6,14 @@ if (!include ('../../config/db_name.php')) {
     include ('../../config/db_name.php');
 }
 require_once('../http_session_functions.php');
+require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../format_functions.php');
 require_once('../../data_functions.php');
 require_once('./volunteer_job_model.php');
 require_once('./volunteer_shift_model.php');
 require_once('../../con_data.php');
+require_once('../authentication.php');
 
 // include one day before the con and one day after
 // because set-up and tear down sometimes happens on
@@ -37,9 +39,10 @@ function is_input_data_valid($db, $json) {
 
 start_session_if_necessary();
 $db = connect_to_db(true);
+$authentication = new Authentication();
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isLoggedIn()) {
-        $badgeId = getBadgeId();
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isLoggedIn()) {
+        $badgeId = $authentication->getBadgeId();
         $shifts = VolunteerShift::findAllAssignedToParticipant($db, $badgeId);
         $result = [];
         foreach ($shifts as $s) {
@@ -50,8 +53,8 @@ try {
         $json_string = json_encode(array("shifts" => $result, "context" => array("timezone" => PHP_DEFAULT_TIMEZONE, "days" => get_potential_days())));
         echo $json_string;
 
-    } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isLoggedIn()) {
-        $badgeId = getBadgeId();
+    } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $authentication->isLoggedIn()) {
+        $badgeId = $authentication->getBadgeId();
         $json_string = file_get_contents('php://input');
         $json = json_decode($json_string, true);
         
@@ -62,8 +65,8 @@ try {
             http_response_code(400);
         }
 
-    } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isLoggedIn()) {
-        $badgeId = getBadgeId();
+    } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $authentication->isLoggedIn()) {
+        $badgeId = $authentication->getBadgeId();
         $json_string = file_get_contents('php://input');
         $json = json_decode($json_string, true);
         

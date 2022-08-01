@@ -6,6 +6,7 @@ if (!include ('../config/db_name.php')) {
     include ('../config/db_name.php');
 }
 
+require_once('../db_exceptions.php');
 require_once("db_support_functions.php");
 require_once("jwt_functions.php");
 require_once("participant_functions.php");

@@ -5,14 +5,21 @@
 if (!include ('../../config/db_name.php')) {
     include ('../../config/db_name.php');
 }
+require_once('../../db_exceptions.php');
+require_once('../../login_functions.php');
 require_once('../db_support_functions.php');
-require_once('../http_session_functions.php');
 require_once('../authentication.php');
 require_once('../../data_functions.php');
+require_once('../http_session_functions.php');
 require_once('./module_model.php');
 
-$db = connect_to_db(true);
+function update_current_modules_and_permissions($db, $badgeId) {
+    set_permission_set($badgeId, $db);
+    set_modules($db);
+}
+
 start_session_if_necessary();
+$db = connect_to_db(true);
 $authentication = new Authentication();
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isAdminModulesAllowed()) {
@@ -35,11 +42,13 @@ try {
             }
             $db->commit();
 
-            http_response_code(201);
         } catch (Exception $e) {
             $db->rollback();
             throw $e;
         }
+
+        update_current_modules_and_permissions($db, $authentication->getBadgeId());
+
         http_response_code(204);
     } else if ($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(401);

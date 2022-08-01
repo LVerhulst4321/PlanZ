@@ -3,6 +3,7 @@
 if (!include ('../../../db_name.php')) {
     include ('../../../db_name.php');
 }
+require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../participant_functions.php');
 require_once('../jwt_functions.php');

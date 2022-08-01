@@ -6,9 +6,11 @@ if (!include ('../config/db_name.php')) {
     include ('../config/db_name.php');
 }
 require_once('./http_session_functions.php');
+require_once('../db_exceptions.php');
 require_once('./db_support_functions.php');
 require_once('./format_functions.php');
 require_once('../data_functions.php');
+require_once('./authentication.php');
 
 function get_session_edits($db, $sessionId) {
     $query = <<<EOD
@@ -115,8 +117,9 @@ function sort_history_by_timestamp($a, $b) {
 
 start_session_if_necessary();
 $db = connect_to_db(true);
+$authentication = new Authentication();
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isProgrammingStaff()) {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isProgrammingStaff()) {
         if (array_key_exists("id", $_REQUEST)) {
 
             $sessionId = $_REQUEST['id'];

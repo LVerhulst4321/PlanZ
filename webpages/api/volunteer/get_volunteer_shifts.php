@@ -6,12 +6,14 @@ if (!include ('../../config/db_name.php')) {
     include ('../../config/db_name.php');
 }
 require_once('../http_session_functions.php');
+require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../format_functions.php');
 require_once('../../data_functions.php');
 require_once('./volunteer_job_model.php');
 require_once('./volunteer_shift_model.php');
 require_once('../../con_data.php');
+require_once('../authentication.php');
 
 // include one day before the con and one day after
 // because set-up and tear down sometimes happens on
@@ -33,8 +35,9 @@ function get_potential_days() {
 
 start_session_if_necessary();
 $db = connect_to_db(true);
+$authentication = new Authentication();
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isLoggedIn()) {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isLoggedIn()) {
         $shifts = VolunteerShift::findAll($db);
         $result = [];
         foreach ($shifts as $s) {

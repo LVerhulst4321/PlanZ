@@ -6,15 +6,18 @@ if (!include ('../../config/db_name.php')) {
     include ('../../config/db_name.php');
 }
 require_once('../http_session_functions.php');
+require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../format_functions.php');
 require_once('../../data_functions.php');
 require_once('./volunteer_job_model.php');
+require_once('../authentication.php');
 
 start_session_if_necessary();
 $db = connect_to_db(true);
+$authentication = new Authentication();
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isLoggedIn()) {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isLoggedIn()) {
         $jobs = VolunteerJob::findAll($db);
         $result = [];
         foreach ($jobs as $j) {
