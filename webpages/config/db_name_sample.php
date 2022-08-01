@@ -105,8 +105,6 @@ define("CON_SUPPORT_EMAIL", ""); // From address to be used for password reset e
 
 define("REPORT_INCLUDE_DIRECTORY", "/var/data/planz/");  // outside of web server path, only served by PHP
 
-define("AUTO_SCHEDULER", FALSE); // enable the auto-scheduler feature
-
 define("PUBLIC_NEW_USER", FALSE); // allow new user creation from login screen
 
 define("CONFIRM_SESSION_ASSIGNMENT", TRUE); // Ask participants to confirm their assignments
