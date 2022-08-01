@@ -47,4 +47,55 @@ EOD;
     }
     return true;
 }
+
+// Function set_modules()
+// This function gets a list of all of the enabled modules
+//
+function set_modules($db) {
+    try {
+        $modules = PlanZModule::findAll($db);
+
+        $_SESSION['modules'] = array();
+        foreach ($modules as $m) {
+            $_SESSION['modules'][$m->packageName] = $m->isEnabled;
+        }
+        return true;
+    } catch (Exception $ex) {
+        return false;
+    }
+}
+
+// Function set_permission_set($badgeid)
+// Performs complicated join to get the set of permission atoms available to the user
+// Stores them in global variable $permission_set
+//
+function set_permission_set($badgeid, $db) {
+    $permissions = array();
+    $query = <<<EOD
+SELECT DISTINCT
+        permatomtag
+    FROM
+                  PermissionAtoms PA
+             JOIN Permissions P USING (permatomid)
+        LEFT JOIN Phases PH ON P.phaseid = PH.phaseid AND PH.current = TRUE
+        LEFT JOIN UserHasPermissionRole UHPR ON P.permroleid = UHPR.permroleid AND UHPR.badgeid='$badgeid'
+    WHERE
+            (PH.phaseid IS NOT NULL OR P.phaseid IS NULL)
+        AND (UHPR.badgeid IS NOT NULL OR P.badgeid='$badgeid')
+        AND (PA.module_id is null 
+			OR PA.module_id in (select id from module where is_enabled = 1));
+EOD;
+    $resultSet = mysqli_query($db, $query);
+    if ($resultSet) {
+        while ($row = mysqli_fetch_object($resultSet)) {
+            $permissions[] = $row->permatomtag;
+        }
+        mysqli_free_result($resultSet);
+
+        $_SESSION['permission_set'] = $permissions;
+    }
+
+    return true;
+}
+
 ?>

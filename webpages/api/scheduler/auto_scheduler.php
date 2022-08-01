@@ -4,6 +4,7 @@ if (!include ('../../config/db_name.php')) {
     include ('../../config/db_name.php');
 }
 
+require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../../name.php');
 require_once('../../time_slot_functions.php');

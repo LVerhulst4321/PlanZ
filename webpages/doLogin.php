@@ -3,6 +3,8 @@
 global $headerErrorMessage, $link, $linki, $title;
 require_once('CommonCode.php');
 require_once('login_functions.php');
+require_once('./db_exceptions.php');
+require_once('./api/admin/module_model.php');
 $userIdPrompt = get_user_id_prompt();
 if (!isset($_SESSION['badgeid'])) {
     $title = "Submit Password";
@@ -52,8 +54,8 @@ EOD;
     }
     $_SESSION['badgeid'] = $badgeid;
     $_SESSION['hashedPassword'] = $dbpassword;
-    set_permission_set($badgeid);
-    set_modules();
+    set_permission_set($badgeid, $linki);
+    set_modules($linki);
     set_login_time($badgeid);
 } else {
     $badgeid = $_SESSION['badgeid'];

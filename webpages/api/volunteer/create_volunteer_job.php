@@ -6,10 +6,12 @@ if (!include ('../../config/db_name.php')) {
     include ('../../config/db_name.php');
 }
 require_once('../http_session_functions.php');
+require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../format_functions.php');
 require_once('../../data_functions.php');
 require_once('./volunteer_job_model.php');
+require_once('../authentication.php');
 
 function is_input_data_valid($json) {
     return array_key_exists("name", $json) && array_key_exists("description", $json);
@@ -18,8 +20,9 @@ function is_input_data_valid($json) {
 
 start_session_if_necessary();
 $db = connect_to_db(true);
+$authentication = new Authentication();
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isVolunteerSetUpAllowed()) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $authentication->isVolunteerSetUpAllowed()) {
 
         $json_string = file_get_contents('php://input');
         $json = json_decode($json_string, true);
@@ -32,7 +35,7 @@ try {
         } else {
             http_response_code(400);
         }
-    } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isVolunteerSetUpAllowed()) {
+    } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $authentication->isVolunteerSetUpAllowed()) {
         $json_string = file_get_contents('php://input');
         $json = json_decode($json_string, true);
 

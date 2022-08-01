@@ -4,6 +4,7 @@ if (!include ('../../../db_name.php')) {
 	include ('../../../db_name.php');
 }
 require_once('../../external/swiftmailer-5.4.8/lib/swift_required.php');
+require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../jwt_functions.php');
 require_once('../../email_functions.php');
