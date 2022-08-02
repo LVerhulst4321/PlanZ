@@ -35,6 +35,10 @@ class TimeSlot implements ScheduleCellData {
     function getRowHeight() {
         return $this->getEndIndex() - $this->getStartIndex();
     }
+
+    function getAdditionalClasses() {
+        return "";
+    }
 }
 
 class TimeSlotDataProvider implements ScheduleCellDataProvider {
