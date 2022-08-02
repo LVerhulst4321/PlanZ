@@ -12,6 +12,7 @@ interface ScheduleCellData {
     public function getStartIndex();
     public function getRowHeight();
     public function getColumnWidth();
+    public function getAdditionalClasses();
     public function getData();
 }
 
@@ -76,19 +77,47 @@ class ScheduleTableRenderer {
     }
 
     function renderTable() {
+
         echo <<<EOD
-        <table class="table table-sm table-bordered">
+        <ul class="nav nav-tabs" id="day_tabs" role="tablist">
+EOD;
+        $startDate = determine_con_start_date();
+        for ($day = 0; $day < CON_NUM_DAYS; $day++) {
+            echo "<li class=\"nav-item\">";
+            echo "<a class=\"nav-link ";
+            echo ($day === 0 ? "active" : "");
+            echo "\" data-toggle=\"tab\" href=\"#";
+            echo mb_strtolower($startDate->format('D_d_M'));
+            echo "\" role=\"tab\" aria-selected=\"";
+            echo ($day === 0 ? "true" : "false");
+            echo "\">";
+            echo $startDate->format('D');
+            echo "</a></li>";
+
+            $startDate->add(new DateInterval('P1D'));
+        }
+
+        echo <<<EOD
+        </ul>
+        <div class="tab-content">
 EOD;
     
         $lastRoom = $this->rooms[count($this->rooms)-1];
         $maxColumns = $lastRoom->columnNumber + $lastRoom->getColumnWidth() - 1;
-        $this->renderTableHeader();
     
-    echo <<<EOD
-        <tbody>
-EOD;
         $startDate = determine_con_start_date();
         for ($day = 0; $day < CON_NUM_DAYS; $day++) {
+            $classes = ($day === 0) ? " show active" : "";
+            $id = mb_strtolower($startDate->format('D_d_M'));
+            echo <<<EOD
+            <div role="tabpanel" class="tab-pane fade $classes" id="$id">
+            <table class="table table-sm table-bordered">
+EOD;
+
+            $this->renderTableHeader();
+
+
+            echo "<tbody>";
             echo "<tr><th colspan=\"" . ($maxColumns + 2) . "\">" . $startDate->format('D, d M') . "</th></tr>";
             
             if ($this->dataProvider->isCellDataAvailableForDay($day)) {
@@ -115,7 +144,8 @@ EOD;
                         $slot = $this->dataProvider->getCellDataFor($row, $column, $day);
                         if ($slot) {
                             if ($slot->getStartIndex() == $row && $slot->room->columnNumber == $column) {
-                                echo "<td class=\"small\" rowspan=\"" . $slot->getRowHeight() . "\" colspan=\"" . $slot->getColumnWidth() . "\">" . $slot->getData() . "</td>";
+                                $classes = $slot->getAdditionalClasses() ? $slot->getAdditionalClasses() : "";
+                                echo "<td class=\"small $classes\" rowspan=\"" . $slot->getRowHeight() . "\" colspan=\"" . $slot->getColumnWidth() . "\">" . $slot->getData() . "</td>";
                             }
                         } else {
                             echo "<td class=\"bg-light small\">&nbsp;</td>";
@@ -127,10 +157,14 @@ EOD;
                 echo "<tr><td class=\"bg-light\" colspan=\"" . ($maxColumns + 2) . "\">None</td></tr>";
             }
             $startDate->add(new DateInterval('P1D'));
+            echo "</tbody>";
+            echo <<<EOD
+            </table>
+            </div>
+EOD;
         }
-    echo <<<EOD
-        </tbody>
-    </table>
+        echo <<<EOD
+        </div>
 EOD;
     }
 }
