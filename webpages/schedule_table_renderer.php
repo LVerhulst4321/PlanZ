@@ -107,17 +107,10 @@ EOD;
     
         $startDate = determine_con_start_date();
         for ($day = 0; $day < CON_NUM_DAYS; $day++) {
+            $classes = ($day === 0) ? " show active" : "";
+            $id = mb_strtolower($startDate->format('D_d_M'));
             echo <<<EOD
-            <div role="tabpanel" class="tab-pane fade
-EOD;
-            if ($day ===0) {
-                echo " show active";
-            }
-            echo "\" id=\"";
-            echo mb_strtolower($startDate->format('D_d_M'));
-            echo "\"  >";
-
-            echo <<<EOD
+            <div role="tabpanel" class="tab-pane fade $classes" id="$id">
             <table class="table table-sm table-bordered">
 EOD;
 
