@@ -47,7 +47,6 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
             $paramArray["badgename"] = $_SESSION['badgename'];
         }
         $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
-        $paramArray["AUTO_SCHEDULER"] = AUTO_SCHEDULER === TRUE ? 1 : 0;
         $paramArray["emailAvailable"] = SMTP_ADDRESS == '' ? 0 : 1;
         $paramArray["isToolbarPresent"] = $isToolbarPresent ? 1 : 0;
         try {
