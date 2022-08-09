@@ -48,6 +48,10 @@ class ScheduleItem implements ScheduleCellData {
     function getRowHeight() {
         return $this->getEndIndex() - $this->getStartIndex();
     }
+
+    function getAdditionalClasses() {
+        return "";
+    }
 }
 
 class ScheduleItemDataProvider implements ScheduleCellDataProvider {
