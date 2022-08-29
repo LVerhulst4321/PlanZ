@@ -174,8 +174,8 @@ function validate_session() {
         return ($flag);
     }
     $i = mb_strlen($session["title"]);
-    if ($i < 10 || $i > 48) {
-        $messages .= "Title is $i characters long.  Please edit it to between <b>10</b> and <b>48</b> characters.<br>\n";
+    if ($i < TITLE_MIN_LENGTH || $i > TITLE_MAX_LENGTH) {
+        $messages .= "Title is $i characters long.  Please edit it to between <b>" . TITLE_MIN_LENGTH . "</b> and <b>" . TITLE_MAX_LENGTH . "</b> characters.<br>\n";
         $flag = false;
     }
     $i = mb_strlen($session["progguiddesc"]);
