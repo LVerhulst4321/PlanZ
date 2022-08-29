@@ -89,7 +89,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         <div class="row">
             <div class="form-group col-md-5 offset-md-1">
                 <label for="title">Title:</label>
-                <input type="text" class="form-control" size="50" name="title" value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT);?>" />&nbsp;&nbsp;
+                <input type="text" class="form-control" size="<?php echo TITLE_MAX_LENGTH; ?>" name="title" value="<?php echo htmlspecialchars($session["title"],ENT_COMPAT);?>" />&nbsp;&nbsp;
             </div>
             <div class="col-md-2 pt-3">
                 <div class="form-check ">
@@ -114,7 +114,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     <div class="row">
         <div class="form-group col-md-5 offset-md-1">
             <label for="secondtitle"><?php echo SECOND_TITLE_CAPTION;?></label>
-            <input type="text" size="50" class="form-control" name="secondtitle" value="<?php echo htmlspecialchars($session["secondtitle"],ENT_COMPAT);?>" />
+            <input type="text" size="<?php echo TITLE_MAX_LENGTH; ?>" class="form-control" name="secondtitle" value="<?php echo htmlspecialchars($session["secondtitle"],ENT_COMPAT);?>" />
         </div>
         <div class="form-group col-md-5 offset-md-1">
             <label for="languagestatusid">Session Language: </label>

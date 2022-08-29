@@ -39,6 +39,8 @@ define("MY_AVAIL_KIDS", FALSE); // Enables questions regarding no. of kids in Fa
 define("ENABLE_SHARE_EMAIL_QUESTION", TRUE); // Enables question regarding sharing participant email address
 define("ENABLE_USE_PHOTO_QUESTION", TRUE); // Enables question regarding using participant photo for promotional purposes
 define("ENABLE_BESTWAY_QUESTION", FALSE); // Enables question regarding best way to contact participant
+define("TITLE_MIN_LENGTH", 10); // Title must be at least this long.
+define("TITLE_MAX_LENGTH", 50); // Title must not be longer than this. Note that the current limit of the DB field is 100 characters.
 define("BILINGUAL", TRUE); // Triggers extra fields in Session and "My General Interests"
 define("SECOND_LANG", "FRENCH");
 define("SECOND_TITLE_CAPTION", "Titre en fran&ccedil;ais");
