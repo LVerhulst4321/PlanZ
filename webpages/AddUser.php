@@ -178,11 +178,11 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 mysqli_free_result($result);
 if ($last_badgeid == "") {
-    $last_badgeid = REG_PART_PREFIX . "1000";
+    $last_badgeid = REG_PART_PREFIX . "0";
 }
 
 $id = mb_substr($last_badgeid, mb_strlen(REG_PART_PREFIX));
-$new_badgeid = REG_PART_PREFIX . strval(intval($id) + 1);
+$new_badgeid = REG_PART_PREFIX . str_pad(strval(intval($id) + 1), REG_PART_DIGITS, '0', STR_PAD_LEFT);
 
 $PriorArray["new_badgeid"] = $new_badgeid;
 

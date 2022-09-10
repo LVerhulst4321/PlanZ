@@ -76,6 +76,7 @@ define("USE_REG_SYSTEM", FALSE);
 define("REGISTRATION_URL", "");
 define("USE_PRONOUNS", TRUE); // let participants specify their pronouns
 define("REG_PART_PREFIX", ""); // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
+define("REG_PART_DIGITS", 4); // only needed for USE_REG_SYSTEM = FALSE; number of digits to pad counter; if number has fewer than specified digits, will left pad with zeros
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
 define("MEETING_LINK", TRUE); // Add support for Meetinglink in sessions
