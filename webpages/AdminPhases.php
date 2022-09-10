@@ -3,6 +3,9 @@
 global $message_error, $title, $linki, $session;
 $title = "Administer Phases";
 require_once('StaffCommonCode.php');
+require_once('db_exceptions.php');
+require_once('login_functions.php');
+require_once('./api/admin/module_model.php');
 $message = "";
 $rows = 0;
 staff_header($title, true);
@@ -56,6 +59,9 @@ EOD;
 				} else {
 					$message = "$rows Phases updated";
 				}
+
+				set_permission_set($_SESSION['badgeid'], $linki);
+				set_modules($linki);
 			} else {
 				$message = "No chages to update";
 			}

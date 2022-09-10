@@ -5,8 +5,10 @@ if (!include ('../config/db_name.php')) {
     include ('../config/db_name.php');
 }
 
+require_once('../db_exceptions.php');
 require_once('./db_support_functions.php');
 require_once('./http_session_functions.php');
+require_once('./authentication.php');
 
 function update_participant_confirmation($db, $sessionId, $participantSessionId, $badgeId, $confirmValue) {
     $query = <<<EOD
@@ -50,13 +52,14 @@ EOD;
 start_session_if_necessary();
 
 $db = connect_to_db();
+$authentication = new Authentication();
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isLoggedIn()) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $authentication->isLoggedIn()) {
 
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
-        $badgeId = getLoggedInUserBadgeId();
+        $badgeId = $authentication->getBadgeId();
         if ($data && array_key_exists('sessionId', $data) && array_key_exists('participantSessionId', $data)
              && array_key_exists('value', $data)) {
 
