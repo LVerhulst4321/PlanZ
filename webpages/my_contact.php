@@ -4,11 +4,12 @@ global $participant, $message, $message_error, $message2, $congoinfo, $title;
 $title="My Profile";
 require ('PartCommonCode.php'); // initialize db; check login;
 //                                  set $badgeid from session
+$regTypeField = USE_REGTYPE_DESCRIPTION ? "COALESCE(RT.message, CD.regtype) AS regtype" : "CD.regtype";
 $queryArray["participant_info"] = <<<EOD
 SELECT
         CD.badgeid, CD.firstname, CD.lastname, CD.badgename, CD.phone, CD.email,
         CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-        CD.postcountry, CD.regtype, P.pubsname, P.sortedpubsname, P.password, P.bestway, P.interested, P.bio,
+        CD.postcountry, $regTypeField, P.pubsname, P.sortedpubsname, P.password, P.bestway, P.interested, P.bio,
         P.htmlbio, P.share_email, P.use_photo, PRO.pronounname, P.approvedphotofilename,
         P.anonymous
     FROM
@@ -16,6 +17,7 @@ SELECT
        JOIN Participants P USING (badgeid)
        LEFT JOIN ParticipantDetails PD USING (badgeid)
        LEFT JOIN Pronouns PRO USING (pronounid)
+       LEFT JOIN RegTypes RT USING (regtype)
     WHERE
         CD.badgeid=?;
 EOD;

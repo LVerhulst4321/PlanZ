@@ -74,6 +74,9 @@ define("USE_REG_SYSTEM", FALSE);
         // True -> PlanZ users loaded from reg system into CongoDump; staff users cannot edit them
         // False -> PlanZ users can be created and edited by staff users in PlanZ
 define("REGISTRATION_URL", "");
+define("USE_REGTYPE_DESCRIPTION", FALSE);
+        // False -> Display regtype field as registration type - name of registration type in regtype.
+        // True -> Display RegTypes.message - registration type code in regtype, description in message field.
 define("USE_PRONOUNS", TRUE); // let participants specify their pronouns
 define("REG_PART_PREFIX", ""); // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
 define("REG_PART_DIGITS", 4); // only needed for USE_REG_SYSTEM = FALSE; number of digits to pad counter; if number has fewer than specified digits, will left pad with zeros
