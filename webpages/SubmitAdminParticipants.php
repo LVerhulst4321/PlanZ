@@ -17,6 +17,7 @@ function fetch_participant() {
         RenderErrorAjax($message_error);
         exit();
     }
+
     $query = <<<EOD
 SELECT
     P.badgeid,
@@ -306,7 +307,9 @@ function perform_search() {
     if ($searchString == "")
         exit();
     $json_return = array ();
-    if (is_numeric($searchString)) {
+    $regTypeField = USE_REGTYPE_DESCRIPTION ? "COALESCE(RT.message, CD.regtype) AS regtype" : "CD.regtype";
+
+    if (is_numeric($searchString)) {    
         if (DBVER >= "8") {
             $query = <<<EOD
 WITH AnsweredSurvey(participantid, answercount) AS (
@@ -318,7 +321,7 @@ SELECT
     P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
+    CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
     CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
     R.statustext, D.reasontext
@@ -328,6 +331,7 @@ FROM
     LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
     LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
     LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+    LEFT OUTER JOIN RegTypes RT USING (regtype)
 WHERE
     P.badgeid = ?
 ORDER BY
@@ -339,7 +343,7 @@ SELECT
     P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
+    CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
     CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
     R.statustext, D.reasontext
@@ -353,6 +357,7 @@ FROM
     ) A ON (P.badgeid = A.participantid)
 LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
 LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+LEFT OUTER JOIN RegTypes RT USING (regtype)
 WHERE
     P.badgeid = ?
 ORDER BY
@@ -373,7 +378,7 @@ SELECT
     P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
+    CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
     CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
     R.statustext, D.reasontext
@@ -383,6 +388,7 @@ FROM
     LEFT OUTER JOIN AnsweredSurvey A ON (P.badgeid = A.participantid)
     LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
     LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+    LEFT OUTER JOIN RegTypes RT USING (regtype)
 WHERE
         P.pubsname LIKE ?
     OR CD.lastname LIKE ?
@@ -397,7 +403,7 @@ SELECT
     P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
-    CD.postcountry, CD.regtype, IFNULL(A.answercount, 0) AS answercount,
+    CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
     P.uploadedphotofilename, P.approvedphotofilename, P.photodenialreasonothertext,
     CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
     R.statustext, D.reasontext
@@ -411,6 +417,7 @@ FROM
     ) A ON (P.badgeid = A.participantid)
     LEFT OUTER JOIN PhotoDenialReasons D USING (photodenialreasonid)
     LEFT OUTER JOIN PhotoUploadStatus R USING (photouploadstatus)
+    LEFT OUTER JOIN RegTypes RT USING (regtype)
 WHERE
         P.pubsname LIKE ?
     OR CD.lastname LIKE ?
