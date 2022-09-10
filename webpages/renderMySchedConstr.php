@@ -58,12 +58,7 @@ participant_header($title, false, 'Normal', true);
                 <h5>Times I Am Available</h5>
             </div>
             <div class="card-body">
-                <p> Living on a round planet is really annoying for a virtual convention.
-                    Please enter your availability using Chicago time, which is Central
-                    Standard Time (GMT-6). We know this can be hard to wrap your brain
-                    around.
-                    <a href="https://www.worldtimebuddy.com/" target="_blank">www.worldtimebuddy.com</a>
-                    can help.</p>
+                <p><?php echo fetchCustomText("note_above_times"); ?></p>
                 <p> For each day you will be attending <?php echo CON_NAME; ?>, please
                     indicate the times when you will be available as a program panelist.
                     Entering a single time for the whole con is fine. Splitting a day into
