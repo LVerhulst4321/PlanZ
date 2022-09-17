@@ -275,8 +275,8 @@ function SubmitMaintainRoom($ignore_conflicts)
             $incompleteRows++;
             continue;
         }
-        // starttimes in minutes from start of con
-        $addToScheduleArray[$_POST["sess$i"]] = ($day - 1) * 1440 + $_POST["ampm$i"] * 720 + $_POST["hour$i"] * 60 + $_POST["min$i"];
+        // starttimes in minutes from start of con (allow for missing ampm if using 12 hours)
+        $addToScheduleArray[$_POST["sess$i"]] = ($day - 1) * 1440 + ($_POST["ampm$i"] ?: 0) * 720 + $_POST["hour$i"] * 60 + $_POST["min$i"];
         $completeRows++;
     }
     if (!$ignore_conflicts) {

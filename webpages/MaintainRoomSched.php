@@ -247,6 +247,15 @@ while ($bigarray[$i] = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 }
 mysqli_free_result($result);
 $numsessions = --$i;
+// Build array containing hours in advance.
+$hours = [-1 => 'Hour&nbsp;'];
+if (DISPLAY_24_HOUR_TIME) {
+    foreach(array_fill(0, 24, '') as $hour => $empty) $hours[$hour] = ($hour < 10 ? '0' : '') . $hour;
+}
+else {
+    foreach(array_fill(0, 12, '') as $hour => $empty) $hours[$hour] = $hour == 0 ? '12' : $hour;
+}
+// Loop through room slots to build table rows.
 for ($i = 1; $i <= newroomslots; $i++) {
     echo "   <tr>\n";
     echo "      <td>";
@@ -266,21 +275,11 @@ for ($i = 1; $i <= newroomslots; $i++) {
         echo "</Select>&nbsp;\n";
         }
 	// ****HOUR****
-    echo "          <select class=\"span1 myspan1\" name=\"hour$i\"><option value=\"-1\" ";
-    if (!isset($_POST["hour$i"]))
-        $_POST["hour$i"]=-1;
-    if ($_POST["hour$i"]==-1)
-        echo "selected";
-    echo ">Hour&nbsp;</option><option value=0 ";
-	if ($_POST["hour$i"]==0)
-	    echo "selected";
-	echo ">12</option>";
-    for ($j=1;$j<=11;$j++) {
-        echo "<option value=$j ";
-        if ($_POST["hour$i"]==$j)
-            echo "selected";
-        echo ">$j</option>";
-        }
+    echo "          <select class=\"span1 myspan1\" name=\"hour$i\">";
+    $selectedHour = $_POST["hour$i"] ?: -1;
+    foreach ($hours as $key => $label) {
+        echo "<option value=\"${key}\" " . ($selectedHour == $key ? 'selected' : '') . ">${label}</option>";
+    }
     echo "</select>\n";
 	// ****MIN****
     echo "          <select class=\"span1 myspan1\" name=\"min$i\"><option value=\"-1\" ";
@@ -296,15 +295,17 @@ for ($i = 1; $i <= newroomslots; $i++) {
 		echo ">".($j<10?"0":"").$j."</option>";
         }
     echo "</select>\n";
-	// ****AM/PM****
-    echo "          <Select class=\"span1 myspan1\" name=\"ampm$i\"><option value=0 ";
-    if ((!isset($_POST["ampm$i"])) or $_POST["ampm$i"]==0)
-        echo "selected";
-    echo ">AM&nbsp;</option><option value=1 ";
-    if (isset($_POST["ampm$i"]) && $_POST["ampm$i"]==1)
-        echo "selected";
-	echo ">PM</option>";
-    echo "</select>\n";
+	// ****AM/PM**** - Only display if not using 24 hour time.
+    if (!DISPLAY_24_HOUR_TIME) {
+        echo "          <Select class=\"span1 myspan1\" name=\"ampm$i\"><option value=0 ";
+        if ((!isset($_POST["ampm$i"])) or $_POST["ampm$i"]==0)
+            echo "selected";
+        echo ">AM&nbsp;</option><option value=1 ";
+        if (isset($_POST["ampm$i"]) && $_POST["ampm$i"]==1)
+            echo "selected";
+        echo ">PM</option>";
+        echo "</select>\n";
+    }
     echo "          </td>";
     // ****Session****
     echo "      <td class=\"room-select-td\"><Select class=\"span8\" name=\"sess$i\"><option value=\"unset\" ";

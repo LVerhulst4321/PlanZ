@@ -73,7 +73,7 @@ EOD;
             $resultSet = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_object($resultSet)) {
                 $record = new PlanzModule($row->id, $row->name, $row->package_name, $row->description, $row->is_enabled);
-                $result[] = $record;
+                $result[$row->id] = $record;
             }
             mysqli_stmt_close($stmt);
             return $result;

@@ -316,18 +316,23 @@ EOD;
                 $titleStr = $dayName . " overnight into " . $nextDayName;
             }
             if ($nowMin == 0) {
-                if ($nowHour % 24 == 0) {
-                    $htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">12:00a</td>";
-                } else if ($nowHour % 24 < 12) {
-                    $htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">" . ($nowHour % 24) . ":00a</td>";
-                } else if ($nowHour % 24 == 12) {
-                    $htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">12:00p</td>";
-                } else {
-                    $htmlTimesArray[$mykey]["html"] = "<td class=\"timeTop\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">" . (($nowHour % 24) - 12) . ":00p</td>";
+                $class = "timeTop";
+                if (DISPLAY_24_HOUR_TIME) {
+                    $displayTime = ($nowHour % 24) . ':00';
+                }
+                else {
+                    // ToDo: This could be a good candidate for PHP 8.0's new match() statement.
+                    $displayTime =
+                        (($nowHour % 24 == 0) ? '12:00a' :
+                        (($nowHour % 24 < 12) ? ($nowHour % 24) . ':00a' :
+                        (($nowHour % 24 == 12) ? '12:00p' :
+                        (($nowHour % 24) - 12) . ':00p')));
                 }
             } else {
-                $htmlTimesArray[$mykey]["html"] = "<td class=\"timeBottom\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">&nbsp;</td>";
+                $class = "timeBottom";
+                $displayTime = '&nbsp;';
             }
+            $htmlTimesArray[$mykey]["html"] = "<td class=\"${class}\" style=\"height:{$standardRowHeight}px\" title=\"$titleStr\" mode=\"$modeIndex\">${displayTime}</td>";
             $nowInUnits++;
             $modeIndex++;
         }
