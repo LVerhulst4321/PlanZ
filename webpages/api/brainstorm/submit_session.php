@@ -1,7 +1,7 @@
 <?php
 
-if (!include ('../../../db_name.php')) {
-	include ('../../../db_name.php');
+if (!include ('../../config/db_name.php')) {
+    include ('../../config/db_name.php');
 }
 require_once('../../external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('../../db_exceptions.php');

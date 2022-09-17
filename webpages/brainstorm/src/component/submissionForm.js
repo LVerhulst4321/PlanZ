@@ -16,6 +16,7 @@ dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 
 import store from '../state/store';
+import { connect } from 'react-redux';
 
 class SubmissionForm extends Component {
 
@@ -197,6 +198,7 @@ class SubmissionForm extends Component {
         let fieldNames = this.getFieldList(this.getSelectedDivision());
         let fields = fieldNames.map((n) => { return this.createField(n); });
 
+        let proem = this.props.con ? (<p>Submissions are open for programming for {this.props.con.name}.</p>) : undefined;
         return (
             <Form onSubmit={(e) =>  this.submitForm(e)}>
                 {message}
@@ -204,7 +206,7 @@ class SubmissionForm extends Component {
                 <Card>
                     <Card.Header><h2>Submit a Session</h2></Card.Header>
                     <Card.Body>
-                        <p>Submissions are open for programming for WisCon 2022.</p>
+                        {proem}
 
                         {fields}
 
@@ -385,4 +387,8 @@ class SubmissionForm extends Component {
     }
 }
 
-export default SubmissionForm;
+function mapStateToProps(state) {
+    return { con: state.options.con };
+}
+
+export default connect(mapStateToProps)(SubmissionForm);
