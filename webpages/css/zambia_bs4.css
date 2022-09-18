@@ -286,3 +286,17 @@ table.table tr.highlight td {
 table.table.table-striped tr.highlight:nth-child(odd) td {
   background-color: #d1c7a6;
 }
+
+.participant-avatar {
+  width: 24rem;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.participant-avatar-sm {
+  width: 6rem;
+}
+
+.participant-avatar-xs {
+  width: 2rem;
+}

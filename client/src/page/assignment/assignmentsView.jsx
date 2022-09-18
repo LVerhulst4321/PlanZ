@@ -1,10 +1,10 @@
 import React from "react";
 import { useEffect } from "react";
-import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import { connect } from "react-redux";
 import SimpleAlert from "../../common/simpleAlert";
 import { fetchSessionAssignments } from "../../state/assignmentsFunctions";
+import { AssignmentCard } from "./assignmentCard";
 
 const AssignmentsView = (props) => {
 
@@ -26,15 +26,7 @@ const AssignmentsView = (props) => {
 
         let assignmentBlock = (props.assignments) 
             ? (<div><h4>Currently Assigned</h4><div className="row row-cols-1 row-cols-md-4 mb-3">
-                {props.assignments.map(a => { return (<div className="col" key={a.badgeId}><Card>
-                        <Card.Body>
-                            <Card.Title>{a.name} <span className="text-muted small">({a.badgeId})</span></Card.Title>
-                            <Card.Text>
-                            Some quick example text to build on the card title and make up the
-                            bulk of the card's content.
-                            </Card.Text>
-                        </Card.Body>
-                    </Card></div>); })}
+                {props.assignments.map(a => { return (<div className="col" key={a.badgeId}><AssignmentCard assignee={a} /></div>); })}
                 </div></div>) 
             : undefined;
         return (<div>

@@ -1,5 +1,11 @@
 <?php
 
+class ParticipantSessionInterestResponse {
+    public $comment;
+    public $willModerate;
+    public $rank;
+}
+
 class ParticipantAssignment {
 
     public $badgeId;
@@ -8,6 +14,7 @@ class ParticipantAssignment {
     public $avatarSrc;
     public $registered;
     public $confirmed;
+    public $interestResponse;
 
     public static function findAssignmentsForSession($db, $sessionId) {
         $query = <<<EOD
@@ -20,11 +27,15 @@ class ParticipantAssignment {
             CD.lastname,
             CD.regtype,
             POS.confirmed,
-            P.approvedphotofilename
+            P.approvedphotofilename,
+            PSI.rank,
+            PSI.comments,
+            PSI.willmoderate
         FROM
                       ParticipantOnSession POS
                  JOIN Participants P ON P.badgeid = POS.badgeid
                  JOIN CongoDump CD ON CD.badgeid = POS.badgeid
+            LEFT JOIN ParticipantSessionInterest PSI ON (POS.badgeid = PSI.badgeid and POS.sessionid = PSI.sessionid)
         WHERE
             POS.sessionid=?;
 EOD;
@@ -52,6 +63,14 @@ EOD;
                     $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . PHOTO_DEFAULT_IMAGE;
                 }
                 $assignment->registered = ($row->regtype) ? true : false;
+                if ($row->rank != null || $row->comments != null || $row->willmoderate != null) {
+                    $interest = new ParticipantSessionInterestResponse();
+                    $interest->rank = $row->rank;
+                    $interest->comments = $row->comments;
+                    $interest->willmoderate = $row->willmoderate ? true : false;
+                    $assignment->interestResponse = $interest;
+                }
+
                 $assignments[] = $assignment;
             }
             mysqli_stmt_close($stmt);
@@ -62,13 +81,20 @@ EOD;
     }
 
     function asArray() {
-        return array("badgeId" => $this->badgeId, 
+        $result = array("badgeId" => $this->badgeId, 
             "name" => $this->name->getBadgeName(), 
             "moderator" => $this->moderator,
             "registered" => $this->registered,
             "confirmed" => $this->confirmed,
             "links" => array("avatar" => $this->avatarSrc)
         );
+        if ($this->interestResponse != null) {
+            $result["interestResponse"] = array("rank" => $this->interestResponse->rank,
+                "comments" => $this->interestResponse->comments,
+                "willModerate" => $this->interestResponse->willmoderate
+            );
+        }
+        return $result;
     }
 
     public static function toJsonArray($participantAssignments) {
