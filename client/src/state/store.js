@@ -2,6 +2,7 @@ import { createStore, combineReducers } from 'redux'
 import { REMEMBER_RECENT_SHIFT_DATA, SET_SHIFT_ASSIGNMENTS, SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL, SHOW_CREATE_SHIFT_MODAL } from './volunteerActions';
 import brainstormReducer from './brainstormReducer';
 import moduleReducer from './moduleReducer';
+import assignmentsReducer from './assignmentsReducer';
 
 const volunteerInitialState = {
     assignments: {
@@ -28,7 +29,7 @@ const volunteerInitialState = {
 
 const volunteering = (state = volunteerInitialState, action) => {
     switch (action.type) {
-        case SET_VOLUNTEER_JOBS: 
+        case SET_VOLUNTEER_JOBS:
             return {
                 ...state,
                 message: action.payload.message,
@@ -38,7 +39,7 @@ const volunteering = (state = volunteerInitialState, action) => {
                     loading: false
                 }
             }
-        case SET_VOLUNTEER_SHIFTS: 
+        case SET_VOLUNTEER_SHIFTS:
             return {
                 ...state,
                 message: action.payload.message,
@@ -49,7 +50,7 @@ const volunteering = (state = volunteerInitialState, action) => {
                     loading: false
                 }
             }
-        case SET_SHIFT_ASSIGNMENTS: 
+        case SET_SHIFT_ASSIGNMENTS:
             return {
                 ...state,
                 message: action.payload.message,
@@ -60,7 +61,7 @@ const volunteering = (state = volunteerInitialState, action) => {
                     loading: false
                 }
             }
-        case SHOW_CREATE_JOB_MODAL: 
+        case SHOW_CREATE_JOB_MODAL:
             return {
                 ...state,
                 jobs: {
@@ -69,7 +70,7 @@ const volunteering = (state = volunteerInitialState, action) => {
                     selectedJob: action.payload.selectedJob
                 }
             }
-        case SHOW_CREATE_SHIFT_MODAL: 
+        case SHOW_CREATE_SHIFT_MODAL:
             return {
                 ...state,
                 shifts: {
@@ -78,7 +79,7 @@ const volunteering = (state = volunteerInitialState, action) => {
                     selectedShift: action.payload.selectedShift
                 }
             }
-        case REMEMBER_RECENT_SHIFT_DATA: 
+        case REMEMBER_RECENT_SHIFT_DATA:
             return {
                 ...state,
                 recentData: action.payload.values
@@ -91,6 +92,7 @@ const volunteering = (state = volunteerInitialState, action) => {
 const reducer = combineReducers({
     modules: moduleReducer,
     volunteering: volunteering,
+    assignments: assignmentsReducer,
     brainstorm: brainstormReducer
 })
 const store = createStore(reducer);
