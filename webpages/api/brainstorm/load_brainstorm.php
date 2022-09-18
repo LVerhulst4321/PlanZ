@@ -1,8 +1,7 @@
 <?php
 
-if (!include ('../../config/db_name.php')) {
-    include ('../../config/db_name.php');
-}
+require_once ('../../config/db_name.php');
+
 require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../participant_functions.php');
@@ -79,7 +78,7 @@ function create_jwt_for_badgeid($db, $badgeid) {
    JOIN CongoDump C USING (badgeid)
   WHERE 
          P.badgeid = ?;
- EOD;
+EOD;
 
 	$stmt = mysqli_prepare($db, $query);
 	mysqli_stmt_bind_param($stmt, "s", $badgeid);
