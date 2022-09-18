@@ -5,6 +5,9 @@ class ParticipantAssignment {
     public $badgeId;
     public $name;
     public $moderator;
+    public $avatarSrc;
+    public $registered;
+    public $confirmed;
 
     public static function findAssignmentsForSession($db, $sessionId) {
         $query = <<<EOD
@@ -14,7 +17,10 @@ class ParticipantAssignment {
             P.pubsname,
             CD.badgename,
             CD.firstname,
-            CD.lastname
+            CD.lastname,
+            CD.regtype,
+            POS.confirmed,
+            P.approvedphotofilename
         FROM
                       ParticipantOnSession POS
                  JOIN Participants P ON P.badgeid = POS.badgeid
@@ -39,6 +45,13 @@ EOD;
                 $assignment->badgeId = $row->badgeid;
                 $assignment->name = $name;
                 $assignment->moderator = $row->moderator ? true : false;
+                $assignment->confirmed = $row->confirmed == 'Y';
+                if ($row->approvedphotofilename) {
+                    $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . $row->approvedphotofilename;
+                } else {
+                    $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . PHOTO_DEFAULT_IMAGE;
+                }
+                $assignment->registered = ($row->regtype) ? true : false;
                 $assignments[] = $assignment;
             }
             mysqli_stmt_close($stmt);
@@ -51,7 +64,11 @@ EOD;
     function asArray() {
         return array("badgeId" => $this->badgeId, 
             "name" => $this->name->getBadgeName(), 
-            "moderator" => $this->moderator);
+            "moderator" => $this->moderator,
+            "registered" => $this->registered,
+            "confirmed" => $this->confirmed,
+            "links" => array("avatar" => $this->avatarSrc)
+        );
     }
 
     public static function toJsonArray($participantAssignments) {
