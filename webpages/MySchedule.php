@@ -12,6 +12,11 @@ if (!may_I('my_schedule')) {
     RenderError($message_error);
     exit();
 }
+// Time format for displaying scheduled items.
+if (DISPLAY_24_HOUR_TIME)
+    $timeFormat = '%H:%i';
+else
+    $timeFormat = '%l:%i %p';
 // set $badgeid from session
 $queryArr = array();
 $queryArr["sessions"] = <<<EOD
@@ -22,8 +27,8 @@ SELECT
             R.roomname,
             S.progguiddesc,
             TY.typename,
-            DATE_FORMAT(ADDTIME('$CON_START_DATIM', SCH.starttime),'%a %l:%i %p') AS starttime,
-            DATE_FORMAT(ADDTIME('$CON_START_DATIM', ADDTIME(SCH.starttime, S.duration)),'%l:%i %p') AS endtime,
+            DATE_FORMAT(ADDTIME('$CON_START_DATIM', SCH.starttime),'%a $timeFormat') AS starttime,
+            DATE_FORMAT(ADDTIME('$CON_START_DATIM', ADDTIME(SCH.starttime, S.duration)),'$timeFormat') AS endtime,
             left(S.duration, 5) AS duration,
             S.persppartinfo,
             S.notesforpart

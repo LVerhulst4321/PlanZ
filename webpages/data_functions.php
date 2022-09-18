@@ -321,6 +321,8 @@ function time_description($time) {
     if ($netdatetime === false) {
         return false;
     }
+    if (DISPLAY_24_HOUR_TIME)
+        return date_format($netdatetime, "D H:i");
     return date_format($netdatetime, "D g:i A");
 }
 
@@ -342,6 +344,8 @@ function timeDescFromUnits($timeUnits) {
     if ($netdatetime === false) {
         return false;
     }
+    if (DISPLAY_24_HOUR_TIME)
+        return date_format($netdatetime, "D H:i");
     return date_format($netdatetime, "D g:i A");
 }
 
