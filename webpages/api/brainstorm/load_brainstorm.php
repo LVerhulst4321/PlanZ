@@ -1,12 +1,13 @@
 <?php
 
-if (!include ('../../../db_name.php')) {
-    include ('../../../db_name.php');
-}
+require_once ('../../config/db_name.php');
+
 require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../participant_functions.php');
 require_once('../jwt_functions.php');
+require_once('../con_info.php');
+
 
 function convert_database_date_to_date($db_date) {
     if ($db_date) {
@@ -98,9 +99,10 @@ EOD;
 $db = connect_to_db();
 session_start();
 try {
+    $currentCon = ConInfo::findCurrentCon($db);
 
     $options = read_division_and_track_options($db);
-    $result = array("divisions" => $options);
+    $result = array("divisions" => $options, "con" => $currentCon->asJson());
 
     // create JWT if already logged in
     if (isset($_SESSION['badgeid'])) {

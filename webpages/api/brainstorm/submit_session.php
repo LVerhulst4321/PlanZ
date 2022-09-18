@@ -1,8 +1,7 @@
 <?php
 
-if (!include ('../../../db_name.php')) {
-	include ('../../../db_name.php');
-}
+require_once ('../../config/db_name.php');
+
 require_once('../../external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
@@ -14,7 +13,7 @@ function find_select_dropdown_by_name($db, $table, $idcolumn, $keycolumnname, $k
 
     $query = <<<EOD
  SELECT $idcolumn as id FROM $table WHERE $keycolumnname = ?;
- EOD;
+EOD;
 
     $stmt = mysqli_prepare($db, $query);
     mysqli_stmt_bind_param($stmt, "s", $key);
@@ -36,7 +35,7 @@ function find_division($db, $divisionId) {
 
     $query = <<<EOD
  SELECT email_address, divisionname FROM Divisions WHERE divisionid = ?;
- EOD;
+EOD;
 
     $stmt = mysqli_prepare($db, $query);
     mysqli_stmt_bind_param($stmt, "i", $divisionId);
@@ -67,7 +66,7 @@ function write_session_to_database($db, $json, $jwt) {
             (title, progguiddesc, servicenotes, persppartinfo,
             divisionid, statusid, kidscatid, trackid, typeid, pubstatusid, roomsetid, duration, pocketprogtext, notesforprog)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-   EOD;
+EOD;
 
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "ssssiiiiiiisss", $json['title'], $json['progguiddesc'], 
@@ -90,7 +89,7 @@ function write_session_to_database($db, $json, $jwt) {
             (sessionid, badgeid, name, email_address,
             sessioneditcode, statusid, editdescription)
     VALUES (?, ?, ?, ?, ?, ?, ?);
-   EOD;
+EOD;
 
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "isssiis", $sessionId, $badgeid, 
@@ -129,7 +128,7 @@ function get_email_address_for_badgeid($db, $badgeid) {
         JOIN CongoDump C USING (badgeid)
         WHERE 
             P.badgeid = ?;
-    EOD;
+EOD;
     $stmt = mysqli_prepare($db, $query);
     mysqli_stmt_bind_param($stmt, "s", $badgeid);
     if (mysqli_stmt_execute($stmt)) {
@@ -159,7 +158,7 @@ function get_name_for_badgeid($db, $badgeid) {
         JOIN CongoDump C USING (badgeid)
         WHERE 
             P.badgeid = ?;
-    EOD;
+EOD;
     $stmt = mysqli_prepare($db, $query);
     mysqli_stmt_bind_param($stmt, "s", $badgeid);
     if (mysqli_stmt_execute($stmt)) {
