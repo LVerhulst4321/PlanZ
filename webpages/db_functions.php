@@ -960,6 +960,7 @@ function retrieveFullParticipant($badgeid) {
     if (empty($message_error)) {
         $message_error = "";
     }
+    $regTypeField = USE_REGTYPE_DESCRIPTION ? "COALESCE(RT.message, CD.regtype) AS regtype" : "CD.regtype";
     $query = <<<EOD
 SELECT
         badgeid,
@@ -974,9 +975,10 @@ SELECT
         poststate,
         postzip,
         postcountry,
-        regtype
+        $regTypeField
     FROM
-        CongoDump
+        CongoDump CD
+        LEFT JOIN RegTypes RT USING (regtype)
     WHERE
         badgeid = '$badgeid';
 EOD;
