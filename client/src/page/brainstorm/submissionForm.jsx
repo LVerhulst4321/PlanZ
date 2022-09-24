@@ -17,6 +17,7 @@ dayjs.extend(advancedFormat);
 
 import store from '../../state/store';
 import { connect } from 'react-redux';
+import { redirectToLogin } from '../../common/redirectToLogin';
 
 class SubmissionForm extends Component {
 
@@ -200,7 +201,7 @@ class SubmissionForm extends Component {
 
         let proem = this.props.con ? (<p>Submissions are open for programming for {this.props.con.name}.</p>) : undefined;
         return (
-            <Form onSubmit={(e) =>  this.submitForm(e)}>
+            <Form onSubmit={(e) => this.submitForm(e)}>
                 {message}
 
                 <Card>
@@ -340,19 +341,14 @@ class SubmissionForm extends Component {
     submitForm(event) {
         event.preventDefault();
         event.stopPropagation();
-        const form = event.currentTarget;
 
-        if (this.isValidForm(form)) {
+        if (this.isValidForm()) {
             this.setState({
                 ...this.state,
                 loading: true
             });
     
-            axios.post('/api/brainstorm/submit_session.php', this.getAllFormValues(), {
-                headers: {
-                    "Authorization": "Bearer " + store.getState().auth.jwt
-                }
-            })
+            axios.post('/api/brainstorm/submit_session.php', this.getAllFormValues())
             .then(res => {
                 this.setState({
                     ...this.state,
@@ -366,14 +362,18 @@ class SubmissionForm extends Component {
                 });
             })
             .catch(error => {
-                this.setState({
-                    ...this.state,
-                    loading: false,
-                    message: {
-                        severity: "danger",
-                        text: "Sorry. We're had a bit of a technical problem. Try again?"
-                    }
-                });
+                if (error.response && error.response.status === 401) {
+                    redirectToLogin();
+                } else {
+                    this.setState({
+                        ...this.state,
+                        loading: false,
+                        message: {
+                            severity: "danger",
+                            text: "Sorry. We're had a bit of a technical problem. Try again?"
+                        }
+                    });
+                }
             });
         }
     }
