@@ -9,6 +9,7 @@ import PageHeader from './component/header';
 
 import './scss/brainstorm.scss';
 import LoginModal from './component/loginModal';
+import SidebarText from './component/sidebarText';
 
 const BrainstormApp = () => (
     <Container>
@@ -19,12 +20,7 @@ const BrainstormApp = () => (
             </section>
             <section className="col-md-3">
                 <DateInfo />
-
-                <p>What are we looking for? WisCon encourages programming that has at least implicit,
-                    but preferrably explicit, recognition of and engagement with an expansive definition
-                    of feminism. We encourage programming that is attentive to issues of gender, sexuality,
-                    race, class, disability, and other issues of oppression and/or identity politics. 
-                </p>
+                <SidebarText />
             </section>
         </div>
         <LoginModal />

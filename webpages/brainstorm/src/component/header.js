@@ -18,13 +18,16 @@ class PageHeader extends Component {
             </NavDropdown>) 
             : (<Nav.Link onClick={() => this.presentModal()}>Login</Nav.Link>);
         let loginMessage = (!this.isAuthenticated()) ? (<Alert variant="warning">Please <a className="alert-link" href="https://program.wiscon.net" onClick={(e) => { e.preventDefault(); this.presentModal();} }>log in</a> to submit session ideas.</Alert>) : undefined;
+        let website = (this.props.links && this.props.links.website) 
+            ? (<Nav.Link href={this.props.links.website.url} target="_blank" rel="noreferrer">{this.props.links.website.name}</Nav.Link>)
+            : undefined;
         return [
             <header className="mb-3" key="page-header-main">
                 <img className="w-100" src="/HeaderImage.php" alt="page header" />
                 <Navbar bg="dark" expand="lg" className="navbar-dark navbar-expand-md justify-content-between">
                     <Nav className="navbar-expand-md navbar-dark bg-dark ">
                         <Nav.Link href="/welcome.php" rel="noreferrer">Home</Nav.Link>
-                        <Nav.Link href="https://wiscon.net" target="_blank" rel="noreferrer">WisCon</Nav.Link>
+                        {website}
                     </Nav>
                     <Nav className="navbar-expand-md navbar-dark bg-dark ml-auto">
                         {loginMenu}
@@ -66,7 +69,7 @@ class PageHeader extends Component {
 }
 
 function mapStateToProps(state) {
-    return { jwt: state.auth.jwt };
+    return { jwt: state.auth.jwt, links: state.options.con ? state.options.con.links : null };
 }
 
 export default connect(mapStateToProps)(PageHeader);

@@ -49,7 +49,8 @@ const options = (state = {}, action) => {
         case SAVE_OPTIONS: 
             return { ...state,
                 con: action.payload.con,
-                divisions: action.payload.divisions 
+                divisions: action.payload.divisions,
+                customText: action.payload.customText 
             };
         default:
             return state;
