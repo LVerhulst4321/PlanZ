@@ -52,7 +52,7 @@ class DateInfo extends Component {
 }
 
 function mapStateToProps(state) {
-    return { divisions: state.options.divisions || [] };
+    return { divisions: state.brainstorm.divisions || [] };
 }
 
 export default connect(mapStateToProps)(DateInfo);

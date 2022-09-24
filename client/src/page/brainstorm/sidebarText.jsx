@@ -8,7 +8,7 @@ const SidebarText = (props) => {
 }
 
 function mapStateToProps(state) {
-    return { sidebar: (state.options != null && state.options.customText != null) ? state.options.customText.sidebar : ""};
+    return { sidebar: (state.brainstorm != null && state.brainstorm.customText != null) ? state.brainstorm.customText.sidebar : ""};
 }
 
 export default connect(mapStateToProps)(SidebarText);

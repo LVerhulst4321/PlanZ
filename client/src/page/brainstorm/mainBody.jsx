@@ -4,10 +4,9 @@ import axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
 import Spinner from 'react-bootstrap/Spinner';
 
+import { saveBrainstormOptions } from '../../state/brainstormActions';
+import store from '../../state/store';
 import SubmissionForm from './submissionForm';
-import store from '../state/store';
-import { saveOptions } from '../state/optionsActions';
-import { extractAndDispatchJwt } from '../state/authActions';
 
 class MainBody extends Component {
 
@@ -41,8 +40,7 @@ class MainBody extends Component {
     loadInitialData() {
         axios.post('/api/brainstorm/load_brainstorm.php')
         .then(res => {
-            extractAndDispatchJwt(res, true);
-            store.dispatch(saveOptions(res.data))
+            store.dispatch(saveBrainstormOptions(res.data))
             this.setState({
                 ...this.state,
                 loading: false,

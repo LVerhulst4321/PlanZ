@@ -15,7 +15,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 
-import store from '../state/store';
+import store from '../../state/store';
 import { connect } from 'react-redux';
 
 class SubmissionForm extends Component {
@@ -25,13 +25,13 @@ class SubmissionForm extends Component {
 
         this.state = {
             values: this.createInitialValues(),
-            submitAllowed: (store.getState().auth.jwt != null),
+            submitAllowed: true,
             errors: {}
         }
     }
 
     getDivisions() {
-        return this.selectOpenDivisions(store.getState().options.divisions);
+        return this.selectOpenDivisions(store.getState().brainstorm.divisions);
     }
 
     createInitialValues() {
@@ -54,7 +54,7 @@ class SubmissionForm extends Component {
             if (values === {}) {
                 values = this.createInitialValues();
             }
-            let submitAllowed = (store.getState().auth.jwt != null);
+            let submitAllowed = true;
             this.setState({
                 ...this.state,
                 values: values,
@@ -388,7 +388,7 @@ class SubmissionForm extends Component {
 }
 
 function mapStateToProps(state) {
-    return { con: state.options.con };
+    return { con: state.brainstorm.con };
 }
 
 export default connect(mapStateToProps)(SubmissionForm);

@@ -1,5 +1,6 @@
 import { createStore, combineReducers } from 'redux'
 import { SET_SHIFT_ASSIGNMENTS, SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL, SHOW_CREATE_SHIFT_MODAL } from './volunteerActions';
+import brainstormReducer from './brainstormReducer';
 import moduleReducer from './moduleReducer';
 
 const volunteerInitialState = {
@@ -82,7 +83,8 @@ const volunteering = (state = volunteerInitialState, action) => {
 
 const reducer = combineReducers({
     modules: moduleReducer,
-    volunteering: volunteering
+    volunteering: volunteering,
+    brainstorm: brainstormReducer
 })
 const store = createStore(reducer);
 
