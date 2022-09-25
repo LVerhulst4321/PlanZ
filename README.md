@@ -55,6 +55,8 @@ Other software which can work with PlanZ:
 
 Are you trying to install PlanZ? Check out the [installation notes](./Install/INSTALL.md).
 
+A portion of the application is built as a React client. You'll need to [build and deploy](./client/README.md) the React code as well.
+
 ### Documentation
 
 Check out the [wiki](https://github.com/olszowka/Zambia/wiki) to review the original version of this code.
