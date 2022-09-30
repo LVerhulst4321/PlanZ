@@ -82,11 +82,14 @@ EOD;
     $program = array();
     while($row = mysqli_fetch_assoc($result)) {
         $tagsArray = array("Track:".$row["trackname"],"Division:".$row["divisionname"]);
+        $temparrayoftags = array();
+        if (!empty($row['typename'])) {
+            $temparrayoftags[] = 'Type:'.$row['typename'];
+        }
         if (!empty($row["taglist"])) {
-            $temparrayoftags = array();
             $temparrayoftags = explode(',', $row["taglist"]);
             foreach ($temparrayoftags as $singletag) {
-                array_push($tagsArray,"Tag:".$singletag);
+                array_push($tagsArray, "Tag:".$singletag);
             }
         }
         $locfloor = '';
