@@ -147,8 +147,9 @@ function trueFalseField(string $name, bool $value): string
 
 /**
  * Format field value for output to config file, depending on type.
+ * ToDo: Change type of $value to string|int|bool when we move to PHP 8.
  */
-function outputType(string $type, string|int|bool $value): string 
+function outputType(string $type, $value): string 
 {
   switch ($type) {
     case 'boolean':
