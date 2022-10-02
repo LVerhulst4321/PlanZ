@@ -158,9 +158,17 @@ EOD;
         if (!empty($row["htmlbio"])) {
             $bio = $row["htmlbio"];
         }
+        // Currently links only used for photo link, but plan to add other link types.
         $links = [];
-        if (!empty($row['approvedphotofilename'])) {
-            $links['img'] = 'http' . ($_SERVER['HTTPS'] ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . PHOTO_PUBLIC_DIRECTORY . '/' . $row['approvedphotofilename'];
+        if (defined('PHOTO_EXTRACT_LINK_TYPE') && !empty(PHOTO_EXTRACT_LINK_TYPE) && !empty($row['approvedphotofilename'])) {
+            // Construct link to photo image on current server.
+            $links[PHOTO_EXTRACT_LINK_TYPE] = 'http' 
+                                            . ($_SERVER['HTTPS'] ? 's' : '') 
+                                            . '://' 
+                                            . $_SERVER['SERVER_NAME'] 
+                                            . PHOTO_PUBLIC_DIRECTORY 
+                                            . '/' 
+                                            . $row['approvedphotofilename'];
         }
         $peopleRow = array(
             "id" => $row["badgeid"],
