@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux'
-import { SET_SHIFT_ASSIGNMENTS, SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL, SHOW_CREATE_SHIFT_MODAL } from './volunteerActions';
+import { REMEMBER_RECENT_SHIFT_DATA, SET_SHIFT_ASSIGNMENTS, SET_VOLUNTEER_JOBS, SET_VOLUNTEER_SHIFTS, SHOW_CREATE_JOB_MODAL, SHOW_CREATE_SHIFT_MODAL } from './volunteerActions';
 import brainstormReducer from './brainstormReducer';
 import moduleReducer from './moduleReducer';
 
@@ -21,6 +21,8 @@ const volunteerInitialState = {
         selectedJob: null,
         loading: true,
         list: []
+    },
+    recentData: {
     }
 }
 
@@ -75,6 +77,11 @@ const volunteering = (state = volunteerInitialState, action) => {
                     showModal: action.payload.show,
                     selectedShift: action.payload.selectedShift
                 }
+            }
+        case REMEMBER_RECENT_SHIFT_DATA: 
+            return {
+                ...state,
+                recentData: action.payload.values
             }
         default:
             return state;
