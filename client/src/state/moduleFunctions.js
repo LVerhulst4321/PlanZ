@@ -1,6 +1,7 @@
 import store from './store';
 import axios from 'axios';
 import { setModules } from './moduleActions';
+import { redirectToLogin } from '../common/redirectToLogin';
 
 export function fetchModules() {
     axios.get('/api/admin/modules.php')

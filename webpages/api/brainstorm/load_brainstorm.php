@@ -3,21 +3,13 @@
 require_once ('../../config/db_name.php');
 
 require_once('../../db_exceptions.php');
+require_once('../../con_data.php');
 require_once('../db_support_functions.php');
 require_once('../participant_functions.php');
-require_once('../jwt_functions.php');
+require_once('../authentication.php');
+require_once('../format_functions.php');
 require_once('../con_info.php');
-
-
-function convert_database_date_to_date($db_date) {
-    if ($db_date) {
-        $date = date_create_from_format('Y-m-d H:i:s', $db_date);
-        $date->setTimezone(new DateTimeZone(PHP_DEFAULT_TIMEZONE));
-        return $date;
-    } else {
-        return null;
-    }
-}
+require_once('../custom_text.php');
 
 function read_division_and_track_options($db) {
     $query = <<<EOD
@@ -98,24 +90,22 @@ EOD;
 
 $db = connect_to_db();
 session_start();
+$authentication = new Authentication();
 try {
-    $currentCon = ConInfo::findCurrentCon($db);
+    if ($authentication->isLoggedIn()) {
+        $currentCon = ConInfo::findCurrentCon($db);
 
-    $options = read_division_and_track_options($db);
-    $result = array("divisions" => $options, "con" => $currentCon->asJson());
+        $options = read_division_and_track_options($db);
+        $result = array("divisions" => $options, "con" => $currentCon->asJson());
+        $customText = CustomText::findByPageName($db, "Brainstorm");
+        $result["customText"] = $customText->data;
 
-    // create JWT if already logged in
-    if (isset($_SESSION['badgeid'])) {
-        $jwt = create_jwt_for_badgeid($db, $_SESSION['badgeid']);
-        if ($jwt) {
-            header("Authorization: Bearer ".$jwt);
-        }
+        header('Content-type: application/json');
+        $json_string = json_encode($result);
+        echo $json_string;
+    } else {
+        http_response_code(401);
     }
-
-    header('Content-type: application/json');
-    $json_string = json_encode($result);
-    echo $json_string;
-
 } finally {
     $db->close();
 }

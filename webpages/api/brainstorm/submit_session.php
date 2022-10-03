@@ -5,7 +5,9 @@ require_once ('../../config/db_name.php');
 require_once('../../external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
-require_once('../jwt_functions.php');
+require_once('../http_session_functions.php');
+require_once('../authentication.php');
+require_once('../../data_functions.php');
 require_once('../../email_functions.php');
 require_once('../participant_functions.php');
 
@@ -53,9 +55,9 @@ EOD;
     }
 }
 
-function write_session_to_database($db, $json, $jwt) {
+function write_session_to_database($db, $json, $authentication) {
 
-    $badgeid = jwt_extract_badgeid($jwt);
+    $badgeid = $authentication->getBadgeId();
     $email = array_key_first(get_email_address_for_badgeid($db, $badgeid));
     $name = get_name_for_badgeid($db, $badgeid);
 
@@ -175,8 +177,8 @@ EOD;
     }
 }
 
-function send_confirmation_email($db, $json, $jwt, $division) {
-    $badgeid = jwt_extract_badgeid($jwt);
+function send_confirmation_email($db, $json, $authentication, $division) {
+    $badgeid = $authentication->getBadgeId();
     $email = get_email_address_for_badgeid($db, $badgeid);
     $name = get_name_for_badgeid($db, $badgeid);
 
@@ -219,8 +221,9 @@ function is_valid($db, $json) {
     }
 }
 
-$auth = jwt_from_header();
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && jwt_validate_token($auth, true)) {
+start_session_if_necessary();
+$authentication = new Authentication();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $authentication->isSubmitBrainstormAllowed()) {
 
     $body = file_get_contents('php://input');
     $json = json_decode($body, true);
@@ -231,12 +234,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && jwt_validate_token($auth, true)) {
         if (is_valid($db, $json)) {
 
             // write to database
-            write_session_to_database($db, set_brainstorm_default_values($db, $json), $auth);
+            write_session_to_database($db, set_brainstorm_default_values($db, $json), $authentication);
 
             $division = find_division($db, $json['division']);
 
             // send email
-            send_confirmation_email($db, $json, $auth, $division);
+            send_confirmation_email($db, $json, $authentication, $division);
 
             http_response_code(201);
         } else {
