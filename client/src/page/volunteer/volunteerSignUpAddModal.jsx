@@ -13,6 +13,7 @@ import timezone from 'dayjs/plugin/timezone';
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import { formatDay } from '../../util/dateUtil';
+import VolunteerSignUpOption from './volunteerSighUpOption';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
@@ -98,20 +99,7 @@ class VolunteerSignUpAddModal extends React.Component {
 
     renderListOfShifts(shifts) {
         return shifts.filter(s => !this.isExistingAssignment(s) && this.matchesFilter(s)).map((s, i) => {
-            let emphasis = this.highNeed(s);
-            return (<div className={'card mb-3 ' + (emphasis ? 'border-primary' : '')} key={'shift-' + s.id}>
-                <div className="card-body">
-                    <div className="row">
-                        <div className="col-md-6"><b>{s.job.name}:</b> {renderDateRange(s.fromTime, s.toTime, this.props.shifts.context.timezone)}</div>                        
-                        <div className="col-md-6"><b>Location:</b> {s.location} </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6"><b>Needs:</b> {s.minPeople}&ndash;{s.maxPeople} volunteers <span>(has {s.currentSignupCount})</span></div>
-                        <div className="col-md-6 text-right"><LoadingButton onClick={() => this.addShiftToMyAssignments(s)} enabled={true} 
-                            loading={this.state.loadingId == s.id}>Add</LoadingButton></div>
-                    </div>
-                </div>
-            </div>)
+            return (<VolunteerSignUpOption shift={s} timezone={this.props.shifts.context.timezone} onClick={(shift) => this.addShiftToMyAssignments(shift) } key={'shift-' + s.id}/>);
         });
     }
 
@@ -186,10 +174,6 @@ class VolunteerSignUpAddModal extends React.Component {
         let result = false;
         this.props.assignments.list.forEach(a => result |= (a.id == shift.id));
         return result;
-    }
-
-    highNeed(shift) {
-        return shift.currentSignupCount < shift.minPeople;
     }
 }
 
