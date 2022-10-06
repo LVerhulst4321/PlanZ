@@ -295,7 +295,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 ?>
         <div class="row mt-3">
             <div class="form-group col-md-6">
-                <label for="streamlink">Streaming link or ID:</label>
+                <label for="streamlink"><?= STREAMING_LABEL ?>:</label>
                 <input type="text" class="form-control" size="80" maxlength="510" name="streamlink" id="streamlink" value="<?php echo htmlspecialchars($session["streamlink"], ENT_COMPAT);?>" />
             </div>
         </div>

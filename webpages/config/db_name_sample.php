@@ -85,6 +85,7 @@ define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as pla
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
 define("MEETING_LINK", TRUE); // Add support for Meeting link in sessions
 define("STREAMING_LINK", TRUE); // Add support for streaming link in sessions
+define("STREAMING_LABEL", "Streaming link"); // Specify label for streaming link - allows conventions to specify specific streaming service if required
 define("SIGNUP_LINK", TRUE); // Add support for signup link in sessions
 
 // Items for Photo Upload/Approval
