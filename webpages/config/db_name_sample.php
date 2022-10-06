@@ -83,7 +83,9 @@ define("REG_PART_PREFIX", ""); // only needed for USE_REG_SYSTEM = FALSE; prefix
 define("REG_PART_DIGITS", 4); // only needed for USE_REG_SYSTEM = FALSE; number of digits to pad counter; if number has fewer than specified digits, will left pad with zeros
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
-define("MEETING_LINK", TRUE); // Add support for Meetinglink in sessions
+define("MEETING_LINK", TRUE); // Add support for Meeting link in sessions
+define("STREAMING_LINK", TRUE); // Add support for streaming link in sessions
+define("SIGNUP_LINK", TRUE); // Add support for signup link in sessions
 
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
