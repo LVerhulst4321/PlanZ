@@ -127,7 +127,8 @@ SELECT
     P.bio,
     P.htmlbio,
     CD.firstname,
-    CD.lastname
+    CD.lastname,
+    P.approvedphotofilename
 FROM
          Participants P
     JOIN CongoDump CD USING (badgeid)
@@ -159,12 +160,25 @@ EOD;
         if (!empty($row["htmlbio"])) {
             $bio = $row["htmlbio"];
         }
+        // Currently links only used for photo link, but plan to add other link types.
+        $links = [];
+        if (defined('PHOTO_EXTRACT_LINK_TYPE') && !empty(PHOTO_EXTRACT_LINK_TYPE) && !empty($row['approvedphotofilename'])) {
+            // Construct link to photo image on current server.
+            $links[PHOTO_EXTRACT_LINK_TYPE] = 'http' 
+                                            . ($_SERVER['HTTPS'] ? 's' : '') 
+                                            . '://' 
+                                            . $_SERVER['SERVER_NAME'] 
+                                            . PHOTO_PUBLIC_DIRECTORY 
+                                            . '/' 
+                                            . $row['approvedphotofilename'];
+        }
         $peopleRow = array(
             "id" => $row["badgeid"],
             "name" => array($name),
             "sortname" => $row["sortedpubsname"],
             "prog" => $participantOnSession[$row["badgeid"]],
-            "bio" => $bio
+            "bio" => $bio,
+            "links" => $links
             );
         $people[] = $peopleRow;
     }
