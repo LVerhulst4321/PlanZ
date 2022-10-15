@@ -81,12 +81,14 @@ EOD;
     $results["program_num_rows"] = mysqli_num_rows($result);        //used for reporting
     $program = array();
     while($row = mysqli_fetch_assoc($result)) {
-        $tagsArray = array("Track:".$row["trackname"],"Division:".$row["divisionname"]);
+        $tagsArray = array("Track:".$row["trackname"], "Division:".$row["divisionname"]);
+        if (!empty($row['typename'])) {
+            $tagsArray[] = 'Type:'.$row['typename'];
+        }
         if (!empty($row["taglist"])) {
-            $temparrayoftags = array();
             $temparrayoftags = explode(',', $row["taglist"]);
             foreach ($temparrayoftags as $singletag) {
-                array_push($tagsArray,"Tag:".$singletag);
+                array_push($tagsArray, "Tag:".$singletag);
             }
         }
         $locfloor = '';
