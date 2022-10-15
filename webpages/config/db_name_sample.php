@@ -93,8 +93,11 @@ define("PHOTO_FILE_TYPES", "jpg,png"); // comma separated list of allowed file t
 define("PHOTO_DIMENSIONS", "200,200,800,800,1048576"); // comma separated list: min width, min height, max width, max height, file size
 define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo
 
-
 define("JSON_EXTRACT_ASSIGN_VARS", FALSE); // If TRUE include variable names in JSON output files (required for KonOpas).
+
+define("PHOTO_EXTRACT_LINK_TYPE", ""); // Link type to use when exporting photos to KonOpas/ConClár.
+        // Supported values: "img", "photo" or "img_256_url" (the last one comes from Grenadine, so not really recommended).
+        // Leave blank to disable image exporting.
 
 define("USING_SURVEYS", FALSE); // enable the survey feature
 

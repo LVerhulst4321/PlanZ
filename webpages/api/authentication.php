@@ -17,6 +17,10 @@ class Authentication {
         return $this->isLoggedIn() && may_I("Volunteering Set-up");
     }
 
+    function isSubmitBrainstormAllowed() {
+        return $this->isLoggedIn() && may_I('BrainstormSubmit');
+    }
+
     function isProgrammingStaff() {
         return $this->isLoggedIn() && may_I("Staff");
     }

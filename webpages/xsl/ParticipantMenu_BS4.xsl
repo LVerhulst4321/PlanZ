@@ -80,7 +80,7 @@
           </xsl:if>          
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']">
             <li class="nav-item py-0 ml-4">
-              <a class="nav-link py-1" href="./brainstorm/">Suggest a Session</a>
+              <a class="nav-link py-1" href="./brainstorm.php">Suggest a Session</a>
             </li>
           </xsl:if>
         </ul>

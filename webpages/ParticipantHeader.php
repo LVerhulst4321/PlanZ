@@ -79,7 +79,7 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                             <?php makeMenuItem("My Schedule", may_I('my_schedule'),"MySchedule.php",false); ?>
                             <?php makeMenuItem("Volunteering", may_I('Volunteering'),"volunteering.php",false); ?>
                             <li class="divider-vertical"></li>
-                            <?php makeMenuItem("Suggest a Session", may_I('BrainstormSubmit'),"./brainstorm/", false); ?>
+                            <?php makeMenuItem("Suggest a Session", may_I('BrainstormSubmit'),"./brainstorm.php", false); ?>
                             <li class="divider-vertical"></li>
                         </ul>
                             <?php if (may_I('Staff')) {
