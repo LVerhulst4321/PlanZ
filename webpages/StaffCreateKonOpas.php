@@ -43,7 +43,7 @@
         exit();
     }
     if ($results["konopas"]) {
-        $resultsFile = fopen(REPORT_INCLUDE_DIRECTORY . "program.js","w");
+        $resultsFile = fopen(JSON_EXTRACT_DIRECTORY . "program.js","w");
         if ($resultsFile === FALSE) {
             $message_error = "StaffCreateKonOpas.php: Cannot open ../program.js for writing.";
             error_log($message_error);
@@ -61,7 +61,7 @@
         echo('<p>The program data file was created.' . "\n");
         echo('<p>Number of program items: ' . $results["program_num_rows"] . "\n");
 
-        $resultsFile = fopen(REPORT_INCLUDE_DIRECTORY . "people.js","w");
+        $resultsFile = fopen(JSON_EXTRACT_DIRECTORY . "people.js","w");
         if ($resultsFile === FALSE) {
             $message_error = "StaffCreateKonOpas.php: Cannot open ../people.js for writing.";
             error_log($message_error);
@@ -79,7 +79,7 @@
         echo('<p>The people data file was created.' . "\n");
         echo('<p>Number of participants: ' . $results["people_num_rows"] . "\n");
 
-        $resultsFile = fopen(REPORT_INCLUDE_DIRECTORY . "konopas.appcache","w");
+        $resultsFile = fopen(JSON_EXTRACT_DIRECTORY . "konopas.appcache","w");
         if ($resultsFile === FALSE) {
             $message_error = "StaffCreateKonOpas.php: Cannot open ../konopas.appcache for writing.";
             error_log($message_error);
@@ -100,8 +100,8 @@
     //Create data file for online guide ConClár
     //Should make this a flag or something to control whether to make the file.
     if ($results["json"]) {
-        $fileNameProd = REPORT_INCLUDE_DIRECTORY . "konOpasData.json";
-        $fileNameTest = REPORT_INCLUDE_DIRECTORY . "konOpasDataTest.json";
+        $fileNameProd = JSON_EXTRACT_DIRECTORY . "konOpasData.json";
+        $fileNameTest = JSON_EXTRACT_DIRECTORY . "konOpasDataTest.json";
         $resultsFileProd = fopen($fileNameProd,"wb");
         $resultsFileTest = fopen($fileNameTest,"wb");
         if ($resultsFileProd === FALSE) {
@@ -149,8 +149,8 @@
         exit();
     }
     if ($infofile["output"]) {
-        $fileNameProd = REPORT_INCLUDE_DIRECTORY . "info.md";
-        $fileNameTest = REPORT_INCLUDE_DIRECTORY . "info_test.md";
+        $fileNameProd = JSON_EXTRACT_DIRECTORY . "info.md";
+        $fileNameTest = JSON_EXTRACT_DIRECTORY . "info_test.md";
         $infofileFileProd = fopen($fileNameProd,"w");
         $infofileFileTest = fopen($fileNameTest,"w");
         if ($infofileFileProd === FALSE) {
