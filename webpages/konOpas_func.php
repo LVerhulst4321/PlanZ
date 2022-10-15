@@ -185,13 +185,23 @@ EOD;
 
     //note:header('Content-type: application/json');
 
+    // Encode program and people as JSON.
+    if (defined('JSON_EXTRACT_ASSIGN_VARS') && JSON_EXTRACT_ASSIGN_VARS) {
+        $programJson = "var program = " . json_encode($program).";\n";
+        $peopleJson = "var people = " . json_encode($people).";\n";
+    }
+    else {
+        $programJson = json_encode($program);
+        $peopleJson = json_encode($people);
+    }
+
     //The json key is for general json output
-    $results["json"]  = "var program = " . json_encode($program).";\n";
-    $results["json"] .= "var people = " . json_encode($people).";\n";
+    $results["json"]  = $programJson;
+    $results["json"] .= $peopleJson;
 
     //The program, people and konopas keys are for KonOpas
-    $results["program"]  = "var program = " . json_encode($program).";\n";
-    $results["people"]   = "var people = " . json_encode($people).";\n";
+    $results["program"]  = $programJson;
+    $results["people"]   = $peopleJson;
     $results["konopas"]  = "CACHE MANIFEST\n";
     $results["konopas"] .= "# " . date("Y-m-d H:i:s") . "\n";
     $results["konopas"] .= "\n";
