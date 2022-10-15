@@ -220,6 +220,14 @@ function get_session_from_post() {
         $session["mlink"] = getString('mlink');
     else
         $session["mlink"] = "";
+    if (STREAMING_LINK === TRUE)
+        $session["streamlink"] = getString('streamlink');
+    else
+        $session["streamlink"] = "";
+    if (SIGNUP_LINK === TRUE)
+        $session["signlink"] = getString('signlink');
+    else
+        $session["signlink"] = "";
 }
 
 // Function set_session_defaults()

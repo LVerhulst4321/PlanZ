@@ -39,10 +39,10 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     }
 ?>
     <form name="sessform" method="POST" action="SubmitEditCreateSession.php">
-        <input type="hidden" name="name" value="<?php echo htmlspecialchars($name,ENT_COMPAT);?>" />
-        <input type="hidden" name="email" value="<?php echo htmlspecialchars($email,ENT_COMPAT);?>" />
+        <input type="hidden" name="name" value="<?php echo htmlspecialchars($name, ENT_COMPAT);?>" />
+        <input type="hidden" name="email" value="<?php echo htmlspecialchars($email, ENT_COMPAT);?>" />
         <!-- The pubno field is no longer used on the form, but the code expects it.-->
-        <input type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"],ENT_COMPAT);?>" />
+        <input type="hidden" name="pubno" value="<?php echo htmlspecialchars($session["pubno"], ENT_COMPAT);?>" />
         <div class="text-right mt-3">
             <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
         </div>
@@ -282,19 +282,43 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
     if (MEETING_LINK === TRUE) {
 ?>
         <div class="row mt-3">
-                    <div class="form-group col-md-6">
-                        <label for="meetinglink">Meeting Link:</label>
-                        <input type="text" class="form-control" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"],ENT_COMPAT);?>" />
-                    </div>
-                </div>
+            <div class="form-group col-md-6">
+                <label for="mlink">Meeting Link:</label>
+                <input type="text" class="form-control" size="80" maxlength="510" name="mlink" id="mlink" value="<?php echo htmlspecialchars($session["mlink"], ENT_COMPAT);?>" />
+            </div>
+        </div>
 <?php
     }
 ?>
-                <div class="text-right mt-3">
-                    <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
-                </div>
-                <input type="hidden" name="action" value="<?php echo ($action === "create") ? "create" : "edit"; ?>" />
-            </form>
+<?php
+    if (STREAMING_LINK === TRUE) {
+?>
+        <div class="row mt-3">
+            <div class="form-group col-md-6">
+                <label for="streamlink"><?= STREAMING_LABEL ?>:</label>
+                <input type="text" class="form-control" size="80" maxlength="510" name="streamlink" id="streamlink" value="<?php echo htmlspecialchars($session["streamlink"], ENT_COMPAT);?>" />
+            </div>
+        </div>
+<?php
+    }
+?>
+<?php
+    if (SIGNUP_LINK === TRUE) {
+?>
+        <div class="row mt-3">
+            <div class="form-group col-md-6">
+                <label for="signlink">Signup Link:</label>
+                <input type="text" class="form-control" size="80" maxlength="510" name="signlink" id="signlink" value="<?php echo htmlspecialchars($session["signlink"], ENT_COMPAT);?>" />
+            </div>
+        </div>
+<?php
+    }
+?>
+        <div class="text-right mt-3">
+            <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
+        </div>
+        <input type="hidden" name="action" value="<?php echo ($action === "create") ? "create" : "edit"; ?>" />
+    </form>
         
     <!-- Modal -->
     <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyLabel" aria-hidden="true">
