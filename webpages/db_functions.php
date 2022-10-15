@@ -541,7 +541,9 @@ UPDATE Sessions
         statusid="{$sessionf["status"]}",
         hashtag="{$sessionf["hashtag"]}",
         notesforprog="{$sessionf["notesforprog"]}",
-        meetinglink="{$sessionf["mlink"]}"
+        meetinglink="{$sessionf["mlink"]}",
+        streaminglink="{$sessionf["streamlink"]}",
+        signuplink="{$sessionf["signlink"]}"
     WHERE
         sessionid = $id;
 EOD;
@@ -635,6 +637,8 @@ INSERT INTO Sessions
         progguiddesc="{$sessionf["progguiddesc"]}",
         progguidhtml="{$sessionf["progguidhtml"]}",
         meetinglink="{$sessionf["mlink"]}",
+        streaminglink="{$sessionf["streamlink"]}",
+        signuplink="{$sessionf["signlink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
         estatten={$sessionf["estatten"]},
@@ -707,6 +711,14 @@ function filter_session() {
         $session2["mlink"] = mysqli_real_escape_string($linki, $session["mlink"]);
     else
         $session2["mlink"] = "";
+    if (STREAMING_LINK === TRUE)
+        $session2["streamlink"] = mysqli_real_escape_string($linki, $session["streamlink"]);
+    else
+        $session2["streamlink"] = "";
+    if (SIGNUP_LINK === TRUE)
+        $session2["signlink"] = mysqli_real_escape_string($linki, $session["signlink"]);
+    else
+        $session2["signlink"] = "";
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
         $session2["duration"] = conv_min2hrsmin($session["duration"]);
@@ -786,7 +798,9 @@ SELECT
         hashtag,
         ts,
         participantlabel,
-        meetinglink
+        meetinglink,
+        streaminglink,
+        signuplink
     FROM
         Sessions
     WHERE
@@ -832,6 +846,8 @@ EOD;
     $session["invguest"] = $sessionarray["invitedguest"];
     $session["participantlabel"] = $sessionarray["participantlabel"];
     $session["mlink"] = $sessionarray["meetinglink"];
+    $session["streamlink"] = $sessionarray["streaminglink"];
+    $session["signlink"] = $sessionarray["signuplink"];
     $session["hashtag"] = $sessionarray["hashtag"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";

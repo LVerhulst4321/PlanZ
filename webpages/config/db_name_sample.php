@@ -83,7 +83,10 @@ define("REG_PART_PREFIX", ""); // only needed for USE_REG_SYSTEM = FALSE; prefix
 define("REG_PART_DIGITS", 4); // only needed for USE_REG_SYSTEM = FALSE; number of digits to pad counter; if number has fewer than specified digits, will left pad with zeros
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
 define("HTML_SESSION", TRUE); // Allow editing Session Description as HTML and saving it both as plain text and HTML
-define("MEETING_LINK", TRUE); // Add support for Meetinglink in sessions
+define("MEETING_LINK", TRUE); // Add support for Meeting link in sessions
+define("STREAMING_LINK", TRUE); // Add support for streaming link in sessions
+define("STREAMING_LABEL", "Streaming link"); // Specify label for streaming link - allows conventions to specify specific streaming service if required
+define("SIGNUP_LINK", TRUE); // Add support for signup link in sessions
 
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
@@ -94,6 +97,11 @@ define("PHOTO_DIMENSIONS", "200,200,800,800,1048576"); // comma separated list: 
 define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo
 
 define("JSON_EXTRACT_DIRECTORY", "/var/data/guide/");  // Path to directory where Konopas/ConClár files to be written.
+define("JSON_EXTRACT_ASSIGN_VARS", FALSE); // If TRUE include variable names in JSON output files (required for KonOpas).
+
+define("PHOTO_EXTRACT_LINK_TYPE", ""); // Link type to use when exporting photos to KonOpas/ConClár.
+        // Supported values: "img", "photo" or "img_256_url" (the last one comes from Grenadine, so not really recommended).
+        // Leave blank to disable image exporting.
 
 define("USING_SURVEYS", FALSE); // enable the survey feature
 

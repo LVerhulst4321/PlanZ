@@ -81,12 +81,14 @@ EOD;
     $results["program_num_rows"] = mysqli_num_rows($result);        //used for reporting
     $program = array();
     while($row = mysqli_fetch_assoc($result)) {
-        $tagsArray = array("Track:".$row["trackname"],"Division:".$row["divisionname"]);
+        $tagsArray = array("Track:".$row["trackname"], "Division:".$row["divisionname"]);
+        if (!empty($row['typename'])) {
+            $tagsArray[] = 'Type:'.$row['typename'];
+        }
         if (!empty($row["taglist"])) {
-            $temparrayoftags = array();
             $temparrayoftags = explode(',', $row["taglist"]);
             foreach ($temparrayoftags as $singletag) {
-                array_push($tagsArray,"Tag:".$singletag);
+                array_push($tagsArray, "Tag:".$singletag);
             }
         }
         $locfloor = '';
@@ -125,7 +127,8 @@ SELECT
     P.bio,
     P.htmlbio,
     CD.firstname,
-    CD.lastname
+    CD.lastname,
+    P.approvedphotofilename
 FROM
          Participants P
     JOIN CongoDump CD USING (badgeid)
@@ -157,25 +160,48 @@ EOD;
         if (!empty($row["htmlbio"])) {
             $bio = $row["htmlbio"];
         }
+        // Currently links only used for photo link, but plan to add other link types.
+        $links = [];
+        if (defined('PHOTO_EXTRACT_LINK_TYPE') && !empty(PHOTO_EXTRACT_LINK_TYPE) && !empty($row['approvedphotofilename'])) {
+            // Construct link to photo image on current server.
+            $links[PHOTO_EXTRACT_LINK_TYPE] = 'http' 
+                                            . ($_SERVER['HTTPS'] ? 's' : '') 
+                                            . '://' 
+                                            . $_SERVER['SERVER_NAME'] 
+                                            . PHOTO_PUBLIC_DIRECTORY 
+                                            . '/' 
+                                            . $row['approvedphotofilename'];
+        }
         $peopleRow = array(
             "id" => $row["badgeid"],
             "name" => array($name),
             "sortname" => $row["sortedpubsname"],
             "prog" => $participantOnSession[$row["badgeid"]],
-            "bio" => $bio
+            "bio" => $bio,
+            "links" => $links
             );
         $people[] = $peopleRow;
     }
 
     //note:header('Content-type: application/json');
 
+    // Encode program and people as JSON.
+    if (defined('JSON_EXTRACT_ASSIGN_VARS') && JSON_EXTRACT_ASSIGN_VARS) {
+        $programJson = "var program = " . json_encode($program).";\n";
+        $peopleJson = "var people = " . json_encode($people).";\n";
+    }
+    else {
+        $programJson = json_encode($program);
+        $peopleJson = json_encode($people);
+    }
+
     //The json key is for general json output
-    $results["json"]  = "var program = " . json_encode($program).";\n";
-    $results["json"] .= "var people = " . json_encode($people).";\n";
+    $results["json"]  = $programJson;
+    $results["json"] .= $peopleJson;
 
     //The program, people and konopas keys are for KonOpas
-    $results["program"]  = "var program = " . json_encode($program).";\n";
-    $results["people"]   = "var people = " . json_encode($people).";\n";
+    $results["program"]  = $programJson;
+    $results["people"]   = $peopleJson;
     $results["konopas"]  = "CACHE MANIFEST\n";
     $results["konopas"] .= "# " . date("Y-m-d H:i:s") . "\n";
     $results["konopas"] .= "\n";

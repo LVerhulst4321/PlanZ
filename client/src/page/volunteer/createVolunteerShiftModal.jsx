@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
-import { showCreateShiftModal } from '../../state/volunteerActions';
+import { rememberRecentShiftData, showCreateShiftModal } from '../../state/volunteerActions';
 import { fetchShifts } from '../../state/volunteerFunctions';
 import FormComponent from '../../common/formComponent';
 
@@ -37,10 +37,23 @@ class CreateVolunteerShiftModal extends FormComponent {
             if (this.props.selectedShift == null) {
                 this.setState((state) => ({
                     ...state,
-                    values: {},
+                    values: this.props.recentData && this.props.recentData.job != null ? {
+                        job: this.props.recentData.job,
+                        min: this.props.recentData.minPeople,
+                        max: this.props.recentData.maxPeople,
+                        location: this.props.recentData.location,
+                        fromDay: dayjs(this.props.recentData.fromTime).tz(this.props.timezone).format("YYYY-MM-DD"),
+                        fromTime: dayjs(this.props.recentData.fromTime).tz(this.props.timezone).format("hh:mm"),
+                        fromAmPm: dayjs(this.props.recentData.fromTime).tz(this.props.timezone).format("A"),
+                        toDay: dayjs(this.props.recentData.toTime).tz(this.props.timezone).format("YYYY-MM-DD"),
+                        toTime: dayjs(this.props.recentData.toTime).tz(this.props.timezone).format("hh:mm"),
+                        toAmPm: dayjs(this.props.recentData.toTime).tz(this.props.timezone).format("A"),
+                    } : {},
                     errors: {},
                     confirmDelete: false,
-                    message: null
+                    message: (this.props.recentData && this.props.recentData.job != null) 
+                        ? { severity: "info", text: "We've remembered the previous data you entered. Most people set up a number of shifts with a lot of the same data."} 
+                        : null
                 }));
             } else {
                 this.setState((state) => ({
@@ -227,6 +240,8 @@ class CreateVolunteerShiftModal extends FormComponent {
 
             axios.post('/api/volunteer/create_volunteer_shift.php', this.getAllFormValues())
             .then(res => {
+                let mostRecent = this.getAllFormValues();
+                store.dispatch(rememberRecentShiftData(mostRecent));
                 this.setState({
                     ...this.state,
                     values: {},
@@ -373,7 +388,8 @@ function mapStateToProps(state) {
         days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
         timezone: state.volunteering.shifts.context ? state.volunteering.shifts.context.timezone : null,
         jobs: state.volunteering.jobs ? state.volunteering.jobs.list : [],
-        selectedShift: state.volunteering.shifts.selectedShift
+        selectedShift: state.volunteering.shifts.selectedShift,
+        recentData: { ...state.volunteering.recentData }
     };
 }
 export default connect(mapStateToProps)(CreateVolunteerShiftModal);

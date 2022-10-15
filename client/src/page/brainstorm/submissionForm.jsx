@@ -15,8 +15,9 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 
-import store from '../state/store';
+import store from '../../state/store';
 import { connect } from 'react-redux';
+import { redirectToLogin } from '../../common/redirectToLogin';
 
 class SubmissionForm extends Component {
 
@@ -25,13 +26,13 @@ class SubmissionForm extends Component {
 
         this.state = {
             values: this.createInitialValues(),
-            submitAllowed: (store.getState().auth.jwt != null),
+            submitAllowed: true,
             errors: {}
         }
     }
 
     getDivisions() {
-        return this.selectOpenDivisions(store.getState().options.divisions);
+        return this.selectOpenDivisions(store.getState().brainstorm.divisions);
     }
 
     createInitialValues() {
@@ -54,7 +55,7 @@ class SubmissionForm extends Component {
             if (values === {}) {
                 values = this.createInitialValues();
             }
-            let submitAllowed = (store.getState().auth.jwt != null);
+            let submitAllowed = true;
             this.setState({
                 ...this.state,
                 values: values,
@@ -200,7 +201,7 @@ class SubmissionForm extends Component {
 
         let proem = this.props.con ? (<p>Submissions are open for programming for {this.props.con.name}.</p>) : undefined;
         return (
-            <Form onSubmit={(e) =>  this.submitForm(e)}>
+            <Form onSubmit={(e) => this.submitForm(e)}>
                 {message}
 
                 <Card>
@@ -340,19 +341,14 @@ class SubmissionForm extends Component {
     submitForm(event) {
         event.preventDefault();
         event.stopPropagation();
-        const form = event.currentTarget;
 
-        if (this.isValidForm(form)) {
+        if (this.isValidForm()) {
             this.setState({
                 ...this.state,
                 loading: true
             });
     
-            axios.post('/api/brainstorm/submit_session.php', this.getAllFormValues(), {
-                headers: {
-                    "Authorization": "Bearer " + store.getState().auth.jwt
-                }
-            })
+            axios.post('/api/brainstorm/submit_session.php', this.getAllFormValues())
             .then(res => {
                 this.setState({
                     ...this.state,
@@ -366,14 +362,18 @@ class SubmissionForm extends Component {
                 });
             })
             .catch(error => {
-                this.setState({
-                    ...this.state,
-                    loading: false,
-                    message: {
-                        severity: "danger",
-                        text: "Sorry. We're had a bit of a technical problem. Try again?"
-                    }
-                });
+                if (error.response && error.response.status === 401) {
+                    redirectToLogin();
+                } else {
+                    this.setState({
+                        ...this.state,
+                        loading: false,
+                        message: {
+                            severity: "danger",
+                            text: "Sorry. We're had a bit of a technical problem. Try again?"
+                        }
+                    });
+                }
             });
         }
     }
@@ -388,7 +388,7 @@ class SubmissionForm extends Component {
 }
 
 function mapStateToProps(state) {
-    return { con: state.options.con };
+    return { con: state.brainstorm.con };
 }
 
 export default connect(mapStateToProps)(SubmissionForm);

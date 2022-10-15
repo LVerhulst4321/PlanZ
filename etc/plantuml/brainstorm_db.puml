@@ -1,0 +1,88 @@
+@startuml
+title Brainstorm Entity Relationship Diagram
+'hide the spot
+hide circle
+
+!global $DARK_BLUE = "#094785"
+!global $MEDIUM_GREY = "#5E5F60"
+!global $DARK_GREY = "#44546A"
+!global $AMBER = "#f7dd90"
+'avoid problems with angled crows feet
+skinparam linetype ortho
+
+
+<style>
+  class {
+    RoundCorner 15
+    LineColor $DARK_BLUE
+    FontColor $DARK_BLUE
+    BackgroundColor #fcf6e4
+    FontSize 12
+    AttributeFontColor $DARK_GREY
+  }
+
+  arrow {
+    LineColor $MEDIUM_GREY
+    FontColor $MEDIUM_GREY
+    FontSize 12
+  }
+
+  note {
+    LineColor $DARK_GREY
+    FontColor #111111
+    BackgroundColor $AMBER
+    FontSize 12
+    AttributeFontColor $DARK_GREY
+  }
+</style>
+
+
+entity con_info {
+* id : int <<auto_increment>>
+--
+* name : varchar(90)
+* perennial_con_id : int
+* header_img_name : varchar(90)
+* active_from_time : TIMESTAMP
+* active_to_time : TIMESTAMP
+* reg_open_time : TIMESTAMP
+* reg_close_time : TIMESTAMP
+* con_start_date : DATE
+* con_end_date : DATE
+}
+
+entity perennial_con_info {
+* id : int <<auto_increment>>
+--
+* name : varchar(90)
+* website_url: varchar(255)
+}
+
+entity con_key_dates {
+* id : int <<auto_increment>>
+--
+* con_id : int
+* external_key : varchar(255)
+* from_time timestamp
+* to_time timestamp
+}
+
+entity Divisions {
+* divisionid : int <<auto_increment>>
+--
+* external_key : varchar(255)
+}
+
+entity Tracks {
+* trackid : int <<auto_increment>>
+--
+* divisionid : int
+}
+
+
+con_info }|-down-|| perennial_con_info : perennial_con_id
+con_key_dates }|-down-|| con_info : con_id
+Tracks }|-up-|| Divisions : divisionid
+Divisions }|-right-|| con_key_dates : external_key
+
+@enduml
