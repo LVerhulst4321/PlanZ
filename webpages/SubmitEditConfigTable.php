@@ -11,6 +11,10 @@ $displayorder_found = false;
 $prikey = '';
 $json_return = array();
 
+/**
+ * Return maximum length of column contents.
+ * Used in calculating more accurate table editor column widths.
+ */
 function fetch_max_length(string $tablename, $columnName): int
 {
     $query = "SELECT MAX(LENGTH($columnName)) FROM $tablename;";
@@ -42,6 +46,7 @@ EOD;
         $displayorder_found = false;
         $prikey = '';
         while ($row = $result->fetch_assoc()) {
+            // Add actual width of contents to results.
             $row['ACTUAL_LENGTH'] = fetch_max_length($tablename, $row['COLUMN_NAME']);
             $schema[] = $row;
             if ($row["COLUMN_NAME"] == 'display_order') {

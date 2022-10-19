@@ -206,6 +206,21 @@ function cellChanged(cell) {
     cell.getElement().style.backgroundColor = "#fff3cd";
 }
 
+/**
+ * Function to return the width of a column in characters.
+ * @param {object} column The column propertes.
+ * @return {int}
+ */
+function calculateColumnWidth(column) {
+    // If no data in column, set width to maxmum length.
+    if (!colLength) return column.CHARACTER_MAXIMUM_LENGTH;
+    // If column contains data, set column width to maximum existing length + 25%.
+    const colLength = column.ACTUAL_LENGTH + column.ACTUAL_LENGTH % 4;
+    // If that would make it longer than maxium length, set to maximum length.
+    if (colLength > column.CHARACTER_MAXIMUM_LENGTH) return column.CHARACTER_MAXIMUM_LENGTH;
+    return colLength;
+}
+
 function opentable(tabledata) {
     // get table information from tableschema
     //console.log(tableschema);
@@ -249,12 +264,7 @@ function opentable(tabledata) {
                 cellClick: tceEditorBlur
             });
         else if (column.DATA_TYPE == 'text') {
-            // If no data in column, set width to maxmum length.
-            // If column contains data, set column width to maximum existing length + 25%.
-            // If that would make it longer than maxium length, set to maximum length.
-            let colLength = column.ACTUAL_LENGTH + column.ACTUAL_LENGTH % 4;
-            if (!colLength || colLength > column.CHARACTER_MAXIMUM_LENGTH) colLength = column.CHARACTER_MAXIMUM_LENGTH;
-            width = 8 * colLength;
+            width = 8 * calculateColumnWidth(column);
             if (width < 80) width = 80;
             if (width > 500) width = 500;
             columns.push({
@@ -262,10 +272,7 @@ function opentable(tabledata) {
                 cellClick: tceEditor
             });
         } else {
-            // Same length rules as text type.
-            let colLength = column.ACTUAL_LENGTH + column.ACTUAL_LENGTH % 4;
-            if (!colLength || colLength > column.CHARACTER_MAXIMUM_LENGTH) colLength = column.CHARACTER_MAXIMUM_LENGTH;
-            width = 8 * colLength;
+            width = 8 * calculateColumnWidth(column);
             if (width < 80) width = 80;
             if (width > 500) width = 500;
             columns.push({
