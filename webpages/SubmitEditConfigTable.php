@@ -11,6 +11,14 @@ $displayorder_found = false;
 $prikey = '';
 $json_return = array();
 
+function fetch_max_length(string $tablename, $columnName): int
+{
+    $query = "SELECT MAX(LENGTH($columnName)) FROM $tablename;";
+    $result = mysqli_query_exit_on_error($query);
+    $row = $result->fetch_row();
+    return $row[0] ?? 0;
+}
+
 function fetch_schema($tablename) {
     global $schema, $displayorder_found, $prikey, $schema_loaded;
 
@@ -34,6 +42,7 @@ EOD;
         $displayorder_found = false;
         $prikey = '';
         while ($row = $result->fetch_assoc()) {
+            $row['ACTUAL_LENGTH'] = fetch_max_length($tablename, $row['COLUMN_NAME']);
             $schema[] = $row;
             if ($row["COLUMN_NAME"] == 'display_order') {
                 $displayorder_found = true;

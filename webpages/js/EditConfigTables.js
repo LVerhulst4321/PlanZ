@@ -249,7 +249,12 @@ function opentable(tabledata) {
                 cellClick: tceEditorBlur
             });
         else if (column.DATA_TYPE == 'text') {
-            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
+            // If no data in column, set width to maxmum length.
+            // If column contains data, set column width to maximum existing length + 25%.
+            // If that would make it longer than maxium length, set to maximum length.
+            let colLength = column.ACTUAL_LENGTH + column.ACTUAL_LENGTH % 4;
+            if (!colLength || colLength > column.CHARACTER_MAXIMUM_LENGTH) colLength = column.CHARACTER_MAXIMUM_LENGTH;
+            width = 8 * colLength;
             if (width < 80) width = 80;
             if (width > 500) width = 500;
             columns.push({
@@ -257,7 +262,10 @@ function opentable(tabledata) {
                 cellClick: tceEditor
             });
         } else {
-            width = 8 * column.CHARACTER_MAXIMUM_LENGTH;
+            // Same length rules as text type.
+            let colLength = column.ACTUAL_LENGTH + column.ACTUAL_LENGTH % 4;
+            if (!colLength || colLength > column.CHARACTER_MAXIMUM_LENGTH) colLength = column.CHARACTER_MAXIMUM_LENGTH;
+            width = 8 * colLength;
             if (width < 80) width = 80;
             if (width > 500) width = 500;
             columns.push({
