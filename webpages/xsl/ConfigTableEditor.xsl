@@ -97,9 +97,15 @@
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Locations' or @permatomtag='ce_All']" />
         <xsl:variable name="editRegTypes"
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_RegTypes' or @permatomtag='ce_All']" />
+        <xsl:variable name="editPerennialConInfo"
+            select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_perennial_con_info' or @permatomtag='ce_All']" />
+        <xsl:variable name="editConInfo"
+            select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_con_info' or @permatomtag='ce_All']" />
+        <xsl:variable name="editConKeyDates"
+            select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_con_key_dates' or @permatomtag='ce_All']" />
 
         <xsl:variable name="editAnyMisc"
-            select="$editDivisions or $editLocations or $editRegTypes" />
+            select="$editDivisions or $editLocations or $editRegTypes or editPerennialConInfo or editConInfo or editConKeyDates" />
 
 
         <xsl:variable name="editAnyThing"
@@ -708,6 +714,27 @@
                                         </a>
                                     </li>
                                 </xsl:if>
+                                <xsl:if test="$editPerennialConInfo">
+                                    <li class="nav-item">
+                                        <a href="#perennial_con_info" class="nav-link" data-toggle="tab" data-top="misc-top"
+                                           id="t-perennial_con_info">Perennial Con Info
+                                        </a>
+                                    </li>
+                                </xsl:if>
+                                <xsl:if test="$editConInfo">
+                                    <li class="nav-item">
+                                        <a href="#con_info" class="nav-link" data-toggle="tab" data-top="misc-top"
+                                           id="t-con_info">Con Info
+                                        </a>
+                                    </li>
+                                </xsl:if>
+                                <xsl:if test="$editConKeyDates">
+                                    <li class="nav-item">
+                                        <a href="#con_key_dates" class="nav-link" data-toggle="tab" data-top="misc-top"
+                                           id="t-con_key_dates">Con Key Dates
+                                        </a>
+                                    </li>
+                                </xsl:if>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane mt-4 fade show active" id="miscdesc">
@@ -721,6 +748,18 @@
                                             <li>RegTypes</li>
                                             <p>The type of member registration the participant has</p>
                                         </xsl:if>
+                                        <xsl:if test="$editPerennialConInfo">
+                                            <li>PerennialConInfo</li>
+                                            <p>The information about the series of conventions</p>
+                                        </xsl:if>
+                                        <xsl:if test="$editConInfo">
+                                            <li>ConInfo</li>
+                                            <p>The information about a specific convention</p>
+                                        </xsl:if>
+                                        <xsl:if test="$editConKeyDates">
+                                            <li>ConKeyDates</li>
+                                            <p>Dates sessions can be proposed for each division</p>
+                                        </xsl:if>
                                     </ul>
                                 </div>
                                 <xsl:if test="$editDivisions">
@@ -728,6 +767,15 @@
                                 </xsl:if>
                                 <xsl:if test="$editRegTypes">
                                     <div class="tab-pane mt-4 fade" id="regtypes"/>
+                                </xsl:if>
+                                <xsl:if test="$editPerennialConInfo">
+                                    <div class="tab-pane mt-4 fade" id="perennial_con_info"/>
+                                </xsl:if>
+                                <xsl:if test="$editConInfo">
+                                    <div class="tab-pane mt-4 fade" id="con_info"/>
+                                </xsl:if>
+                                <xsl:if test="$editConKeyDates">
+                                    <div class="tab-pane mt-4 fade" id="con_key_dates"/>
                                 </xsl:if>
                             </div>
                         </div>
