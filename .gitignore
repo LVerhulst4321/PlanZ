@@ -12,3 +12,15 @@ webpages/vendor/
 webpages/config/db_name.php
 webpages/config/db_env.php
 webpages/config/db.php
+webpages/config/db_name_backup_*.php
+
+# Exclude participant photos.
+webpages/participant_photos/*.jpg
+webpages/participant_photos/*.png
+webpages/participant_photos/*.gif
+webpages/participant_photos/*.webp
+
+# Folders that won't necessarily in the project space, but since the root is outside webroot, they could be.
+private/
+upload_photos/
+
