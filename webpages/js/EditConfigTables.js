@@ -213,7 +213,7 @@ function cellChanged(cell) {
  */
 function calculateColumnWidth(column) {
     // If no data in column, set width to maxmum length.
-    if (!colLength) return column.CHARACTER_MAXIMUM_LENGTH;
+    if (!column.ACTUAL_LENGTH) return column.CHARACTER_MAXIMUM_LENGTH;
     // If column contains data, set column width to maximum existing length + 25%.
     const colLength = column.ACTUAL_LENGTH + column.ACTUAL_LENGTH % 4;
     // If that would make it longer than maxium length, set to maximum length.
