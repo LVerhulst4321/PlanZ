@@ -1,10 +1,10 @@
 <?php
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'Participant Bio and pubname';
+$report['name'] = 'Participant Bio and pubsname';
 $report['multi'] = 'true';
 $report['output_filename'] = 'participant_bios.csv';
-$report['description'] = 'Show the badgeid, pubsname, sortedpubsname, and bio for all participants who have indicated they are attending and interested in being assigned to sessions.';
+$report['description'] = 'Show the id, pubsname, sortedpubsname, and bio for all participants who have indicated they are attending and interested in being assigned to sessions.';
 $report['categories'] = array(
     'Participant Info Reports' => 700,
     'Programming Reports' => 1,
@@ -14,7 +14,6 @@ $report['columns'] = array(
     array("width" => "6em"),
     array("width" => "12em", "orderData" => 2),
     array("visible" => false),
-    array("orderable" => false),
     array("orderable" => false)
 );
 $report['queries'] = [];
