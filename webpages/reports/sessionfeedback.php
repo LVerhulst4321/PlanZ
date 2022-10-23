@@ -7,7 +7,6 @@ $report['output_filename'] = 'sessionfeedback.csv';
 $report['description'] = 'For each session, show number of members who expressed interest to either attend or be assigned to a session';
 $report['categories'] = array(
     'Programming Reports' => 965,
-    'WisCon Custom Reports' => 20,
 );
 $report['queries'] = [];
 $report['queries']['sessions'] =<<<'EOD'

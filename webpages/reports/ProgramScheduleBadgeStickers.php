@@ -50,8 +50,7 @@ $report['xsl'] =<<<'EOD'
     <xsl:output encoding="UTF-8" indent="yes" method="html" />
     <xsl:include href="xsl/reportInclude.xsl" />
     <xsl:template match="/">
-        <link rel="stylesheet" href="css/zambia_report_print.css" type="text/css" />
-        <link rel="stylesheet" href="css/zambia_report_print.css" type="text/css" />
+        <link rel="stylesheet" href="css/zambia_report_print.css" type="text/css" />        
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
                 <div class="form">

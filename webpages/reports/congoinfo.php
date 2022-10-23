@@ -9,6 +9,7 @@ $report['categories'] = array(
     'Events Reports' => 500,
     'Administration Reports' => 500,
     'Participant Info Reports' => 500,
+    'Registration Reports' => 1,
 );
 $report['columns'] = array(
     null,

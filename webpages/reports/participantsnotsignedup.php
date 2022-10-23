@@ -79,7 +79,7 @@ $report['xsl'] =<<<'EOD'
                             <th>Pubs Name</th>
                             <th>Badge Name</th>
                             <th>Last Name, First Name</th>
-                            <th>Interested in sessions</th>
+                            <th>Interested in Sessions</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='participants']/row" />
