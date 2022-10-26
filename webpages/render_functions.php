@@ -75,7 +75,20 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
     while (list($sessionid, $trackname, $typename, $title, $duration, $estatten, $progguiddesc, $persppartinfo, $starttime, $roomname, $statusname, $taglist, $notesforprog, $notesforpart, $servicenotes, $pubstatusname, $sessionhistory)
         = mysqli_fetch_array($result, MYSQLI_NUM)) {
         $html .= "<tr>\n";
-        $rowSpan = $oneLinePerSession ? "" : "rowspan=\"3\"";
+        $rowSpanCnt = 3;
+        if ($persppartinfo) {
+          $rowSpanCnt++;
+        }
+        if ($notesforprog) {
+          $rowSpanCnt++;
+        }
+        if ($notesforpart) {
+          $rowSpanCnt++;
+        }
+        if ($servicenotes) {
+          $rowSpanCnt++;
+        }
+        $rowSpan = $oneLinePerSession ? "" : "rowspan=\"" . $rowSpanCnt . "\"";
         $html .= "  <th $rowSpan id=\"sessidtcell\">";
         if ($showlinks) {
             $html .= "<a href=\"StaffAssignParticipants.php?selsess=" . $sessionid . "\">" . $sessionid . "</a>";
@@ -144,7 +157,6 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
         if ($notesforprog) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Notes for Programming Committee: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($notesforprog,ENT_NOQUOTES)."</td>";
@@ -159,7 +171,6 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
         if ($notesforpart) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Notes for Participants: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($notesforpart,ENT_NOQUOTES)."</td>";
@@ -174,7 +185,6 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
         if ($servicenotes) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Notes for Tech and Hotel: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($servicenotes,ENT_NOQUOTES)."</td>";
@@ -189,7 +199,6 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
         if ($sessionhistory) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Session History Notes: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($sessionhistory,ENT_NOQUOTES)."</td>";
