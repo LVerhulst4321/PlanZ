@@ -1,5 +1,5 @@
 <?php
-//	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+// Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 global $returnAjaxErrors, $return500errors;
 $returnAjaxErrors = true;
 $return500errors = true;
@@ -125,13 +125,13 @@ EOD;
         $query .= survey_filter_build_where($qcte, $andor);
         $query .= <<<EOD
 ORDER BY
-	IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
+    IF(instr(P.pubsname,CD.lastname)>0,CD.lastname,substring_index(P.pubsname,' ',-1)),CD.firstname
 EOD;
     }
     //error_log("\nquery: $query\n\n");
 
     $result = mysqli_query_exit_on_error($query);
-	$participants = array();
+    $participants = array();
     if ($source == 'invite') {
         $select = '<select id="participant-select" name="selpart">' . "\n" .
             '<option value="" selected="selected" disabled="true">Select Participant</option>' . "\n";
@@ -156,8 +156,8 @@ EOD;
         $select .= '<option value="' . $row["badgeid"] . '">' . $sortableName . ' - ' . $row["badgeid"] . "</option>\n";
     }
     $select .= "</select>\n";
-	mysqli_free_result($result);
-	$json_return["participants"] = $participants;
+    mysqli_free_result($result);
+    $json_return["participants"] = $participants;
     $json_return["select"] = $select;
     echo json_encode($json_return);
 }
