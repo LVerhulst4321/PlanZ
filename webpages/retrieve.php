@@ -3,6 +3,7 @@
 function retrieveSessions($sessionSearchArray) {
     global $linki;
     $ConStartDatim = CON_START_DATIM; // make it a variable so it can be substituted
+    $sessionEditCodes = '1,2,6';   // 1=created in brainstorm, 2=Created in staff create session, 6=Created by import
     $query = <<<EOB
 SELECT
         S.sessionid,
@@ -36,7 +37,7 @@ SELECT
         LEFT JOIN SessionHasTag SHT USING (sessionid)
         LEFT JOIN Tags TA USING (tagid)
     WHERE
-        SEH.sessioneditcode IN (1,2,6)   #1=brainstorm,2=vetted,3=editme
+        SEH.sessioneditcode IN ($sessionEditCodes)
 EOB;
     if (isset($sessionSearchArray['trackidList'])) {
         $trackidList = $sessionSearchArray['trackidList'];
