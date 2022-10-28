@@ -30,7 +30,10 @@ define('COMMENT_PATTERN', '/^\s*\/\/\s*(.*)$/');
 // If 
 $defaultConfig = readConfig(SAMPLE_CONFIG);
 $messages = [];
-if (!empty($_POST) && isset($_POST['submitbtn'])) {
+
+$canSave = checkWritable();
+
+if ($canSave && !empty($_POST) && isset($_POST['submitbtn'])) {
   // Form has been posted.
   try {
     // Load current live config (we'll only use the prefix lines from this).
@@ -62,6 +65,41 @@ if (!empty($_POST) && isset($_POST['submitbtn'])) {
 }
 
 staff_header($title, $bootstrap4);
+
+/** 
+ * Check if write permission on config file.
+ * Note that this will check that the user has permission to write to the config directory and live config file.
+ * It should detect if the OS file permissions are not correct to allow config changes to be saved.
+ * It will not detect other restrictions such as PHP safe mode or SELinux protections.
+ */
+function checkWritable(): bool
+{
+  global $messages;
+
+  $directoryWritable = is_writable(CONFIG_DIR);
+  if (!$directoryWritable) {
+    $configDirPath = realpath(CONFIG_DIR);
+    $messages[] = "<p class=\"error\">Config directory is not writable.<br />"
+      . "Write permission required on directory to save backup configuration files.<br />"
+      . "Please grant write permission to the following directory: $configDirPath</p>";
+  }
+
+  $liveConfigWritable = is_writable(LIVE_CONFIG);
+  if (!$liveConfigWritable) {
+    $configFilePath = realpath(LIVE_CONFIG);
+    $messages[] = "<p class=\"error\">Live configuration file is not writable.<br />"
+      . "Permission needed to write updated configuration file.<br />"
+      . "Please grant write permission to the following file: $configFilePath</p>";
+  }
+
+  if ($directoryWritable && $liveConfigWritable) {
+    return true;
+  }
+
+  $messages[] = "<p class=\"warning\">Save button disabled.</p>";
+
+  return false;
+}
 
 /**
  * Infer a string's type from the pattern value.
@@ -213,6 +251,12 @@ foreach($defaultConfig->defines as $define) {
         </tr>
   EOD;
 }
+
+$saveButton = $canSave ? <<<EOD
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary" id="submitbtn" name="submitbtn" value="save">Save</button>
+  </div>
+EOD : "";
 // Output table closure and buttons.
 echo <<<EOD
       </tbody>
@@ -221,9 +265,7 @@ echo <<<EOD
       <div class="col-auto">
         <button type="submit" class="btn btn-secondary" id="resetbtn" name="resetbtn" value="undo">Reset</button>
       </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-primary" id="submitbtn" name="submitbtn" value="save">Save</button>
-      </div>
+      $saveButton
     </div>
   </form>
 EOD;
