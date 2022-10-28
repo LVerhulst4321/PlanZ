@@ -162,6 +162,7 @@
                                     <a class="dropdown-item" href="BuildReportMenus.php">Build Report Menus</a>
                                 </xsl:if>
                                 <xsl:if test="$Administrator">
+                                    <a class="dropdown-item" href="ConfigurationAdmin.php">Edit Configuration Settings</a>
                                     <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>
                                     <a class="dropdown-item" href="EditSurvey.php">Edit Survey</a>
                                 </xsl:if>

@@ -191,6 +191,9 @@
                     </xsl:if>
                     <xsl:if test="$Administrator">
                       <li>
+                        <a href="ConfigurationAdmin.php">Edit Configuration Settings</a>
+                      </li>
+                      <li>
                         <a href="EditCustomText.php">Edit Custom Text</a>
                       </li>
                       <li>
