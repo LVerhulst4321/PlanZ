@@ -126,7 +126,6 @@ define("PUBLIC_NEW_USER", FALSE); // allow new user creation from login screen
 
 define("CONFIRM_SESSION_ASSIGNMENT", TRUE); // Ask participants to confirm their assignments
 
-define("USE_CUSTOM_REG_SYSTEM", FALSE); // Define DB Connection to Registration Database.
 define("CUSTOM_LOGIN_PHP", ""); // Custom login function connected to reg system
 
 ?>
