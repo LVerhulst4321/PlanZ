@@ -23,6 +23,7 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["no_user_required"] = $noUserRequired;
     $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
     $paramArray["PUBLIC_NEW_USER"] = PUBLIC_NEW_USER;
+    $paramArray["LOGIN_PHP"] = defined('CUSTOM_LOGIN_PHP') ? CUSTOM_LOGIN_PHP : 'doLogin.php';
     if ($bootstrap4) {
         RenderXSLT('GlobalHeader_BS4.xsl', $paramArray);
     } else {

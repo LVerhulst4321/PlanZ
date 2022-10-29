@@ -14,6 +14,7 @@
     <xsl:param name="header_error_message" select="''" />
     <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:param name="PUBLIC_NEW_USER" select="false()" /><!-- TRUE/FALSE -->
+    <xsl:param name="LOGIN_PHP" select="'doLogin.php'" />
     <xsl:template match="/">
         <header class="header-wrapper" data-pbo="GlobalHeader_BS4.xsl:15">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -136,7 +137,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                        <form id="login-form" class="col-md-6" name="loginform" method="post" action="doLogin.php" data-pbo="GlobalHeader_BS4.xsl:60">
+                        <form id="login-form" class="col-md-6" name="loginform" method="post" action="{$LOGIN_PHP}" data-pbo="GlobalHeader_BS4.xsl:60">
                             <fieldset id="login-box mt-3">
                                 <div class="form-group">
                                     <label for="badgeid" class="sr-only"><xsl:value-of select="$USER_ID_PROMPT" /></label>
