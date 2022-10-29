@@ -195,7 +195,7 @@ function outputType(string $type, $value): string
         case 'int':
             return $value ?: '0';
         case 'datetime':
-            return "\"" . (new DateTime($value))->format("Y-m-d h:i:s") . "\"";
+            return "\"" . (new DateTime($value))->format("Y-m-d H:i:s") . "\"";
         default:
             return "\"". str_replace('"', '\"', $value) ."\"";
     }
