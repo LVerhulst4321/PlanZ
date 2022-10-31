@@ -4,7 +4,8 @@ require_once('error_functions.php');
 require_once('Constants.php');
 require_once('data_functions.php');
 require_once('db_functions.php');
-require_once('custom_functions.php');
+if (file_exists('custom_functions.php'))
+    include_once('custom_functions.php');
 require_once('render_functions.php');
 require_once('validation_functions.php');
 require_once('HtmlHeader.php');
