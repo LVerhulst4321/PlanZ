@@ -271,6 +271,9 @@ if( file_exists( './config/db_name.php' ) ) {
 } else {
     echo '<strong>FATAL ERROR: Config file not found.</strong><br />';
 }
+if (USE_REG_SYSTEM === TRUE) {
+    require_once ('./custom_reg.php'); // Calls an extra file which contains authentication methods for interfacing with con Registration.
+}
 
 
 function prepare_db_and_more() {
@@ -900,6 +903,11 @@ function isLoggedIn() {
         return false;
     }
 
+    if (USE_REG_SYSTEM === TRUE) {
+        global $reg_link;
+        return custom_isLoggedIn();
+    }
+
     $query = "SELECT password FROM Participants WHERE badgeid = '{$_SESSION['badgeid']}';";
     if (!$result = mysqli_query_with_error_handling($query)) {
         unset($_SESSION['badgeid']);
@@ -1133,6 +1141,5 @@ function survey_programmed() {
            return $questions > 0;
     return false;
 }
-
 
 ?>
