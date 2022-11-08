@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Created by Syd Weinstein on 2021-01-04;
-	Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
+    Created by Syd Weinstein on 2021-01-04;
+    Copyright (c) 2021 Peter Olszowka. All rights reserved. See copyright document for more details.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="UpdateMessage" select="''"/>
@@ -27,6 +27,8 @@
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Credentials' or @permatomtag='ce_All']" />
         <xsl:variable name="editInterests"
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Interests' or @permatomtag='ce_All']" />
+        <xsl:variable name="editLinkTypes"
+            select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_link_type' or @permatomtag='ce_All']" />
         <xsl:variable name="editPronouns"
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Pronouns' or @permatomtag='ce_All']" />
         <xsl:variable name="editRoles"
@@ -35,7 +37,7 @@
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_Times' or @permatomtag='ce_All']" />
 
         <xsl:variable name="editAnyParticipant"
-            select="$editAgeRanges or $editBioEditStatuses or $editCredentials or $editInterests or $editPhotoDenialReasons or $editPronouns or $editRoles or $editTimes" />
+            select="$editAgeRanges or $editBioEditStatuses or $editCredentials or $editInterests or $editLinkTypes or $editPhotoDenialReasons or $editPronouns or $editRoles or $editTimes" />
 
 
         <xsl:variable name="editTracks"
@@ -276,7 +278,14 @@
                                 <xsl:if test="$editPhotoDenialReasons">
                                     <li class="nav-item">
                                         <a href="#photodenialreasons" class="nav-link" data-toggle="tab" data-top="part-top"
-                                           id="t-PhotoDenialReasons">PhotoDenialReasons
+                                           id="t-PhotoDenialReasons">Photo Denial Reasons
+                                        </a>
+                                    </li>
+                                </xsl:if>
+                                <xsl:if test="$editLinkTypes">
+                                    <li class="nav-item">
+                                        <a href="#linktypes" class="nav-link" data-toggle="tab" data-top="part-top"
+                                           id="t-link_type">Link Types
                                         </a>
                                     </li>
                                 </xsl:if>
@@ -317,6 +326,10 @@
                                             <li>PhotoDenialReasons</li>
                                             <p>Reasons a participant's photo may be denied for publication </p>
                                         </xsl:if>
+                                        <xsl:if test="$editLinkTypes">
+                                            <li>Link Types</li>
+                                            <p>Types of social media links of a participant</p>
+                                        </xsl:if>
                                     </ul>
                                 </div>
                                 <xsl:if test="$editBioEditStatuses">
@@ -342,6 +355,9 @@
                                 </xsl:if>
                                 <xsl:if test="$editPhotoDenialReasons">
                                     <div class="tab-pane mt-4 fade" id="photodenialreasons"/>
+                                </xsl:if>
+                                <xsl:if test="$editLinkTypes">
+                                    <div class="tab-pane mt-4 fade" id="linktypes"/>
                                 </xsl:if>
                             </div>
                         </div>

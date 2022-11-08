@@ -20,6 +20,7 @@
         @permatomtag='ce_AgeRanges' or @permatomtag='ce_BioEditStatuses' or @permatomtag='ce_Credentials' or @permatomtag='ce_Divisions' or
         @permatomtag='ce_EmailCC' or @permatomtag='ce_EmailFrom' or @permatomtag='ce_EmailTo' or @permatomtag='ce_Features' or
         @permatomtag='ce_Interests' or @permatomtag='ce_KidsCategories' or @permatomtag='ce_LanguageStatuses' or 
+        @permatomtag='ce_link_type' or 
         @permatomtag='ce_Locations' or @permatomtag='ce_PhotoDenialReasons' or @permatomtag='ce_Pronouns' or @permatomtag='ce_PubStatuses' or
         @permatomtag='ce_RegTypes' or @permatomtag='ce_Roles' or @permatomtag='ce_RoomColors' or @permatomtag='ce_Rooms' or @permatomtag='ce_RoomSets' or
         @permatomtag='ce_RoomHasSet' or @permatomtag='ce_Services' or @permatomtag='ce_ServiceTypes' or @permatomtag='ce_SessionStatuses' or

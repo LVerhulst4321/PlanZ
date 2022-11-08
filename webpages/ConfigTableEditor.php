@@ -21,6 +21,7 @@ $editAnyTable =
     || may_I('ce_Interests')
     || may_I('ce_KidsCategories')
     || may_I('ce_LanguageStatuses')
+    || may_I('ce_link_type')
     || may_I('ce_Locations')
     || may_I('ce_PhotoDenialReasons')
     || may_I('ce_Pronouns')

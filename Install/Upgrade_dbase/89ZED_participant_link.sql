@@ -27,6 +27,7 @@ CREATE TABLE `participant_link` (
   `link_value` VARCHAR(255) NOT NULL,
   `link_desc` VARCHAR(255) NULL,
   `updated_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_approved` INT(11) NOT NULL DEFAULT 0,
   CONSTRAINT `participant_link_participant` FOREIGN KEY (`badge_id`) REFERENCES `Participants` (`badgeid`),
   CONSTRAINT `participant_link_link_type` FOREIGN KEY (`link_type_id`) REFERENCES `link_type` (`id`),
   PRIMARY KEY (`id`)
