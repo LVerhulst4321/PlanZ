@@ -11,6 +11,7 @@
     <xsl:param name="trackIsPrimary" />
     <xsl:param name="showTrack" />
     <xsl:param name="showTags" />
+    <xsl:param name="collapse_list" />
     <xsl:variable name="interested" select="/doc/query[@queryName='interested']/row/@interested='1'"/>
     <xsl:variable name="mayISubmitPanelInterests" select="$interested and $may_I" />
 
@@ -50,6 +51,11 @@
                                 <xsl:if test="not($mayISubmitPanelInterests)"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
                                 <xsl:text>Save</xsl:text>
                             </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 offset-sm-10 float-right">
+                            <a class="btn btn-info" data-toggle="collapse" href=".multi-collapse" role="button" aria-expanded="false" aria-controls="{$collapse_list}">Expand All</a>
                         </div>
                     </div>
                     <hr />
@@ -189,7 +195,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </div>
-            <div id="collapse-{@sessionid}" class="collapse list-group list-group-flush">
+            <div id="collapse-{@sessionid}" class="collapse multi-collapse list-group list-group-flush">
                 <div class="list-group-item py-1">
                     <div class="row">
                         <div class="col-0p75 pl-1 pr-0">Duration:</div>
