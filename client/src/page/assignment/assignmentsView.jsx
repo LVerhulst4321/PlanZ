@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Alert, Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { connect } from "react-redux";
+import { SessionScheduleSummary } from "../../common/sessionScheduleSummary";
 import SimpleAlert from "../../common/simpleAlert";
 import { fetchSessionAssignments } from "../../state/assignmentsFunctions";
 import { AssignmentCard } from "./assignmentCard";
@@ -25,6 +26,7 @@ const AssignmentsView = (props) => {
 
         let sessionBlock = (props.session) ? (<div className="mb-3">
                 <h3>{props.session.title}</h3>
+                <SessionScheduleSummary session={props.session} />
                 <div>{props.session.programGuideDescription}</div>
                 <div><i>Notes:</i> {props.session.notesForProgramStaff || "None"}</div>
             </div>) : undefined;
