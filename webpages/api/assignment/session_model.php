@@ -17,11 +17,11 @@ class Session {
         SELECT
             S.title, S.progguiddesc, S.notesforprog
         FROM
-                      Sessions S
+            Sessions S
         WHERE
             S.sessionid=?;
 EOD;
-    
+
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "i", $sessionId);
         $session = null;
@@ -40,10 +40,10 @@ EOD;
             throw new DatabaseSqlException("Query could not be executed: $query");
         }
     }
-    function asArray() {
-        return array("sessionId" => $this->sessionId, 
-            "title" => $this->title, 
-            "programGuideDescription" => $this->programGuideDescription, 
+    function asJson() {
+        return array("sessionId" => $this->sessionId,
+            "title" => $this->title,
+            "programGuideDescription" => $this->programGuideDescription,
             "notesForProgramStaff" => $this->notesForProgramStaff);
     }
 }

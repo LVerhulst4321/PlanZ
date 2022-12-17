@@ -26,7 +26,7 @@ try {
             $assignments = ParticipantAssignment::findAssignmentsForSession($db, $sessionId);
 
             header('Content-type: application/json; charset=utf-8');
-            $json_string = json_encode(array("session" => $session->asArray(), "assignments" => ParticipantAssignment::toJsonArray($assignments)));
+            $json_string = json_encode(array("session" => $session->asJson(), "assignments" => ParticipantAssignment::toJsonArray($assignments)));
             echo $json_string;
         } else {
             http_response_code(400);

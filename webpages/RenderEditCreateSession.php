@@ -181,7 +181,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <label class="control-label vert-sep vert-sep-above" for="pocketprogtext">
                     <?php echo SECOND_DESCRIPTION_CAPTION;?>:
                 </label>
-                <textarea class="form-control" rows="4" cols="70" 
+                <textarea class="form-control" rows="4" cols="70"
                     name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
 <?php
         } else {
@@ -246,7 +246,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 <?php
     if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
 ?>
-            <div class="form-group col-lg-4"> 
+            <div class="form-group col-lg-4">
                 <div><label for="tagdest">Tags:</label></div>
                 <select class="form-control form-control-multiselect" id="tagdest" name="tagdest[]" multiple>
                     <?php populate_multiselect_from_table("Tags", $session["tagdest"]); ?>
@@ -319,7 +319,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
         </div>
         <input type="hidden" name="action" value="<?php echo ($action === "create") ? "create" : "edit"; ?>" />
     </form>
-        
+
     <!-- Modal -->
     <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -360,7 +360,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 </div>
                 <div class="modal-footer">
 <?php
-                    echo "<a class=\"btn btn-primary\" href=\"/StaffAssignParticipants.php?selsess=$sessionId\">Modify</a>";
+                    echo "<a class=\"btn btn-primary\" href=\"/assignParticipants.php?sessionId=$sessionId\">Modify</a>";
 ?>
                 </div>
             </div>

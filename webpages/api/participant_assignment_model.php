@@ -15,6 +15,7 @@ class ParticipantAssignment {
     public $registered;
     public $confirmed;
     public $interestResponse;
+    public $textBio;
 
     public static function findAssignmentsForSession($db, $sessionId) {
         $query = <<<EOD
@@ -28,6 +29,7 @@ class ParticipantAssignment {
             CD.regtype,
             POS.confirmed,
             P.approvedphotofilename,
+            P.bio,
             PSI.rank,
             PSI.comments,
             PSI.willmoderate
@@ -37,9 +39,10 @@ class ParticipantAssignment {
                  JOIN CongoDump CD ON CD.badgeid = POS.badgeid
             LEFT JOIN ParticipantSessionInterest PSI ON (POS.badgeid = PSI.badgeid and POS.sessionid = PSI.sessionid)
         WHERE
-            POS.sessionid=?;
+            POS.sessionid=?
+        ORDER BY moderator DESC, badgename;
 EOD;
-    
+
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "i", $sessionId);
         $assignments = [];
@@ -57,6 +60,7 @@ EOD;
                 $assignment->name = $name;
                 $assignment->moderator = $row->moderator ? true : false;
                 $assignment->confirmed = $row->confirmed == 'Y';
+                $assignment->textBio = $row->bio;
                 if ($row->approvedphotofilename) {
                     $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . $row->approvedphotofilename;
                 } else {
@@ -81,8 +85,9 @@ EOD;
     }
 
     function asArray() {
-        $result = array("badgeId" => $this->badgeId, 
-            "name" => $this->name->getBadgeName(), 
+        $result = array("badgeId" => $this->badgeId,
+            "name" => $this->name->getBadgeName(),
+            "textBio" => $this->textBio,
             "moderator" => $this->moderator,
             "registered" => $this->registered,
             "confirmed" => $this->confirmed,

@@ -1,23 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 export const AssignmentCard = ({assignee}) => {
-    return (<Card>
-        <Card.Body>
-            <Card.Title>{assignee.name} <span className="text-muted small">({assignee.badgeId})</span></Card.Title>
-            <div className="text-center p-2">
-                <img src={assignee.links.avatar} className="rounded-circle participant-avatar participant-avatar-sm img-thumbnail" alt={'Avatar for ' + assignee.name} />
-            </div>
-            <div>
-                {assignee.registered ? undefined : (<div className="text-muted small">{assignee.name} is not registered.</div>)}
-                {assignee.interestResponse ? (<div><i>Rank: </i> {assignee.interestResponse.rank}</div>) : undefined}
-                {assignee.interestResponse ? (<div className="small">{assignee.interestResponse.comments}</div>) : undefined}
-            </div>
-            <div>
-                <Button variant="link" className="btn-sm">Bio</Button>
-                <Button variant="link" className="btn-sm">Make Moderator</Button>
-                <Button variant="link" className="btn-sm text-danger">Remove</Button>
+    let [showBio, setShowBio] = useState(false);
+
+    return (<Card className={assignee.moderator ? 'border-primary' : ''}>
+        <Card.Body className="p-3">
+
+            <div className="d-flex" style={{ gap: "1rem" }}>
+                <div className="mr-3" style={{ flexGrow: "0" }}>
+                    <img src={assignee.links.avatar} className="rounded-circle participant-avatar participant-avatar-sm img-thumbnail" alt={'Avatar for ' + assignee.name} />
+                </div>
+                <div className="d-flex flex-column justify-content-between" style={{ flexGrow: "1" }}>
+                    <div className="d-md-flex" style={{ gap: "1rem", flexGrow: "1" }}>
+                        <div style={{ flexGrow: "1" }}>
+                            <div>
+                                <b>{assignee.name}</b> {assignee.moderator ? (<span> (Mod)</span>) : null} {' '}
+                                <span className="text-muted small">({assignee.badgeId})</span> {' '}
+                                <Button variant="link" className="btn-sm" onClick={() => setShowBio(!showBio)}>[Bio]</Button>
+                            </div>
+                            {showBio ? (<div className="text-muted small py-2">
+                                        {assignee.textBio || "This person has no bio."}
+                                    </div>)
+                                : null }
+                            {assignee.registered ? undefined : (<div className="text-muted small">{assignee.name} is not registered.</div>)}
+                        </div>
+                        <div style={{ flexGrow: "1" }}>
+                            {assignee.interestResponse ? (<div><i>Rank: </i> {assignee.interestResponse.rank}</div>) : undefined}
+                            {assignee.interestResponse ? (<div className="small">{assignee.interestResponse.comments}</div>) : undefined}
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Button variant="link" className="btn-sm">Make Moderator</Button>
+                        <Button variant="link" className="btn-sm text-danger">Remove</Button>
+                    </div>
+                </div>
             </div>
         </Card.Body>
     </Card>);
