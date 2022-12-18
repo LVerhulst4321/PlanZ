@@ -19,7 +19,7 @@ const AssignmentsView = (props) => {
         return props.assignments.filter(a => a.moderator).length;
     }
 
-    const renderModal = () => {
+    const renderModal = ({candidates}) => {
         return (<Modal show={showModal} size="lg" onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Assign {props.session?.participantLabel ? props.session?.participantLabel : 'Participants'}</Modal.Title>
@@ -29,7 +29,9 @@ const AssignmentsView = (props) => {
                     className="mb-3"
                     >
                     <Tab eventKey="interested" title="Interested">
-                        <p>Intereasted people</p>
+                        <p>These people expressed interest in participating in this session.</p>
+
+                        {candidates?.map(c => (<div>c?.name</div>))}
                     </Tab>
                     <Tab eventKey="other" title="Other">
                         <p>Someone else</p>
@@ -79,15 +81,16 @@ const AssignmentsView = (props) => {
                 {sessionBlock}
                 {assignmentBlock}
                 </div>
-                {renderModal()}
+                {renderModal(props)}
             </>)
     }
 }
 
 function mapStateToProps(state) {
     return {
-        session: state.assignments.data.session ? state.assignments.data.session : undefined,
-        assignments: state.assignments.data.assignments ? state.assignments.data.assignments : undefined,
+        session: state.assignments.data?.session ? state.assignments.data.session : undefined,
+        assignments: state.assignments.data?.assignments ? state.assignments.data.assignments : undefined,
+        candidates: state.assignments.data?.candidates,
         loading: state.assignments.data.loading,
         message: state.assignments.data.message
     };

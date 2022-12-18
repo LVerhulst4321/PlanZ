@@ -60,40 +60,83 @@ EOD;
         if (mysqli_stmt_execute($stmt)) {
             $result = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_object($result)) {
-                $name = new PersonName();
-                $name->firstName = $row->firstname;
-                $name->lastName = $row->lastname;
-                $name->badgeName = $row->badgename;
-                $name->pubsName = $row->pubsname;
-
-                $assignment = new ParticipantAssignment();
-                $assignment->badgeId = $row->badgeid;
-                $assignment->name = $name;
-                $assignment->moderator = $row->moderator ? true : false;
-                $assignment->confirmed = $row->confirmed == 'Y';
-                $assignment->textBio = $row->bio;
-                $assignment->sessionId = $sessionId;
-                if ($row->approvedphotofilename) {
-                    $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . $row->approvedphotofilename;
-                } else {
-                    $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . PHOTO_DEFAULT_IMAGE;
-                }
-                $assignment->registered = ($row->regtype) ? true : false;
-                if ($row->rank != null || $row->comments != null || $row->willmoderate != null) {
-                    $interest = new ParticipantSessionInterestResponse();
-                    $interest->rank = $row->rank;
-                    $interest->comments = $row->comments;
-                    $interest->willmoderate = $row->willmoderate ? true : false;
-                    $assignment->interestResponse = $interest;
-                }
-
-                $assignments[] = $assignment;
+                $assignments[] = ParticipantAssignment::toModel($row, $sessionId);
             }
             mysqli_stmt_close($stmt);
             return $assignments;
         } else {
             throw new DatabaseSqlException("Query could not be executed: $query");
         }
+    }
+
+    public static function findCandidateAssigneesForSession($db, $sessionId) {
+        $query = <<<EOD
+        SELECT
+            P.badgeid,
+            P.pubsname,
+            CD.badgename,
+            CD.firstname,
+            CD.lastname,
+            CD.regtype,
+            P.approvedphotofilename,
+            P.bio,
+            PSI.rank,
+            PSI.comments,
+            PSI.willmoderate
+        FROM ParticipantSessionInterest PSI
+        JOIN Participants P ON P.badgeid = PSI.badgeid
+        JOIN CongoDump CD ON CD.badgeid = PSI.badgeid
+        WHERE PSI.sessionid=?
+          AND ((PSI.rank IS NOT NULL
+          AND PSI.rank < 5) OR (PSI.willmoderate = 1))
+          AND P.badgeid NOT IN (
+                select badgeid from ParticipantOnSession POS WHERE POS.sessionid = ?)
+        ORDER BY badgename;
+EOD;
+
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "ii", $sessionId, $sessionId);
+        $assignments = [];
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_get_result($stmt);
+            while ($row = mysqli_fetch_object($result)) {
+                $assignments[] = ParticipantAssignment::toModel($row, $sessionId);
+            }
+            mysqli_stmt_close($stmt);
+            return $assignments;
+        } else {
+            throw new DatabaseSqlException("Query could not be executed: $query");
+        }
+    }
+
+    private static function toModel($row, $sessionId) {
+        $name = new PersonName();
+        $name->firstName = $row->firstname;
+        $name->lastName = $row->lastname;
+        $name->badgeName = $row->badgename;
+        $name->pubsName = $row->pubsname;
+
+        $assignment = new ParticipantAssignment();
+        $assignment->badgeId = $row->badgeid;
+        $assignment->name = $name;
+        $assignment->moderator = $row->moderator ? true : false;
+        $assignment->confirmed = $row->confirmed == 'Y';
+        $assignment->textBio = $row->bio;
+        $assignment->sessionId = $sessionId;
+        if ($row->approvedphotofilename) {
+            $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . $row->approvedphotofilename;
+        } else {
+            $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . PHOTO_DEFAULT_IMAGE;
+        }
+        $assignment->registered = ($row->regtype) ? true : false;
+        if ($row->rank != null || $row->comments != null || $row->willmoderate != null) {
+            $interest = new ParticipantSessionInterestResponse();
+            $interest->rank = $row->rank;
+            $interest->comments = $row->comments;
+            $interest->willmoderate = $row->willmoderate ? true : false;
+            $assignment->interestResponse = $interest;
+        }
+        return $assignment;
     }
 
     function asArray() {

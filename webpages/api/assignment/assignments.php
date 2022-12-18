@@ -26,9 +26,12 @@ try {
         $session = Session::findById($db, $sessionId);
         if ($session != null) {
             $assignments = ParticipantAssignment::findAssignmentsForSession($db, $sessionId);
+            $candidates = ParticipantAssignment::findCandidateAssigneesForSession($db, $sessionId);
 
             header('Content-type: application/json; charset=utf-8');
-            $json_string = json_encode(array("session" => $session->asJson(), "assignments" => ParticipantAssignment::toJsonArray($assignments)));
+            $json_string = json_encode(array("session" => $session->asJson(),
+                "assignments" => ParticipantAssignment::toJsonArray($assignments),
+                "candiates" => ParticipantAssignment::toJsonArray($candidates)));
             echo $json_string;
         } else {
             http_response_code(400);
