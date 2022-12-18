@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import { connect } from "react-redux";
+import { updateModeratorStatus } from "../../state/assignmentsFunctions";
 
-export const AssignmentCard = ({assignee}) => {
+const AssignmentCard = ({assignee, session}) => {
     let [showBio, setShowBio] = useState(false);
 
-    return (<Card className={assignee.moderator ? 'border-primary' : ''}>
+    return (<Card className={assignee.moderator ? 'border-success' : ''}>
         <Card.Body className="p-3">
 
             <div className="d-flex" style={{ gap: "1rem" }}>
@@ -32,7 +34,7 @@ export const AssignmentCard = ({assignee}) => {
                         </div>
                     </div>
                     <div className="text-right">
-                        <Button variant="link" className="btn-sm">Make Moderator</Button>
+                        <Button variant="link" className="btn-sm" onClick={() => updateModeratorStatus(session?.sessionId, assignee?.badgeId, !assignee?.moderator) }>{assignee.moderator ? 'Unmake Moderator' : 'Make Moderator'}</Button>
                         <Button variant="link" className="btn-sm text-danger">Remove</Button>
                     </div>
                 </div>
@@ -40,3 +42,11 @@ export const AssignmentCard = ({assignee}) => {
         </Card.Body>
     </Card>);
 }
+
+function mapStateToProps(state) {
+    return {
+        session: state.assignments.data.session ? state.assignments.data.session : undefined
+    };
+}
+
+export default connect(mapStateToProps)(AssignmentCard);

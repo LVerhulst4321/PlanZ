@@ -16,6 +16,17 @@ class ParticipantAssignment {
     public $confirmed;
     public $interestResponse;
     public $textBio;
+    public $sessionId;
+
+    public static function findAssignmentForSessionByBadgeId($db, $sessionId, $badgeId) {
+        $assignments = ParticipantAssignment::findAssignmentsForSession($db, $sessionId);
+        foreach ($assignments as $a) {
+            if ($a->badgeId === $badgeId) {
+                return $a;
+            }
+        }
+        return null;
+    }
 
     public static function findAssignmentsForSession($db, $sessionId) {
         $query = <<<EOD
@@ -61,6 +72,7 @@ EOD;
                 $assignment->moderator = $row->moderator ? true : false;
                 $assignment->confirmed = $row->confirmed == 'Y';
                 $assignment->textBio = $row->bio;
+                $assignment->sessionId = $sessionId;
                 if ($row->approvedphotofilename) {
                     $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . $row->approvedphotofilename;
                 } else {
@@ -108,6 +120,48 @@ EOD;
             $result[] = $a->asArray();
         }
         return $result;
+    }
+
+    public static function updateModeratorStatus($db, $participantAssignment) {
+        mysqli_begin_transaction($db);
+        try {
+            if ($participantAssignment->moderator) {
+                $query = <<<EOD
+                UPDATE ParticipantOnSession
+                SET moderator = 0
+                WHERE sessionId = ?
+                AND badgeid != ?
+                AND moderator = 1;
+EOD;
+                $stmt = mysqli_prepare($db, $query);
+                mysqli_stmt_bind_param($stmt, "is", $participantAssignment->sessionId, $participantAssignment->badgeId);
+                if (mysqli_stmt_execute($stmt)) {
+                    mysqli_stmt_close($stmt);
+                } else {
+                    throw new DatabaseSqlException("Update could not be executed: $query");
+                }
+            }
+
+            $query = <<<EOD
+            UPDATE ParticipantOnSession
+            SET moderator = ?
+            WHERE sessionId = ?
+            AND badgeid = ?;
+EOD;
+            $stmt = mysqli_prepare($db, $query);
+            $moderator = $participantAssignment->moderator ? 1 : 0;
+            mysqli_stmt_bind_param($stmt, "iis", $moderator,
+                $participantAssignment->sessionId, $participantAssignment->badgeId);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Update could not be executed: $query");
+            }
+            mysqli_commit($db);
+        } catch (Exception $e) {
+            mysqli_rollback($db);
+            throw $e;
+        }
     }
 };
 

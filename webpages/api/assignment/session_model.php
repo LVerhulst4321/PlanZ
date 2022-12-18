@@ -15,6 +15,8 @@ class Session {
     public $programGuideDescription;
     public $notesForProgramStaff;
     public $sessionSchedule;
+    /* What we call "participants" for this session */
+    public $participantLabel;
 
     public static function findById($db, $sessionId) {
         $CON_START_DATIM = CON_START_DATIM;
@@ -25,7 +27,7 @@ class Session {
 
         $query = <<<EOD
         SELECT
-            S.title, S.progguiddesc, S.notesforprog, T.trackname, R.roomname, R.is_online,
+            S.title, S.progguiddesc, S.notesforprog, S.participantlabel, T.trackname, R.roomname, R.is_online,
             DATE_FORMAT(ADDTIME('$CON_START_DATIM', SCH.starttime),'%a $timeFormat') AS starttime,
             DATE_FORMAT(ADDTIME('$CON_START_DATIM', ADDTIME(SCH.starttime, S.duration)),'$timeFormat') AS endtime,
             left(S.duration, 5) AS duration
@@ -52,6 +54,7 @@ EOD;
                 $session->programGuideDescription = $row->progguiddesc;
                 $session->notesForProgramStaff = $row->notesforprog;
                 $session->trackName = $row->trackname;
+                $session->participantLabel = $row->participantlabel;
 
                 if ($row->roomname) {
                     $schedule = new SessionSchedule();
@@ -73,7 +76,8 @@ EOD;
             "title" => $this->title,
             "programGuideDescription" => $this->programGuideDescription,
             "notesForProgramStaff" => $this->notesForProgramStaff,
-            "track" => array("name" => $this->trackName));
+            "track" => array("name" => $this->trackName),
+            "participantLabel" => $this->participantLabel);
         if ($this->sessionSchedule) {
             $result["schedule"] = array(
                 "room" => array(
