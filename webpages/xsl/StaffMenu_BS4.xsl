@@ -23,7 +23,7 @@
     <xsl:variable name="EditAnyTable" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_All' or
         @permatomtag='ce_AgeRanges' or @permatomtag='ce_BioEditStatuses' or @permatomtag='ce_Credentials' or @permatomtag='ce_Divisions' or
         @permatomtag='ce_EmailCC' or @permatomtag='ce_EmailFrom' or @permatomtag='ce_EmailTo' or @permatomtag='ce_Features' or
-        @permatomtag='ce_Interests' or @permatomtag='ce_KidsCategories' or @permatomtag='ce_LanguageStatuses' or 
+        @permatomtag='ce_Interests' or @permatomtag='ce_KidsCategories' or @permatomtag='ce_LanguageStatuses' or
         @permatomtag='ce_Locations' or @permatomtag='ce_PhotoDenialReasons' or @permatomtag='ce_Pronouns' or @permatomtag='ce_PubStatuses' or
         @permatomtag='ce_RegTypes' or @permatomtag='ce_Roles' or @permatomtag='ce_RoomColors' or @permatomtag='ce_Rooms' or @permatomtag='ce_RoomSets' or
         @permatomtag='ce_RoomHasSet' or @permatomtag='ce_Services' or @permatomtag='ce_ServiceTypes' or @permatomtag='ce_SessionStatuses' or
@@ -82,7 +82,6 @@
                               <a class="dropdown-item" href="AdminPhotos.php">Photos</a>
                             </xsl:if>
                             <a class="dropdown-item" href="InviteParticipants.php">Invite to a Session</a>
-                            <a class="dropdown-item" href="StaffAssignParticipants.php">Assign to a Session</a>
                             <xsl:if test="$emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                                 <a class="dropdown-item" href="StaffSendEmailCompose.php">Send email</a>
                             </xsl:if>

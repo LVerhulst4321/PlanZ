@@ -20,6 +20,16 @@ const AssignmentsView = (props) => {
         return props.assignments.filter(a => a.moderator).length;
     }
 
+    const renderMessages = () => {
+        if (!props.assignments?.length) {
+            return (<Alert variant="warning" className="mt-3">This session has no participants.</Alert>);
+        } else if (!isModeratorPresent()) {
+            return (<Alert variant="warning" className="mt-3">This session has no moderator.</Alert>);
+        } else {
+            return null;
+        }
+    }
+
     const renderModal = ({candidates, session}) => {
         return (<Modal show={showModal} size="lg" onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
@@ -31,6 +41,7 @@ const AssignmentsView = (props) => {
                         <p>These people expressed interest in participating in this session.</p>
                         {candidates?.map(c => (<CandidateCard candidate={c} session={session}
                             closeModal={() => setShowModal(false)} key={'candidate-' + c.badgeId} />))}
+                        {candidates?.length ? null : (<p className="my-3 text-info">This list is empty.</p>)}
                     </Tab>
                     <Tab eventKey="other" title="Other">
                         <p>Someone else</p>
@@ -63,7 +74,7 @@ const AssignmentsView = (props) => {
                         <h4>Currently Assigned</h4>
                         <Button variant="outline-secondary" onClick={() => setShowModal(true)}>Add</Button>
                     </div>
-                    {isModeratorPresent() ? null : (<Alert variant="warning" className="mt-3">This session has no moderator.</Alert>)}
+                    {renderMessages()}
                     <div>
                         {props.assignments.map(a => { return (<div className="my-3" key={a.badgeId}><AssignmentCard assignee={a} /></div>); })}
                     </div>

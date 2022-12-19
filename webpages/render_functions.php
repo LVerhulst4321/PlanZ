@@ -91,7 +91,7 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
         $rowSpan = $oneLinePerSession ? "" : "rowspan=\"" . $rowSpanCnt . "\"";
         $html .= "  <th $rowSpan id=\"sessidtcell\">";
         if ($showlinks) {
-            $html .= "<a href=\"StaffAssignParticipants.php?selsess=" . $sessionid . "\">" . $sessionid . "</a>";
+            $html .= "<a href=\"assignParticipants.php?sessionId=" . $sessionid . "\">" . $sessionid . "</a>";
         } else {
             $html .= "$sessionid";
         }
