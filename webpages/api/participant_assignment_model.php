@@ -109,6 +109,48 @@ EOD;
         }
     }
 
+    public static function findOtherCandidateAssigneesForSession($db, $sessionId, $queryString) {
+        $lowerQueryString = '%' . mb_strtolower($queryString) . '%';
+        $query = <<<EOD
+        SELECT
+            P.badgeid,
+            P.pubsname,
+            CD.badgename,
+            CD.firstname,
+            CD.lastname,
+            CD.regtype,
+            P.approvedphotofilename,
+            P.bio,
+            P.sortedpubsname,
+            PSI.rank,
+            PSI.comments,
+            PSI.willmoderate
+        FROM Participants P
+        JOIN CongoDump CD USING(badgeid)
+        LEFT OUTER JOIN ParticipantSessionInterest PSI ON (P.badgeid = PSI.badgeid AND PSI.sessionId = ?)
+        WHERE P.interested = 1
+        AND P.badgeid NOT IN (
+            select badgeid from ParticipantOnSession POS WHERE POS.sessionid = ?)
+        AND (P.sortedpubsname like ? OR lower(CD.badgename) like ? OR lower(CD.firstname) like ? OR lower(CD.lastname) like ?)
+        ORDER BY sortedpubsname
+        LIMIT 50;
+EOD;
+
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "iissss", $sessionId, $sessionId, $lowerQueryString, $lowerQueryString, $lowerQueryString, $lowerQueryString);
+        $assignments = [];
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_get_result($stmt);
+            while ($row = mysqli_fetch_object($result)) {
+                $assignments[] = ParticipantAssignment::toModel($row, $sessionId);
+            }
+            mysqli_stmt_close($stmt);
+            return $assignments;
+        } else {
+            throw new DatabaseSqlException("Query could not be executed: $query");
+        }
+    }
+
     private static function toModel($row, $sessionId) {
         $name = new PersonName();
         $name->firstName = $row->firstname;

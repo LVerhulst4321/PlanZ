@@ -1,4 +1,4 @@
-import { SET_SESSION_ASSIGNMENTS } from "./assignmentsActions";
+import { SET_OTHER_CANDIDATE_ASSIGNMENTS, SET_SESSION_ASSIGNMENTS } from "./assignmentsActions";
 
 const initialState = {
     data: {
@@ -8,12 +8,21 @@ const initialState = {
 
 const assignmentsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SET_SESSION_ASSIGNMENTS: 
+        case SET_SESSION_ASSIGNMENTS:
             return {
                 ...state,
-                data: { 
+                data: {
+                    ...state.data,
                     ...action.payload,
                     loading: false
+                }
+            }
+        case SET_OTHER_CANDIDATE_ASSIGNMENTS:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    otherCandidates: action.payload
                 }
             }
         default:

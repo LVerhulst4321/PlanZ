@@ -8,16 +8,29 @@ import Spinner from "react-bootstrap/Spinner";
 import { connect } from "react-redux";
 import { SessionScheduleSummary } from "../../common/sessionScheduleSummary";
 import SimpleAlert from "../../common/simpleAlert";
-import { fetchSessionAssignments } from "../../state/assignmentsFunctions";
+import { fetchOtherAssignmentCandidates, fetchSessionAssignments } from "../../state/assignmentsFunctions";
 import AssignmentCard from "./assignmentCard";
 import CandidateCard from "./candidateCard";
 
 const AssignmentsView = (props) => {
 
     const [showModal, setShowModal] = useState(false);
+    const [term, setTerm] = useState("");
+    let timeout = null;
 
     const isModeratorPresent = () => {
         return props.assignments.filter(a => a.moderator).length;
+    }
+
+    const executeQuery = (session, queryString) => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        setTerm(queryString);
+        timeout = setTimeout(() => {
+            fetchOtherAssignmentCandidates(session.sessionId, term);
+            timeout = undefined;
+        }, 1000);
     }
 
     const renderMessages = () => {
@@ -30,7 +43,7 @@ const AssignmentsView = (props) => {
         }
     }
 
-    const renderModal = ({candidates, session}) => {
+    const renderModal = ({candidates, session, otherCandidates}) => {
         return (<Modal show={showModal} size="lg" onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Assign {props.session?.participantLabel ? props.session?.participantLabel : 'Participants'}</Modal.Title>
@@ -44,7 +57,18 @@ const AssignmentsView = (props) => {
                         {candidates?.length ? null : (<p className="my-3 text-info">This list is empty.</p>)}
                     </Tab>
                     <Tab eventKey="other" title="Other">
-                        <p>Someone else</p>
+                        <p>Search for a potential candidate:</p>
+                        <div className="row">
+                            <div className="form-group col-md-6">
+                                <label htmlFor="candidate-search" className="sr-only">Search</label>
+                                <input type="text" id="candidate-search" className="form-control"
+                                    value={term} autoComplete="off" name="q" placeholder="Search..."
+                                    onChange={(e) => executeQuery(session, e.target.value)} />
+                            </div>
+                        </div>
+                        {otherCandidates?.map(c => (<CandidateCard candidate={c} session={session}
+                            closeModal={() => setShowModal(false)} key={'other-' + c.badgeId} />))}
+                        {otherCandidates?.length ? null : (<p className="my-3 text-info">This list is empty.</p>)}
                     </Tab>
                 </Tabs>
             </Modal.Body>
@@ -97,7 +121,8 @@ function mapStateToProps(state) {
         assignments: state.assignments.data?.assignments ? state.assignments.data.assignments : undefined,
         candidates: state.assignments.data?.candidates,
         loading: state.assignments.data.loading,
-        message: state.assignments.data.message
+        message: state.assignments.data.message,
+        otherCandidates: state.assignments.data.otherCandidates
     };
 }
 
