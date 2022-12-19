@@ -12,11 +12,12 @@ import { fetchOtherAssignmentCandidates, fetchSessionAssignments } from "../../s
 import AssignmentCard from "./assignmentCard";
 import CandidateCard from "./candidateCard";
 
+var timeout = null;
+
 const AssignmentsView = (props) => {
 
     const [showModal, setShowModal] = useState(false);
     const [term, setTerm] = useState("");
-    let timeout = null;
 
     const isModeratorPresent = () => {
         return props.assignments.filter(a => a.moderator).length;
@@ -25,12 +26,16 @@ const AssignmentsView = (props) => {
     const executeQuery = (session, queryString) => {
         if (timeout) {
             clearTimeout(timeout);
+            timeout = undefined;
         }
         setTerm(queryString);
-        timeout = setTimeout(() => {
-            fetchOtherAssignmentCandidates(session.sessionId, term);
-            timeout = undefined;
-        }, 1000);
+        if (queryString) {
+            timeout = setTimeout(() => {
+                console.log("fire");
+                fetchOtherAssignmentCandidates(session.sessionId, queryString);
+                timeout = undefined;
+            }, 1000);
+        }
     }
 
     const renderMessages = () => {
