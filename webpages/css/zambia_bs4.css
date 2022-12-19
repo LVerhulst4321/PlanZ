@@ -29,17 +29,17 @@
 .invalid-feedback {
   font-size: unset;
 }
-.bs4 .nav-tabs {
+.bs4 .config-table-editor .nav-tabs {
   border-bottom: 2px solid #b5b5b5;
 }
-.bs4 .nav-tabs .nav-link {
+.bs4 .config-table-editor .nav-tabs .nav-link {
   background-color: #e5e5e5;
   border: 2px solid #b5b5b5;
   margin-left: 1px;
   margin-right: 1px;
 }
-.bs4 .nav-tabs .nav-item.show .nav-link,
-.bs4 .nav-tabs .nav-link.active {
+.bs4 .config-table-editor .nav-tabs .nav-item.show .nav-link,
+.bs4 .config-table-editor .nav-tabs .nav-link.active {
   background-color: #ffffff;
   border-color: #212121 #212121 #b5b5b5;
 }

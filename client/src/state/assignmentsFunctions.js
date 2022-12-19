@@ -9,7 +9,8 @@ export function fetchSessionAssignments(sessionId) {
             store.dispatch(setSessionAssignments({
                 id: sessionId,
                 session: res.data.session,
-                assignments: res.data.assignments
+                assignments: res.data.assignments,
+                candidates: res.data.candidates
             }));
         })
         .catch(error => {
@@ -31,6 +32,48 @@ export function updateModeratorStatus(sessionId, badgeId, moderator) {
             sessionId: sessionId,
             badgeId: badgeId,
             moderator: moderator
+        }).then(res => {
+            fetchSessionAssignments(sessionId);
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = {
+                    severity: "danger",
+                    text: "We've hit a bit of a technical snag trying to get information about that session."
+                };
+                store.dispatch(setSessionAssignments({ message: message }, message));
+            }
+        }
+    );
+}
+
+export function removeAssignment(sessionId, badgeId) {
+    axios.post('/api/assignment/remove_assignment.php', {
+            sessionId: sessionId,
+            badgeId: badgeId
+        }).then(res => {
+            fetchSessionAssignments(sessionId);
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = {
+                    severity: "danger",
+                    text: "We've hit a bit of a technical snag trying to get information about that session."
+                };
+                store.dispatch(setSessionAssignments({ message: message }, message));
+            }
+        }
+    );
+}
+
+export function createAssignment(sessionId, badgeId) {
+    axios.post('/api/assignment/create_assignment.php', {
+            sessionId: sessionId,
+            badgeId: badgeId
         }).then(res => {
             fetchSessionAssignments(sessionId);
         })

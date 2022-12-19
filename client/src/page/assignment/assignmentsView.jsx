@@ -10,6 +10,7 @@ import { SessionScheduleSummary } from "../../common/sessionScheduleSummary";
 import SimpleAlert from "../../common/simpleAlert";
 import { fetchSessionAssignments } from "../../state/assignmentsFunctions";
 import AssignmentCard from "./assignmentCard";
+import CandidateCard from "./candidateCard";
 
 const AssignmentsView = (props) => {
 
@@ -19,30 +20,23 @@ const AssignmentsView = (props) => {
         return props.assignments.filter(a => a.moderator).length;
     }
 
-    const renderModal = ({candidates}) => {
+    const renderModal = ({candidates, session}) => {
         return (<Modal show={showModal} size="lg" onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Assign {props.session?.participantLabel ? props.session?.participantLabel : 'Participants'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Tabs defaultActiveKey="interested"
-                    className="mb-3"
-                    >
+                <Tabs defaultActiveKey="interested" className="mb-3">
                     <Tab eventKey="interested" title="Interested">
                         <p>These people expressed interest in participating in this session.</p>
-
-                        {candidates?.map(c => (<div>c?.name</div>))}
+                        {candidates?.map(c => (<CandidateCard candidate={c} session={session}
+                            closeModal={() => setShowModal(false)} key={'candidate-' + c.badgeId} />))}
                     </Tab>
                     <Tab eventKey="other" title="Other">
                         <p>Someone else</p>
                     </Tab>
                 </Tabs>
             </Modal.Body>
-
-            <Modal.Footer>
-                <Button variant="outline-secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-                <Button variant="primary" onClick={() => setShowModal(false)}>OK</Button>
-            </Modal.Footer>
         </Modal>);
     }
 

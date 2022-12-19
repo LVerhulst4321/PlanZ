@@ -165,7 +165,36 @@ EOD;
         return $result;
     }
 
-    public static function updateModeratorStatus($db, $participantAssignment) {
+    public static function removeAssignment($db, $participantAssignment, $authentication) {
+        $query = <<<EOD
+        DELETE FROM ParticipantOnSession
+        WHERE sessionId = ?
+        AND badgeid = ?;
+EOD;
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "is", $participantAssignment->sessionId, $participantAssignment->badgeId);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
+        } else {
+            throw new DatabaseSqlException("Delete could not be executed: $query");
+        }
+    }
+
+    public static function insertAssignment($db, $sessionId, $badgeId, $authentication) {
+        $query = <<<EOD
+        INSERT INTO ParticipantOnSession (sessionid, badgeid)
+        VALUES (?, ?);
+EOD;
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "is", $sessionId, $badgeId);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
+        } else {
+            throw new DatabaseSqlException("Insert could not be executed: $query");
+        }
+    }
+
+    public static function updateModeratorStatus($db, $participantAssignment, $authentication) {
         mysqli_begin_transaction($db);
         try {
             if ($participantAssignment->moderator) {

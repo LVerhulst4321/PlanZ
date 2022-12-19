@@ -153,7 +153,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
+            <div class="mt-4 config-table-editor">
                 <h1 style="text-align: center;">Configuration Table Editor</h1>
                 <ul class="nav nav-tabs">
                     <li class="nav-item">

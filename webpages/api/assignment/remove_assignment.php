@@ -23,16 +23,14 @@ try {
         $json_string = file_get_contents('php://input');
         $json = json_decode($json_string, true);
 
-        if (array_key_exists('sessionId', $json) && array_key_exists('moderator', $json)
-            && array_key_exists('badgeId', $json)) {
+        if (array_key_exists('sessionId', $json) && array_key_exists('badgeId', $json)) {
 
             $assignment = ParticipantAssignment::findAssignmentForSessionByBadgeId($db, $json["sessionId"], $json["badgeId"]);
             if ($assignment != null) {
-                $assignment->moderator = $json["moderator"];
-                ParticipantAssignment::updateModeratorStatus($db, $assignment, $authentication);
+                ParticipantAssignment::removeAssignment($db, $assignment, $authentication);
                 http_response_code(204);
             } else {
-                http_response_code(400);
+                http_response_code(204);
             }
         } else {
             http_response_code(400);

@@ -31,7 +31,7 @@ try {
             header('Content-type: application/json; charset=utf-8');
             $json_string = json_encode(array("session" => $session->asJson(),
                 "assignments" => ParticipantAssignment::toJsonArray($assignments),
-                "candiates" => ParticipantAssignment::toJsonArray($candidates)));
+                "candidates" => ParticipantAssignment::toJsonArray($candidates)));
             echo $json_string;
         } else {
             http_response_code(400);
