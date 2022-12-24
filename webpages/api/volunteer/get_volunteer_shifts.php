@@ -5,6 +5,7 @@
 if (!include ('../../config/db_name.php')) {
     include ('../../config/db_name.php');
 }
+require_once('../con_info.php');
 require_once('../http_session_functions.php');
 require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
@@ -37,8 +38,12 @@ start_session_if_necessary();
 $db = connect_to_db(true);
 $authentication = new Authentication();
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isLoggedIn()) {
-        $shifts = VolunteerShift::findAll($db);
+    $conInfo = ConInfo::findCurrentCon($db);
+
+    if ($conInfo == null) {
+        http_response_code(409);
+    } else if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isLoggedIn()) {
+        $shifts = VolunteerShift::findAll($db, $conInfo);
         $result = [];
         foreach ($shifts as $s) {
             $result[] = $s->asArray();

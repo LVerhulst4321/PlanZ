@@ -30,7 +30,8 @@ SELECT
          JOIN volunteer_job VJ ON (VS.volunteer_job_id = VJ.id)
     LEFT JOIN participant_has_volunteer_shift PHVS ON (PHVS.volunteer_shift_id = VS.id)
     LEFT JOIN CongoDump CD ON (PHVS.badgeid = CD.badgeid)
-    LEFT JOIN Participants P ON (PHVS.badgeid = P.badgeid);
+    LEFT JOIN Participants P ON (PHVS.badgeid = P.badgeid)
+    WHERE VS.con_id in (select id from current_con);
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
