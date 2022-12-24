@@ -2,10 +2,8 @@ import axios from 'axios';
 import React from 'react';
 import { Form, Modal, Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import LoadingButton from '../../common/loadingButton';
 import SimpleAlert from '../../common/simpleAlert';
 import { fetchMyShiftAssignments, fetchShifts } from '../../state/volunteerFunctions';
-import { renderDateRange } from '../../util/dateUtil';
 
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
@@ -35,7 +33,7 @@ class VolunteerSignUpAddModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.show === false && this.props.show === true) {
-            this.setState((state) => ({...state, 
+            this.setState((state) => ({...state,
                 loadingId: null,
                 message: null,
                 filter: {
@@ -70,7 +68,7 @@ class VolunteerSignUpAddModal extends React.Component {
                     </Form.Control>
                 </Form.Group>
             </div>
-        </fieldset>                
+        </fieldset>
         );
     }
 
@@ -114,11 +112,11 @@ class VolunteerSignUpAddModal extends React.Component {
             !(dayjs(shift.toTime).format('YYYY-MM-DD') === filterDay)) {
 
             matches = false;
-        } 
+        }
 
         if (filterJob === "" || !matches) {
             // skip it
-        } else if (filterJob != shift.job.id) {
+        } else if (filterJob !== shift.job.id) {
             matches = false;
         }
 
@@ -172,13 +170,13 @@ class VolunteerSignUpAddModal extends React.Component {
 
     isExistingAssignment(shift) {
         let result = false;
-        this.props.assignments.list.forEach(a => result |= (a.id == shift.id));
+        this.props.assignments.list.forEach(a => result |= (a.id === shift.id));
         return result;
     }
 }
 
 function mapStateToProps(state) {
-    return { 
+    return {
         assignments: state.volunteering.assignments,
         shifts: state.volunteering.shifts || {},
         days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],

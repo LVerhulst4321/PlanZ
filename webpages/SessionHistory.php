@@ -5,7 +5,7 @@ global $title;
 $title="Session History";
 require_once('StaffCommonCode.php');
 
-staff_header($title);
+staff_header($title, true);
 
 $queryArray = array();
 if (isset($_POST["selsess"])) {

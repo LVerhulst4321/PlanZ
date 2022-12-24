@@ -2,21 +2,8 @@ import React from 'react';
 
 class FormComponent extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return undefined;
-    }
-
-    isFieldInError(name) {
-        let errors = this.state.errors;
-        if (errors) {
-            return errors[name];
-        } else {
-            return false;
-        }
     }
 
     getFormValue(formName) {
@@ -88,7 +75,7 @@ class FormComponent extends React.Component {
 
     getAllFormValues() {
         return this.state.values;
-    }    
+    }
 }
 
 export default FormComponent;

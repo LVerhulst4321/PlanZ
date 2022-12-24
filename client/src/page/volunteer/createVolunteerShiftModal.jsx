@@ -51,8 +51,8 @@ class CreateVolunteerShiftModal extends FormComponent {
                     } : {},
                     errors: {},
                     confirmDelete: false,
-                    message: (this.props.recentData && this.props.recentData.job != null) 
-                        ? { severity: "info", text: "We've remembered the previous data you entered. Most people set up a number of shifts with a lot of the same data."} 
+                    message: (this.props.recentData && this.props.recentData.job != null)
+                        ? { severity: "info", text: "We've remembered the previous data you entered. Most people set up a number of shifts with a lot of the same data."}
                         : null
                 }));
             } else {
@@ -94,8 +94,8 @@ class CreateVolunteerShiftModal extends FormComponent {
                 <LoadingButton loading={this.state.loading} variant="primary" enabled={true} onClick={() => this.submitForm()} key="btn-save">Save</LoadingButton>];
         }
 
-        let confirmMessage = this.state.confirmDelete 
-            ? (<p>Are you sure you want to delete this shift? All related sign-ups will also be deleted.</p>) 
+        let confirmMessage = this.state.confirmDelete
+            ? (<p>Are you sure you want to delete this shift? All related sign-ups will also be deleted.</p>)
             : undefined;
 
         return (
@@ -117,13 +117,13 @@ class CreateVolunteerShiftModal extends FormComponent {
                         <div className="col-md-2 pb-2">Needs</div>
                         <Form.Group className="col-md-2" controlId="min">
                             <Form.Label className="sr-only">Min Count</Form.Label>
-                            <Form.Control type="text" className={this.getErrorClass('min')} placeholder="e.g. 1"  
+                            <Form.Control type="text" className={this.getErrorClass('min')} placeholder="e.g. 1"
                                 value={this.getFormValue("min")} onChange={(e) => this.setFormValue("min", e.target.value)}/>
                         </Form.Group>
                         <div className="col-md-1 pb-2">to</div>
                         <Form.Group className="col-md-2" controlId="max">
                             <Form.Label className="sr-only">Max Count</Form.Label>
-                            <Form.Control type="text" className={this.getErrorClass('max')} placeholder="e.g. 5"  
+                            <Form.Control type="text" className={this.getErrorClass('max')} placeholder="e.g. 5"
                                 value={this.getFormValue("max")} onChange={(e) => this.setFormValue("max", e.target.value)}/>
                         </Form.Group>
                         <div className="col-md-5 pb-2">volunteers</div>
@@ -138,7 +138,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                         </Form.Group>
                         <Form.Group className="mb-3 col-md-3" controlId="fromTime">
                             <Form.Label className="sr-only">Time</Form.Label>
-                            <Form.Control type="text" className={this.getErrorClass('fromTime')} placeholder="Time..."  
+                            <Form.Control type="text" className={this.getErrorClass('fromTime')} placeholder="Time..."
                                 value={this.getFormValue("fromTime")} onChange={(e) => this.setFormValue("fromTime", e.target.value)}/>
                         </Form.Group>
                         <Form.Group className="mb-3 col-md-3" controlId="fromDay">
@@ -160,7 +160,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                         </Form.Group>
                         <Form.Group className="mb-3 col-md-3" controlId="fromTime">
                             <Form.Label className="sr-only">Time</Form.Label>
-                            <Form.Control type="text" className={this.getErrorClass('toTime')} placeholder="Time..."  
+                            <Form.Control type="text" className={this.getErrorClass('toTime')} placeholder="Time..."
                                 value={this.getFormValue("toTime")} onChange={(e) => this.setFormValue("toTime", e.target.value)}/>
                         </Form.Group>
                         <Form.Group className="mb-3 col-md-3" controlId="fromDay">
@@ -174,7 +174,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                     </div>
                     <Form.Group className="mb-3" controlId="location">
                         <Form.Label className="sr-only">Location</Form.Label>
-                        <Form.Control type="text" className={this.getErrorClass('location')} placeholder="Location..."  
+                        <Form.Control type="text" className={this.getErrorClass('location')} placeholder="Location..."
                             value={this.getFormValue("location")} onChange={(e) => this.setFormValue("location", e.target.value)}/>
                     </Form.Group>
 
@@ -198,12 +198,12 @@ class CreateVolunteerShiftModal extends FormComponent {
         if (formName === 'job') {
             return formValue != null && formValue !== '';
         } else if (formName === 'location') {
-            return formValue != null && formValue != '';
+            return formValue != null && formValue !== '';
         } else if (formName === 'fromDay') {
-            return formValue != null && formValue != '';
+            return formValue != null && formValue !== '';
         } else if (formName === 'toDay') {
             if (formValue != null && formValue !== '') {
-                if (this.state.values['fromDay'] != null && this.state.values['fromDay'] != "") {
+                if (this.state.values['fromDay'] != null && this.state.values['fromDay'] !== "") {
                     return this.state.values['fromDay'].localeCompare(formValue) <= 0;
                 } else {
                     return true;
@@ -212,7 +212,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                 return false;
             }
         } else if (formName === 'fromAmPm' || formName === 'toAmPm') {
-            return formValue != null && formValue != '';
+            return formValue != null && formValue !== '';
         } else if (formName === 'fromTime' || formName === 'toTime') {
             return new RegExp('^([0]?[0-9]|1[0-2])(:[0-5][0-9])?$').test(formValue);
         } else if (formName === 'max' || formName === 'min') {
@@ -383,8 +383,8 @@ class CreateVolunteerShiftModal extends FormComponent {
 }
 
 function mapStateToProps(state) {
-    return { 
-        showModal: state.volunteering.shifts.showModal, 
+    return {
+        showModal: state.volunteering.shifts.showModal,
         days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
         timezone: state.volunteering.shifts.context ? state.volunteering.shifts.context.timezone : null,
         jobs: state.volunteering.jobs ? state.volunteering.jobs.list : [],

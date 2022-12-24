@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { connect } from "react-redux";
-import { createAssignment, updateModeratorStatus } from "../../state/assignmentsFunctions";
+import { createAssignment } from "../../state/assignmentsFunctions";
 
 const CandidateCard = ({candidate, session, closeModal}) => {
     let [showBio, setShowBio] = useState(false);
