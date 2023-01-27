@@ -40,33 +40,6 @@ SELECT
         sessionid = $selsessionid;
 EOD;
 
-    $queryArray["timestamps"]=<<<EOD
-(SELECT
-        createdts AS timestamp
-    FROM
-        ParticipantOnSessionHistory
-    WHERE
-        sessionid = $selsessionid
-)
-    UNION
-(SELECT
-        inactivatedts AS timestamp
-    FROM
-        ParticipantOnSessionHistory
-    WHERE
-        sessionid = $selsessionid
-)
-    UNION
-(SELECT
-        timestamp
-    FROM
-        SessionEditHistory
-    WHERE
-        sessionid = $selsessionid
-)
-ORDER BY timestamp DESC;
-EOD;
-
     $queryArray["currentAssignments"]=<<<EOD
 SELECT
         COALESCE(POS.moderator, 0) AS moderator,
@@ -82,49 +55,49 @@ SELECT
         moderator DESC;
 EOD;
 
-    $queryArray["participantedits"]=<<<EOD
-SELECT
-        POSH.badgeid,
-        COALESCE(POSH.moderator, 0) AS moderator,
-        POSH.createdbybadgeid,
-        POSH.createdts,
-        DATE_FORMAT(POSH.createdts, "%c/%e/%y %l:%i %p") AS createdtsformat,
-        POSH.inactivatedbybadgeid,
-        POSH.inactivatedts,
-        DATE_FORMAT(POSH.inactivatedts, "%c/%e/%y %l:%i %p") AS inactivatedtsformat,
-        PartOS.pubsname,
-        PartCR.pubsname AS crpubsname,
-        PartInact.pubsname AS inactpubsname,
-        PartOS.sortedpubsname,
-        PartCR.sortedpubsname AS crsortedpubsname,
-        PartInact.sortedpubsname AS inactsortedpubsname
-    FROM
-                  ParticipantOnSessionHistory POSH
-             JOIN Participants PartOS ON PartOS.badgeid = POSH.badgeid
-             JOIN Participants PartCR ON PartCR.badgeid = POSH.createdbybadgeid
-        LEFT JOIN Participants PartInact ON PartInact.badgeid = POSH.inactivatedbybadgeid
-    WHERE
-        POSH.sessionid=$selsessionid;
+    $queryArray["changes"]=<<<EOD
+    (SELECT
+    SEH.badgeid as change_by_badgeid,
+    CONCAT(CD.firstname, " ", CD.lastname) AS change_by_name,
+    CONCAT(SEC.description,
+        (CASE WHEN SEH.editdescription IS NOT NULL THEN CONCAT(" — ", SEH.editdescription)
+        ELSE ""
+        END),
+        " — status: ",
+        SS.statusname) as description,
+    SEH.timestamp as change_ts,
+    DATE_FORMAT(SEH.timestamp, "%c/%e/%y %l:%i %p") AS change_ts_format
+FROM
+         SessionEditHistory SEH
+    JOIN SessionEditCodes SEC USING (sessioneditcode)
+    JOIN SessionStatuses SS USING (statusid)
+    JOIN CongoDump CD ON CD.badgeid = SEH.badgeid
+WHERE
+    SEH.sessionid=$selsessionid)
+
+UNION
+
+(SELECT
+    POSH.change_by_badgeid,
+    PartCR.pubsname AS change_by_name,
+    (CASE WHEN POSH.change_type = 'insert_assignment' THEN CONCAT('Add ', PartOS.pubsname, ' to session')
+            WHEN POSH.change_type = 'remove_assignment' THEN CONCAT('Remove ', PartOS.pubsname, ' from session')
+            WHEN POSH.change_type = 'assign_moderator' THEN CONCAT('Assign ', PartOS.pubsname, ' as moderator')
+            WHEN POSH.change_type = 'remove_moderator' THEN CONCAT('Unassign ', PartOS.pubsname, ' as moderator')
+            ELSE 'Unknown action.' END) as description,
+    POSH.change_ts,
+    DATE_FORMAT(POSH.change_ts, "%c/%e/%y %l:%i %p") AS change_ts_format
+FROM
+              participant_on_session_history POSH
+         JOIN Participants PartOS ON PartOS.badgeid = POSH.badgeid
+         JOIN Participants PartCR ON PartCR.badgeid = POSH.change_by_badgeid
+WHERE
+    POSH.sessionid=$selsessionid)
+
+
+ORDER BY change_ts;
 EOD;
 
-    $queryArray["sessionedits"]=<<<EOD
-SELECT
-        SEH.badgeid,
-        SEH.name,
-        CONCAT(CD.firstname, " ", CD.lastname) AS fullname,
-        SEH.editdescription,
-        SEH.timestamp,
-        DATE_FORMAT(SEH.timestamp, "%c/%e/%y %l:%i %p") AS tsformat,
-        SEC.description AS codedescription,
-        SS.statusname
-    FROM
-             SessionEditHistory SEH
-        JOIN SessionEditCodes SEC USING (sessioneditcode)
-        JOIN SessionStatuses SS USING (statusid)
-        JOIN CongoDump CD ON CD.badgeid = SEH.badgeid
-    WHERE
-        SEH.sessionid=$selsessionid;
-EOD;
 }
 
 if (($resultXML=mysql_query_XML($queryArray))===false) {

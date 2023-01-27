@@ -38,7 +38,7 @@ EOD;
     if (mysqli_stmt_execute($stmt)) {
         $result = mysqli_stmt_get_result($stmt);
         while ($row = mysqli_fetch_object($result)) {
-            $record = [ 
+            $record = [
                 "badgeid" => $row->badgeid,
                 "name" => $row->badgename,
                 "description" => $row->editdescription,
@@ -60,22 +60,18 @@ function get_participant_edits($db, $sessionId) {
     SELECT
         POSH.badgeid,
         COALESCE(POSH.moderator, 0) AS moderator,
-        POSH.createdbybadgeid,
-        POSH.createdts,
-        DATE_FORMAT(POSH.createdts, "%c/%e/%y %l:%i %p") AS createdtsformat,
-        POSH.inactivatedbybadgeid,
-        POSH.inactivatedts,
-        DATE_FORMAT(POSH.inactivatedts, "%c/%e/%y %l:%i %p") AS inactivatedtsformat,
+        POSH.change_by_badgeid,
+        POSH.change_ts,
+        POSH.change_type,
+        DATE_FORMAT(POSH.change_ts, "%c/%e/%y %l:%i %p") AS change_ts_format,
         PartOS.pubsname,
         CD.badgename,
-        PartCR.pubsname AS crpubsname,
-        PartInact.pubsname AS inactpubsname
+        PartCR.pubsname AS crpubsname
     FROM
-                  ParticipantOnSessionHistory POSH
+                  participant_on_session_history POSH
              JOIN Participants PartOS ON PartOS.badgeid = POSH.badgeid
              JOIN CongoDump CD ON CD.badgeid = POSH.badgeid
-             JOIN Participants PartCR ON PartCR.badgeid = POSH.createdbybadgeid
-        LEFT JOIN Participants PartInact ON PartInact.badgeid = POSH.inactivatedbybadgeid
+             JOIN Participants PartCR ON PartCR.badgeid = POSH.change_by_badgeid
     WHERE
         POSH.sessionid=?;
 EOD;
@@ -86,23 +82,21 @@ EOD;
     if (mysqli_stmt_execute($stmt)) {
         $result = mysqli_stmt_get_result($stmt);
         while ($row = mysqli_fetch_object($result)) {
-            $history[] = [ 
-                "badgeid" => $row->createdbybadgeid,
-                "name" => $row->crpubsname,
-                "description" => $row->editdescription,
-                "timestamp" => date_format(convert_database_date_to_date($row->createdts) , 'c'),
-                "codedescription" => "Participant added: " . $row->badgename
-            ];
-
-            if ($row->inactivatedts != null && $row->inactpubsname != null) {
-                $history[] = [ 
-                    "badgeid" => $row->inactivatedbybadgeid,
-                    "name" => $row->inactpubsname,
-                    "description" => $row->editdescription,
-                    "timestamp" => date_format(convert_database_date_to_date($row->inactivatedts) , 'c'),
-                    "codedescription" => "Participant removed: " . $row->badgename
-                ];
+            $changeType = $row->change_type;
+            $description = "Participant added: " . $row->badgename;
+            if ($changeType == 'remove_assignment') {
+                $description = "Participant removed: " . $row->badgename;
+            } else if ($changeType == 'assign_moderator') {
+                $description = "Participant assigned as moderator: " . $row->badgename;
+            } else if ($changeType == 'remove_moderator') {
+                $description = "Participant removed as moderator: " . $row->badgename;
             }
+            $history[] = [
+                "badgeid" => $row->change_by_badgeid,
+                "name" => $row->crpubsname,
+                "timestamp" => date_format(convert_database_date_to_date($row->change_ts) , 'c'),
+                "codedescription" => $description
+            ];
         }
         mysqli_stmt_close($stmt);
         return $history;

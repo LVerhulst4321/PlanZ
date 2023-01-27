@@ -19,18 +19,11 @@ $report['queries']['Days'] =<<<'EOD'
         datediff(now(), SEH.timestamp) < 10)
 UNION
 (SELECT
-        datediff(now(), POSH.createdts)
+        datediff(now(), POSH.change_ts)
     FROM
         ParticipantOnSessionHistory POSH
     WHERE
-        datediff(now(), POSH.createdts) < 10)
-UNION
-(SELECT
-        datediff(now(), POSH.inactivatedts)
-    FROM
-        ParticipantOnSessionHistory POSH
-    WHERE
-        datediff(now(), POSH.inactivatedts) < 10)
+        datediff(now(), POSH.change_ts) < 10)
     ORDER BY
         days;
 EOD;
@@ -56,7 +49,7 @@ SELECT
             (SELECT
                     POSH.sessionid, datediff(now(), POSH.inactivatedts)
                 FROM
-                    ParticipantOnSessionHistory POSH
+                    participant_on_session_history POSH
                 WHERE
                     datediff(now(), POSH.inactivatedts) < 10)
         ) SUBQA
@@ -83,16 +76,10 @@ SELECT
                         AND datediff(now(), SEH.timestamp) < 10
                 )
         OR EXISTS (
-                SELECT * From ParticipantOnSessionHistory POSH
+                SELECT * From participant_on_session_history POSH
                     WHERE
                             POSH.sessionid = S.sessionid
-                        AND datediff(now(), POSH.createdts) < 10
-                )
-        OR EXISTS (
-                SELECT * From ParticipantOnSessionHistory POSH
-                    WHERE
-                            POSH.sessionid = S.sessionid
-                        AND datediff(now(), POSH.inactivatedts) < 10
+                        AND datediff(now(), POSH.change_ts) < 10
                 );
 EOD;
 $report['queries']['Persons'] =<<<'EOD'
@@ -106,28 +93,10 @@ SELECT
             EXISTS (
                 SELECT *
                     FROM
-                        ParticipantOnSessionHistory POSH
+                        participant_on_session_history POSH
                     WHERE
                         POSH.badgeid = P.badgeid
-                        AND (   DATEDIFF(NOW(), POSH.inactivatedts) < 10
-                             OR DATEDIFF(NOW(), POSH.createdts) < 10
-                        )
-            )
-         OR EXISTS (
-                SELECT *
-                    FROM
-                        ParticipantOnSessionHistory POSH
-                    WHERE
-                        POSH.createdbybadgeid = P.badgeid
-                        AND DATEDIFF(NOW(), POSH.createdts) < 10
-            )
-         OR EXISTS (
-                SELECT *
-                    FROM
-                        ParticipantOnSessionHistory POSH
-                    WHERE
-                        POSH.inactivatedbybadgeid = P.badgeid
-                        AND DATEDIFF(NOW(), POSH.inactivatedts) < 10
+                        AND DATEDIFF(NOW(), POSH.change_ts) < 10
             )
          OR EXISTS (
                 SELECT *
@@ -150,42 +119,28 @@ SELECT
     WHERE
         DATEDIFF(NOW(), SEH.timestamp) < 10
 UNION
-SELECT 
+SELECT
         POSH.createdts,
-        DATE_FORMAT(POSH.createdts, "%c/%e/%y %l:%i %p") AS formattedts,
+        DATE_FORMAT(POSH.change_ts, "%c/%e/%y %l:%i %p") AS formattedts,
         DATEDIFF(NOW(), POSH.createdts) AS days,
         sessionid,
         createdbybadgeid
     FROM
-        ParticipantOnSessionHistory POSH
+        participant_on_session_history POSH
     WHERE
-        DATEDIFF(NOW(), POSH.createdts) < 10
-UNION
-SELECT 
-        POSH.inactivatedts,
-        DATE_FORMAT(POSH.inactivatedts, "%c/%e/%y %l:%i %p") AS formattedts,
-        DATEDIFF(NOW(), POSH.inactivatedts) AS days,
-        sessionid,
-        inactivatedbybadgeid
-    FROM
-        ParticipantOnSessionHistory POSH
-    WHERE
-        DATEDIFF(NOW(), POSH.inactivatedts) < 10;
+        DATEDIFF(NOW(), POSH.change_ts) < 10;
 EOD;
 $report['queries']['ParticipantEdits'] =<<<'EOD'
 SELECT
         POSH.badgeid,
         POSH.sessionid,
         POSH.moderator,
-        POSH.createdts,
-        POSH.createdbybadgeid,
-        POSH.inactivatedts,
-        POSH.inactivatedbybadgeid
+        POSH.change_ts,
+        POSH.change_by_badgeid
     FROM
-        ParticipantOnSessionHistory POSH
+        participant_on_session_history POSH
     WHERE
-           DATEDIFF(NOW(), POSH.createdts) < 10
-        OR DATEDIFF(NOW(), POSH.inactivatedts) < 10;
+           DATEDIFF(NOW(), POSH.change_ts) < 10;
 EOD;
 $report['queries']['SessionEdits'] =<<<'EOD'
 SELECT
@@ -198,7 +153,7 @@ SELECT
     FROM
              SessionEditHistory SEH
         JOIN SessionEditCodes SEC USING (sessioneditcode)
-        JOIN SessionStatuses SS USING(statusid) 
+        JOIN SessionStatuses SS USING(statusid)
     WHERE
         DATEDIFF(NOW(), SEH.timestamp) < 10;
 EOD;
@@ -234,7 +189,7 @@ $report['xsl'] =<<<'EOD'
             <xsl:sort select="@trackname" />
         </xsl:apply-templates>
     </xsl:template>
-    
+
     <xsl:template match="doc/query[@queryName='SessionDays']/row">
         <xsl:variable name="days" select="@days" />
         <xsl:variable name="sessionid" select="@sessionid" />

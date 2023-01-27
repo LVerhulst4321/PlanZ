@@ -3,7 +3,7 @@ $report = [];
 $report['name'] = 'Differential Assigned Session by Participant';
 $report['multi'] = 'true';
 $report['output_filename'] = 'assigned_session_by_participant_differential.csv';
-$report['description'] = 'Recent changes (last 20 days) of whom has been assigned to each session ordered by created time.';
+$report['description'] = 'Recent changes (last 20 days) of whom has been assigned to each session.';
 $report['categories'] = array(
     'Events Reports' => 1,
     'Programming Reports' => 1,
@@ -20,12 +20,12 @@ SELECT
         S.sessionid,
         S.title,
         POS.moderator,
-        POSH.createdts as ts,
-        POSH.inactivatedts as its,
+        POSH.change_ts as ts,
+        POSH.change_type,
         R.roomname,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime
     FROM
-                        ParticipantOnSessionHistory POSH
+                        participant_on_session_history POSH
         LEFT OUTER JOIN ParticipantOnSession POS ON (POS.badgeid=POSH.badgeid and POS.sessionid=POSH.sessionid)
                    JOIN Participants P ON (POSH.badgeid=P.badgeid)
                    JOIN CongoDump CD ON (POSH.badgeid=CD.badgeid)
@@ -33,10 +33,9 @@ SELECT
               LEFT JOIN Schedule SCH ON (S.sessionid=SCH.sessionid)
               LEFT JOIN Rooms R USING (roomid)
     WHERE
-        DATE_SUB(NOW(), INTERVAL 20 DAY) < POSH.createdts
-        OR DATE_SUB(NOW(), INTERVAL 20 DAY) < POSH.inactivatedts
+        DATE_SUB(NOW(), INTERVAL 20 DAY) < POSH.change_ts
     ORDER BY
-        POSH.createdts DESC
+        POSH.change_ts DESC
 EOD;
 $report['xsl'] =<<<'EOD'
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -49,8 +48,8 @@ $report['xsl'] =<<<'EOD'
                 <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr>
-                            <th style="white-space:nowrap;">Date &#038; Time Created</th>
-                            <th style="white-space:nowrap;">Date &#038; Time Inactivated</th>
+                            <th style="white-space:nowrap;">Date &#038; Time Changed</th>
+                            <th style="white-space:nowrap;">Change Type</th>
                             <th style="white-space:nowrap;">Person ID</th>
                             <th>Badge Number</th>
                             <th>Name for Publications</th>
@@ -75,7 +74,25 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='edits']/row">
         <tr>
             <td><xsl:value-of select="@ts"/></td>
-            <td><xsl:value-of select="@its"/></td>
+            <td>
+                <xsl:choose>
+                    <xsl:when test="@change_type = 'insert_assignment'">
+                        <xsl:text>Added</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@change_type = 'remove_assignment'">
+                        <xsl:text>Removed</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@change_type = 'assign_moderator'">
+                        <xsl:text>Made moderator</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@change_type = 'remove_moderator'">
+                        <xsl:text>Remove moderator</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="@change_type"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </td>
             <td>
                 <xsl:call-template name="showBadgeid">
                     <xsl:with-param name="badgeid" select = "@badgeid" />

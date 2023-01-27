@@ -1,7 +1,7 @@
 <?php
 
 class ParticipantSessionInterestResponse {
-    public $comment;
+    public $comments;
     public $willModerate;
     public $rank;
 }
@@ -175,7 +175,7 @@ EOD;
             $interest = new ParticipantSessionInterestResponse();
             $interest->rank = $row->rank;
             $interest->comments = $row->comments;
-            $interest->willmoderate = $row->willmoderate ? true : false;
+            $interest->willModerate = $row->willmoderate ? true : false;
             $assignment->interestResponse = $interest;
         }
         return $assignment;
@@ -208,38 +208,101 @@ EOD;
     }
 
     public static function removeAssignment($db, $participantAssignment, $authentication) {
+        $changedBy = $authentication->getBadgeId();
         $query = <<<EOD
         DELETE FROM ParticipantOnSession
         WHERE sessionId = ?
         AND badgeid = ?;
 EOD;
-        $stmt = mysqli_prepare($db, $query);
-        mysqli_stmt_bind_param($stmt, "is", $participantAssignment->sessionId, $participantAssignment->badgeId);
-        if (mysqli_stmt_execute($stmt)) {
-            mysqli_stmt_close($stmt);
-        } else {
-            throw new DatabaseSqlException("Delete could not be executed: $query");
+
+        $historyQuery = <<<EOD
+        INSERT INTO participant_on_session_history
+        (`badgeid`, `sessionid`, `change_by_badgeid`, `change_type`, `moderator`)
+        values (?, ?, ?, 'remove_assignment', ?);
+EOD;
+
+        $db->begin_transaction();
+        try {
+            $stmt = mysqli_prepare($db, $query);
+            mysqli_stmt_bind_param($stmt, "is", $participantAssignment->sessionId, $participantAssignment->badgeId);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Delete could not be executed: $query");
+            }
+
+            $stmt = mysqli_prepare($db, $historyQuery);
+            mysqli_stmt_bind_param($stmt, "sisi", $participantAssignment->badgeId, $participantAssignment->sessionId,
+                $changedBy, $participantAssignment->moderator);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Insert could not be executed: $historyQuery");
+            }
+
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
         }
     }
 
     public static function insertAssignment($db, $sessionId, $badgeId, $authentication) {
+        $changedBy = $authentication->getBadgeId();
+
         $query = <<<EOD
         INSERT INTO ParticipantOnSession (sessionid, badgeid)
         VALUES (?, ?);
 EOD;
-        $stmt = mysqli_prepare($db, $query);
-        mysqli_stmt_bind_param($stmt, "is", $sessionId, $badgeId);
-        if (mysqli_stmt_execute($stmt)) {
-            mysqli_stmt_close($stmt);
-        } else {
-            throw new DatabaseSqlException("Insert could not be executed: $query");
+
+        $historyQuery = <<<EOD
+        INSERT INTO participant_on_session_history
+        (`badgeid`, `sessionid`, `change_by_badgeid`, `change_type`, `moderator`)
+        values (?, ?, ?, 'insert_assignment', 0);
+EOD;
+        $db->begin_transaction();
+        try {
+
+            $stmt = mysqli_prepare($db, $query);
+            mysqli_stmt_bind_param($stmt, "is", $sessionId, $badgeId);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Insert could not be executed: $query");
+            }
+
+            $stmt = mysqli_prepare($db, $historyQuery);
+            mysqli_stmt_bind_param($stmt, "sis", $badgeId, $sessionId, $changedBy);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Insert could not be executed: $historyQuery");
+            }
+
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
         }
     }
 
     public static function updateModeratorStatus($db, $participantAssignment, $authentication) {
+
+        $changedBy = $authentication->getBadgeId();
         mysqli_begin_transaction($db);
+        error_log("Badge id" . $authentication->getBadgeId() . ' ' . $participantAssignment->sessionId . ' ' . $participantAssignment->badgeId);
         try {
             if ($participantAssignment->moderator) {
+                $historyQuery = <<<EOD
+                INSERT INTO participant_on_session_history
+                (`badgeid`, `sessionid`, `moderator`, `change_by_badgeid`, `change_type`)
+                SELECT badgeid, sessionid, 0, ?, 'remove_moderator'
+                FROM ParticipantOnSession
+                WHERE sessionId = ?
+                AND badgeid != ?
+                AND moderator = 1;
+EOD;
+
                 $query = <<<EOD
                 UPDATE ParticipantOnSession
                 SET moderator = 0
@@ -247,6 +310,16 @@ EOD;
                 AND badgeid != ?
                 AND moderator = 1;
 EOD;
+
+                $stmt = mysqli_prepare($db, $historyQuery);
+                mysqli_stmt_bind_param($stmt, "sis", $changedBy,
+                    $participantAssignment->sessionId, $participantAssignment->badgeId);
+                if (mysqli_stmt_execute($stmt)) {
+                    mysqli_stmt_close($stmt);
+                } else {
+                    throw new DatabaseSqlException("Insert could not be executed: $historyQuery");
+                }
+
                 $stmt = mysqli_prepare($db, $query);
                 mysqli_stmt_bind_param($stmt, "is", $participantAssignment->sessionId, $participantAssignment->badgeId);
                 if (mysqli_stmt_execute($stmt)) {
@@ -262,15 +335,33 @@ EOD;
             WHERE sessionId = ?
             AND badgeid = ?;
 EOD;
+
+            $historyQuery = <<<EOD
+            INSERT INTO participant_on_session_history
+            (`badgeid`, `sessionid`, `change_by_badgeid`, `change_type`, `moderator`)
+            values (?, ?, ?, ?, ?);
+EOD;
+
+            $changeType = $participantAssignment->moderator ? 'assign_moderator' : 'remove_moderator';
+
             $stmt = mysqli_prepare($db, $query);
-            $moderator = $participantAssignment->moderator ? 1 : 0;
-            mysqli_stmt_bind_param($stmt, "iis", $moderator,
+            mysqli_stmt_bind_param($stmt, "iis", $participantAssignment->moderator,
                 $participantAssignment->sessionId, $participantAssignment->badgeId);
             if (mysqli_stmt_execute($stmt)) {
                 mysqli_stmt_close($stmt);
             } else {
                 throw new DatabaseSqlException("Update could not be executed: $query");
             }
+
+            $stmt = mysqli_prepare($db, $historyQuery);
+            mysqli_stmt_bind_param($stmt, "sissi", $participantAssignment->badgeId, $participantAssignment->sessionId,
+                $changedBy, $changeType, $participantAssignment->moderator);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Insert could not be executed: $historyQuery");
+            }
+
             mysqli_commit($db);
         } catch (Exception $e) {
             mysqli_rollback($db);
