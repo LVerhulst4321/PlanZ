@@ -71,6 +71,58 @@ EOD;
             throw new DatabaseSqlException("Query could not be executed: $query");
         }
     }
+
+    static function saveNotesForProgramStaff($db, $session, $note, $authentication) {
+        $changedBy = $authentication->getBadgeId();
+        $query = "UPDATE Sessions SET notesforprog = ? WHERE sessionid = ?";
+
+        $db->begin_transaction();
+        try {
+
+            $stmt = mysqli_prepare($db, $query);
+            mysqli_stmt_bind_param($stmt, "si", $note, $session->sessionId);
+
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Update could not be executed: $query");
+            }
+
+            $historyQuery = <<<EOD
+    INSERT INTO SessionEditHistory
+        (sessionid, badgeid, name, email_address, sessioneditcode, editdescription, statusid)
+    SELECT
+            ?,
+            CD.badgeid,
+            CONCAT(CD.firstName, " ", CD.lastname),
+            CD.email,
+            3,
+            "Edit notes for program committee",
+            (SELECT statusid FROM Sessions WHERE sessionid = ?)
+        FROM
+            CongoDump CD
+        WHERE
+            badgeid = ?;
+EOD;
+
+            $stmt = mysqli_prepare($db, $historyQuery);
+            mysqli_stmt_bind_param($stmt, "iis", $session->sessionId, $session->sessionId, $changedBy);
+
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_close($stmt);
+            } else {
+                error_log($db->error);
+                throw new DatabaseSqlException("Insert could not be executed: $historyQuery");
+            }
+
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
+    }
+
+
     function asJson() {
         $result = array("sessionId" => $this->sessionId,
             "title" => $this->title,

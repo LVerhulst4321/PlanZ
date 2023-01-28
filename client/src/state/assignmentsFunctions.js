@@ -90,6 +90,27 @@ export function removeAssignment(sessionId, badgeId) {
     );
 }
 
+export function updateNotes(sessionId, notes) {
+    axios.post('/api/assignment/assign_note.php', {
+            sessionId: sessionId,
+            notes: notes
+        }).then(res => {
+            fetchSessionAssignments(sessionId);
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = {
+                    severity: "danger",
+                    text: "We've hit a bit of a technical snag trying to update them thar notes."
+                };
+                store.dispatch(setSessionAssignments({ message: message }, message));
+            }
+        }
+    );
+}
+
 export function createAssignment(sessionId, badgeId) {
     axios.post('/api/assignment/create_assignment.php', {
             sessionId: sessionId,

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { connect } from "react-redux";
-import { removeAssignment, updateModeratorStatus } from "../../state/assignmentsFunctions";
+import { createAssignment, removeAssignment, updateModeratorStatus } from "../../state/assignmentsFunctions";
 
-const AssignmentCard = ({assignee, session}) => {
+const AssignmentCard = ({assignee, assigned, session}) => {
     let [showBio, setShowBio] = useState(false);
 
     return (<Card className={assignee.moderator ? 'border-success' : ''}>
@@ -33,10 +33,14 @@ const AssignmentCard = ({assignee, session}) => {
                             {assignee.interestResponse ? (<div className="small">{assignee.interestResponse.comments}</div>) : undefined}
                         </div>
                     </div>
-                    <div className="text-right">
-                        <Button variant="link" className="btn-sm" onClick={() => updateModeratorStatus(session?.sessionId, assignee?.badgeId, !assignee?.moderator) }>{assignee.moderator ? 'Unmake Moderator' : 'Make Moderator'}</Button>
-                        <Button variant="link" className="btn-sm text-danger" onClick={() => removeAssignment(session?.sessionId, assignee?.badgeId)}>Remove</Button>
-                    </div>
+                    {assigned
+                        ? (<div className="text-right">
+                            <Button variant="link" className="btn-sm" onClick={() => updateModeratorStatus(session?.sessionId, assignee?.badgeId, !assignee?.moderator) }>{assignee.moderator ? 'Unmake Moderator' : 'Make Moderator'}</Button>
+                            <Button variant="link" className="btn-sm text-danger" onClick={() => removeAssignment(session?.sessionId, assignee?.badgeId)}>Remove</Button>
+                        </div>)
+                        : (<div className="text-right">
+                            <Button variant="link" className="btn-sm" onClick={() => createAssignment(session?.sessionId, assignee?.badgeId) }>Assign</Button>
+                        </div>)}
                 </div>
             </div>
         </Card.Body>
