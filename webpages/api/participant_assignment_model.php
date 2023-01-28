@@ -17,6 +17,7 @@ class ParticipantAssignment {
     public $interestResponse;
     public $textBio;
     public $sessionId;
+    public $willingnessToBeParticipant;
 
     public static function findAssignmentForSessionByBadgeId($db, $sessionId, $badgeId) {
         $assignments = ParticipantAssignment::findAssignmentsForSession($db, $sessionId);
@@ -43,7 +44,8 @@ class ParticipantAssignment {
             P.bio,
             PSI.rank,
             PSI.comments,
-            PSI.willmoderate
+            PSI.willmoderate,
+            P.interested
         FROM
                       ParticipantOnSession POS
                  JOIN Participants P ON P.badgeid = POS.badgeid
@@ -82,7 +84,8 @@ EOD;
             P.bio,
             PSI.rank,
             PSI.comments,
-            PSI.willmoderate
+            PSI.willmoderate,
+            P.interested
         FROM ParticipantSessionInterest PSI
         JOIN Participants P ON P.badgeid = PSI.badgeid
         JOIN CongoDump CD ON CD.badgeid = PSI.badgeid
@@ -124,11 +127,12 @@ EOD;
             P.sortedpubsname,
             PSI.rank,
             PSI.comments,
-            PSI.willmoderate
+            PSI.willmoderate,
+            P.interested
         FROM Participants P
         JOIN CongoDump CD USING(badgeid)
         LEFT OUTER JOIN ParticipantSessionInterest PSI ON (P.badgeid = PSI.badgeid AND PSI.sessionId = ?)
-        WHERE P.interested = 1
+        WHERE (P.interested = 1 OR P.interested is NULL)
         AND P.badgeid NOT IN (
             select badgeid from ParticipantOnSession POS WHERE POS.sessionid = ?)
         AND (P.sortedpubsname like ? OR lower(CD.badgename) like ? OR lower(CD.firstname) like ? OR lower(CD.lastname) like ?)
@@ -165,6 +169,16 @@ EOD;
         $assignment->confirmed = $row->confirmed == 'Y';
         $assignment->textBio = $row->bio;
         $assignment->sessionId = $sessionId;
+
+        $interested = "Unknown";
+        if ($row->interested == 1) {
+            $interested = "Yes";
+        } else if ($row->interested == 2) {
+            $interested = "No";
+        }
+
+        $assignment->willingnessToBeParticipant = $interested;
+
         if ($row->approvedphotofilename) {
             $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . $row->approvedphotofilename;
         } else {
@@ -188,6 +202,7 @@ EOD;
             "moderator" => $this->moderator,
             "registered" => $this->registered,
             "confirmed" => $this->confirmed,
+            "willingnessToBeParticipant" => $this->willingnessToBeParticipant,
             "links" => array("avatar" => $this->avatarSrc)
         );
         if ($this->interestResponse != null) {

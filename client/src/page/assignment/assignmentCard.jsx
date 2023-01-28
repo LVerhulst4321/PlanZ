@@ -27,6 +27,11 @@ const AssignmentCard = ({assignee, assigned, session}) => {
                                     </div>)
                                 : null }
                             {assignee.registered ? undefined : (<div className="text-muted small">{assignee.name} is not registered.</div>)}
+                            {assignee.willingnessToBeParticipant == 'Unknown'
+                                ? (<div className="text-muted small">{assignee.name} has not specified their willingness to be a participant.</div>)
+                                : (assignee.willingnessToBeParticipant == 'No'
+                                    ? (<div className="text-danger small">{assignee.name} does not want to be on panels.</div>)
+                                    : null)}
                         </div>
                         <div className="col-md-6">
                             {assignee.interestResponse ? (<div><i>Rank: </i> {assignee.interestResponse.rank}</div>) : undefined}
