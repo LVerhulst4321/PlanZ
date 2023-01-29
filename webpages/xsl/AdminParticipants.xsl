@@ -24,7 +24,7 @@
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                           <td class="actionB" id="pnameSPAN_{@badgeid}"><xsl:value-of select="@pubsname"/></td>
-                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>                
+                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                           <td class="action" id="bnameSPAN_{@badgeid}"><xsl:value-of select="@badgename"/></td>
                           <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
@@ -106,6 +106,11 @@
                           <input type="hidden" id="answercountHID_{@badgeid}">
                             <xsl:attribute name="value">
                               <xsl:value-of select="@answercount"/>
+                            </xsl:attribute>
+                          </input>
+                          <input type="hidden" id="approvedphotofilenameHID_{@badgeid}">
+                            <xsl:attribute name="value">
+                              <xsl:value-of select="@approvedphotofilename"/>
                             </xsl:attribute>
                           </input>
                       </tr>

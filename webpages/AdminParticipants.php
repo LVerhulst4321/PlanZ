@@ -10,23 +10,29 @@ if ($fbadgeid) {
     echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
 }
 ?>
-<form id="adminParticipantsForm" class="form-row">
-    <div id="resultBoxDIV" class="container-fluid"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
-    <div id="searchPartsDIV" class="container-fluid">
-        <div class="row mt-3">
+<form id="adminParticipantsForm">
+<div class="card">
+    <div class="card-body">
+    <div id="resultBoxDIV"><span class="beforeResult" id="resultBoxSPAN">Result messages will appear here.</span></div>
+    <div id="searchPartsDIV">
+        <div class="row">
             <div class="col-sm-12">
                 <div class="dialog">Enter all or part of first name, last name, badge name, <span style="font-weight:bold">or</span> published name.  If you enter numbers, it will be interpreted as a complete <?php echo USER_ID_PROMPT; ?>.
                 </div>
             </div>
         </div>
-        <div style="margin-top: 0.5em">
-            <input type="text" id="searchPartsINPUT" onkeypress = "if (event.keyCode === 13) doSearchPartsBUTN();" />
-            <input type="hidden" id="searchPhotoApproval" value=""/>
-            <div class="btn-group" role="group" aria-label="search actions">
-                <button type="button" class="btn btn-primary" data-loading-text="Searching..." id="searchPartsBUTN" style="margin-right:10px;">Search</button>
-                <button type="button" class="btn btn-secondary" id="prevSearchResultBUTN" style="display: none; margin-right:10px;" disabled onclick="prevParticipant();">Previous</button>
-                <button type="button" class="btn btn-secondary" id="nextSearchResultBUTN" style="display: none; margin-right:10px;" disabled onclick="nextParticipant();">Next</button>
-                <button type="button" class="btn btn-secondary" id="toggleSearchResultsBUTN"><span id="toggleText">Hide</span> Results</button>
+        <div class="row" style="margin-top: 0.5em">
+            <div class="col-sm-3">
+                <input class="form-control" type="text" id="searchPartsINPUT" onkeypress = "if (event.keyCode === 13) doSearchPartsBUTN();" />
+                <input type="hidden" id="searchPhotoApproval" value=""/>
+            </div>
+            <div class="col-sm-9">
+                <div role="group" aria-label="search actions">
+                    <button type="button" class="btn btn-primary" data-loading-text="Searching..." id="searchPartsBUTN" style="margin-right:10px;">Search</button>
+                    <button type="button" class="btn btn-secondary" id="prevSearchResultBUTN" style="display: none; margin-right:10px;" disabled onclick="prevParticipant();">Previous</button>
+                    <button type="button" class="btn btn-secondary" id="nextSearchResultBUTN" style="display: none; margin-right:10px;" disabled onclick="nextParticipant();">Next</button>
+                    <button type="button" class="btn btn-secondary" id="toggleSearchResultsBUTN"><span id="toggleText">Hide</span> Results</button>
+                </div>
             </div>
         </div>
         <div style="margin-top: 1em; height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
@@ -51,277 +57,246 @@ if ($fbadgeid) {
             </div>
         </div>
     </div>
+</div>
+</div>
+
+<div id="resultsDiv" class="mt-3">
+    <div class="card">
+        <div class="card-body">
 
 
-    <div id="resultsDiv" class="container-fluid">
-
-
-        <div class="row mt-3">
+        <div class="row">
             <div class="col-sm-2 col-xl-1">
-                <div class="">
+                <div class="form-group">
                     <label for="badgeid" class="mb-1"><?php echo USER_ID_PROMPT; ?>:</label>
-                </div>
-                <div>
-                    <input class="col-text-input disabled" id="badgeid" type="text" readonly="readonly" />
+                    <input class="form-control disabled" id="badgeid" type="text" readonly="readonly" />
                 </div>
             </div>
+            <div class="col-sm-10 col-xl-11">
+                <div class="row">
 <?php
 if (USE_REG_SYSTEM === TRUE) {
 ?>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="lname_fname" class="mb-1">Last name, first name:</label>
-                </div>
-                <div>
-                    <input class="col-text-input disabled" id="lname_fname" type="text" readonly="readonly" style="max-width:20rem;" />
-                </div>
-            </div>
-<?php
-} else {
-?>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="lastname" class="mb-1">Last name:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="lastname" type="text" maxlength="40" />
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="firstname" class="mb-1">First name:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="firstname" type="text" maxlength="35" />
-                </div>
-            </div>
-<?php
-};
-?>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="badgename" class="mb-1">Badge name:</label>
-                </div>
-                <div>
-<?php
-if (USE_REG_SYSTEM === TRUE) {
-?>
-                    <input type="text" id="badgename" class="col-text-input disabled" readonly="readonly" maxlength="50" />
-<?php
-} else {
-?>
-                    <input type="text" id="badgename" class="col-text-input mycontrol" maxlength="50" />
-<?php
-}
-?>
-                </div>
-           </div>
-        </div>
-
-
-        <div class="row mt-3">
-<?php 
-if (USE_REG_SYSTEM === FALSE) {
-?> 
-            <div class="col-sm-2 offset-sm-2 offset-xl-1">
-                <div class="">
-                    <label for="phone" class="mb-1">Phone number:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="phone" type="text" maxlength="100" />
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="">
-                    <label for="email" class="mb-1">Email address:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="email" type="text" maxlength="100" />
-                </div>
-            </div>
-<?php
-}
-?>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="pubsname" class="mb-1">Name for publications:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="pubsname" type="text" readonly="readonly" maxlength="50" />
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="sortedpubsname" class="mb-1">Sorted Name for publications:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="sortedpubsname" type="text" readonly="readonly" maxlength="50" />
-                </div>
-            </div>
-        </div>
-
-
-<?php
-if (USE_REG_SYSTEM === FALSE) {
-?>
-        <div class="row mt-3">
-            <div class="col-sm-3 offset-sm-2 offset-xl-1">
-                <div class="">
-                    <label for="postaddress1" class="mb-1">Postal Address:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="postaddress1" type="text" maxlength="100" />
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="postaddress2" class="mb-1">Postal Address Line 2:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="postaddress2" type="text" maxlength="100" />
-                </div>
-            </div>
-        </div>
-
-
-        <div class="row mt-3">
-            <div class="col-sm-2 offset-sm-2 offset-xl-1">
-                <div class="">
-                    <label for="postcity" class="mb-1">City:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="postcity" type="text" maxlength="50" />
-                </div>
-            </div>
-            <div class="col-sm-1">
-                <div class="">
-                    <label for="poststate" class="mb-1">State:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="poststate" type="text" maxlength="25" />
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="">
-                    <label for="postzip" class="mb-1">Zip Code:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="postzip" type="text" maxlength="10" style="max-width:7rem;" />
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="">
-                    <label for="postcountry" class="mb-1">Country:</label>
-                </div>
-                <div>
-                    <input class="col-text-input mycontrol" id="postcountry" type="text" maxlength="25" />
-                </div>
-            </div>
-        </div>
-<?php
-};
-?>
-
-
-        <div class="row mt-3">
-            <div class="container-sm p-2 my-2 border border-dark">
-                <div class="control-group">
-                    <label for="interested" class="control-label">Participant is interested and available to participate
-                        in <?php echo CON_NAME; ?> programming:</label>
-                    <div class="controls">
-                        <select id="interested" class="yesno mycontrol" disabled="disabled">
-                            <option value="0" selected="selected">&nbsp</option>
-                            <option value="1">Yes</option>
-                            <option value="2">No</option>
-                        </select>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="lname_fname" class="mb-1">Last name, first name:</label>
+                            <input class="form-control disabled" id="lname_fname" type="text" readonly="readonly" style="max-width:20rem;" />
+                        </div>
                     </div>
-                    <p class="help-block">Changing this to <i>No</i> will remove the participant from all sessions.</p>
+<?php
+} else {
+?>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="lastname" class="mb-1">Last name:</label>
+                            <input class="form-control mycontrol" id="lastname" type="text" maxlength="40" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="firstname" class="mb-1">First name:</label>
+                            <input class="form-control mycontrol" id="firstname" type="text" maxlength="35" />
+                        </div>
+                    </div>
+<?php
+};
+?>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="badgename" class="mb-1">Badge name:</label>
+<?php
+if (USE_REG_SYSTEM === TRUE) {
+?>
+                            <input type="text" id="badgename" class="form-control disabled" readonly="readonly" maxlength="50" />
+<?php
+} else {
+?>
+                            <input type="text" id="badgename" class="form-control mycontrol" maxlength="50" />
+<?php
+}
+?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
 
-        <div class="row mt-3">
+        <div class="row">
+            <div class="col-sm-2 col-xl-1 text-center">
+                <img id="participantAvatar" class="rounded-circle participant-avatar participant-avatar-sm img-thumbnail d-none d-sm-inline"
+                    src=<?php echo '"' . PHOTO_PUBLIC_DIRECTORY . '/' . PHOTO_DEFAULT_IMAGE . '"'; ?>
+                    data-default=<?php echo '"' . PHOTO_PUBLIC_DIRECTORY . '/' . PHOTO_DEFAULT_IMAGE . '"'; ?>
+                    alt="Avatar"
+                    data-basedir=<?php echo '"' . PHOTO_PUBLIC_DIRECTORY . '/"'; ?> />
+            </div>
+<?php
+if (USE_REG_SYSTEM === FALSE) {
+?>
+            <div class="col-sm-10 col-xl-11">
+                <div class="row">
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label for="phone" class="mb-1">Phone number:</label>
+                    <input class="form-control mycontrol" id="phone" type="text" maxlength="100" />
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label for="email" class="mb-1">Email address:</label>
+                    <input class="form-control mycontrol" id="email" type="text" maxlength="100" />
+                </div>
+            </div>
+<?php
+}
+?>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="pubsname" class="mb-1">Name for publications:</label>
+                    <input class="form-control mycontrol" id="pubsname" type="text" readonly="readonly" maxlength="50" />
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="sortedpubsname" class="mb-1">Sorted Name for publications:</label>
+                    <input class="form-control mycontrol" id="sortedpubsname" type="text" readonly="readonly" maxlength="50" />
+                </div>
+            </div>
+        </div>
+
+
+<?php
+if (USE_REG_SYSTEM === FALSE) {
+?>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="postaddress1" class="mb-1">Postal Address:</label>
+                    <input class="form-control mycontrol" id="postaddress1" type="text" maxlength="100" />
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="postaddress2" class="mb-1">Postal Address Line 2:</label>
+                    <input class="form-control mycontrol" id="postaddress2" type="text" maxlength="100" />
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="postcity" class="mb-1">City:</label>
+                    <input class="form-control mycontrol" id="postcity" type="text" maxlength="50" />
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label for="poststate" class="mb-1">State:</label>
+                    <input class="form-control mycontrol" id="poststate" type="text" maxlength="25" />
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label for="postzip" class="mb-1">Zip Code:</label>
+                    <input class="form-control mycontrol" id="postzip" type="text" maxlength="10" />
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="postcountry" class="mb-1">Country:</label>
+                    <input class="form-control mycontrol" id="postcountry" type="text" maxlength="25" />
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+<?php
+};
+?>
+
+        <div class="container-sm py-2 px-3 my-3 border border-dark rounded">
+            <div class="form-group">
+                <label for="interested" class="control-label">Participant is interested and available to participate
+                    in <?php echo CON_NAME; ?> programming:</label>
+                <select id="interested" class="yesno mycontrol form-control" disabled="disabled" style="width: auto;">
+                    <option value="0" selected="selected">&nbsp</option>
+                    <option value="1">Yes</option>
+                    <option value="2">No</option>
+                </select>
+                <p class="help-block">Changing this to <i>No</i> will remove the participant from all sessions.</p>
+            </div>
+        </div>
+
 <?php
 if (RESET_PASSWORD == true) {
     if (may_I("ResetUserPassword")) {
 ?>
-            <div class="container-sm p-2 my-2 border border-dark">
+        <div class="container-sm py-2 px-3 my-3 border border-dark rounded">
+            <div class="row">
                 <div class="col-sm-3">
-                    <div class="">
+                    <div class="form-group">
                         <label for="password">Change Participant's Password:</label>
-                    </div>
-                    <div>
-                        <input type="password" maxlength="40" id="password" readonly="readonly" class="mycontrol" />
+                        <input type="password" maxlength="40" id="password" readonly="readonly" class="form-control mycontrol" />
                     </div>
                     <span id="passwordsDontMatch" style="color: red;">Passwords don't match.</span>
                 </div>
-                <div class="col-sm-3">
-                    <div class="">
-                        <label for="cpassword">Confirm New Password:</label>
-                    </div>
-                    <div>
-                        <input type="password" maxlength="40" id="cpassword" readonly="readonly" class="mycontrol" />
-                    </div>
-                </div>
             </div>
-<?php
-    };
-};
-?>
-            <div class="container-sm p-2 my-2 border border-dark">
+            <div class="row">
                 <div class="col-sm-3">
-                    <div class="">
-                        <label for="regtype">Registration type:</label>
-                    </div>
-                    <div id="regtype">
+                    <div class="form-group">
+                        <label for="cpassword">Confirm New Password:</label>
+                        <input type="password" maxlength="40" id="cpassword" readonly="readonly" class="form-control mycontrol" />
                     </div>
                 </div>
             </div>
         </div>
-
+<?php
+    };
+};
+?>
+        <div class="container-sm py-2 px-3 my-3 border border-dark rounded">
+            <div class="">
+                <label for="regtype">Registration type:</label>
+            </div>
+            <div id="regtype">
+            </div>
+        </div>
 
         <div class="row mt-3">
             <div class="col-sm-6">
-                
+
 <?php
 if (HTML_BIO === TRUE) {
 ?>
-              <div>
+              <div class="form-group">
                 <label for="htmlbio" class="">Participant biography:</label>
-              </div>
-              <div class="newforminput">
-                <textarea id="htmlbio" rows="4" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>" onchange="textChange('htmlbio');" onkeyup="textChange('htmlbio');"></textarea>
+                <textarea class="form-control" id="htmlbio" rows="4" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>" onchange="textChange('htmlbio');" onkeyup="textChange('htmlbio');"></textarea>
               </div>
 <?php
 } else {
 ?>
-              <div>
+              <div class="form-group">
                 <label for="bio" class="">Participant biography:</label>
+                <textarea class="form-control" id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
               </div>
-              <div>
-                <textarea id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
-              </div>
-            
+
 <?php
 }
 ?>
             </div>
             <div class="col-sm-6">
-                <div class="">
+                <div class="form-group">
                     <label for="staffnotes" class="">Staff notes re. participant:</label>
-                </div>
-                <div>
-                    <textarea id="staffnotes" rows="6" cols="80" readonly="readonly" class="mycontrol"></textarea>
+                    <textarea class="form-control" id="staffnotes" rows="6" cols="80" readonly="readonly" class="mycontrol"></textarea>
                 </div>
 <?php
 if (HTML_BIO === TRUE) {
 ?>
-              <div class="newformlabel">
+              <div class="form-group">
                  <label for="bio" class="newformlabel">Text biography (updates only after Update is pressed):</label>
-              </div>
-              <div class="newforminput">
-                  <textarea id="bio" rows="8" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
+                  <textarea class="form-control" id="bio" rows="8" cols="80" readonly="readonly" maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
               </div>
 <?php
 }
@@ -357,6 +332,8 @@ if (HTML_BIO === TRUE) {
 
 
     </div>
+</div>
+</div>
 </form>
 <?php
 staff_footer();
