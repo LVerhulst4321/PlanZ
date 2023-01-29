@@ -61,8 +61,8 @@ class CreateVolunteerJobModal extends FormComponent {
                 <LoadingButton loading={this.state.loading} variant="primary" enabled={true} onClick={() => this.submitJob()} key="btn-save">Save</LoadingButton>];
         }
 
-        let confirmMessage = this.state.confirmDelete 
-            ? (<p>Are you sure you want to delete this job? All related shifts will also be deleted.</p>) 
+        let confirmMessage = this.state.confirmDelete
+            ? (<p>Are you sure you want to delete this job? All related shifts will also be deleted.</p>)
             : undefined;
 
         return (
@@ -75,7 +75,7 @@ class CreateVolunteerJobModal extends FormComponent {
 
                     <Form.Group className="mb-3" controlId="name">
                         <Form.Label className="sr-only">Name</Form.Label>
-                        <Form.Control type="text" className={this.getErrorClass('name')} placeholder="Job name..." value={this.getFormValue("name")} 
+                        <Form.Control type="text" className={this.getErrorClass('name')} placeholder="Job name..." value={this.getFormValue("name")}
                             onChange={(e) => this.setFormValue("name", e.target.value)}/>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="isOnline">
@@ -88,7 +88,7 @@ class CreateVolunteerJobModal extends FormComponent {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="description">
                         <Form.Label className="sr-only">Description</Form.Label>
-                        <Form.Control as="textarea" rows={3} className={this.getErrorClass('description')} placeholder="Description..."  
+                        <Form.Control as="textarea" rows={3} className={this.getErrorClass('description')} placeholder="Description..."
                             value={this.getFormValue("description")} onChange={(e) => this.setFormValue("description", e.target.value)}/>
                     </Form.Group>
 
@@ -108,7 +108,7 @@ class CreateVolunteerJobModal extends FormComponent {
         if (formName === 'name') {
             return formValue != null && formValue !== '';
         } else if (formName === 'description') {
-            return formValue != null && formValue != '';
+            return formValue != null && formValue !== '';
         } else {
             return true;
         }

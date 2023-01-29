@@ -19,11 +19,11 @@ class DateInfo extends Component {
                 <div className="card-body">
                     <h5>Submission Dates</h5>
                     {items}
-                </div> 
+                </div>
             </div>
         );
     }
-    
+
     formatDivision(division) {
         if (division.to_time) {
             let toDate = dayjs(division.to_time);
@@ -37,7 +37,6 @@ class DateInfo extends Component {
             } else {
 
                 let to = dayjs(division.to_time).format("MMM Do, YYYY [at] h:mm a z");
-                let tz = dayjs.tz.guess();
                 return (
                     <div className="mt-2" key={'division' + division.id}>
                         {division.name} <span className="text-muted">open until:</span><br />

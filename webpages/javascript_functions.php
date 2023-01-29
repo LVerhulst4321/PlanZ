@@ -28,7 +28,6 @@ function load_internal_javascript($title, $isDataTables = false) {
      * These js files initialize themselves and therefore should be included only on the relevant pages.
      * See main.js
      *
-     * (Staff) Assign Participants -- StaffAssignParticipants.js
      * Forgot Password -- ForgotPassword.js
      * Invite Participants -- InviteParticipants.js
      * Maintain Room Schedule -- MaintainRoomSched.js
@@ -38,9 +37,6 @@ function load_internal_javascript($title, $isDataTables = false) {
      * Other js files may be included in this switch statement, but aren't required
      */
     switch ($title) {
-        case "Assign Participants":
-            echo "<script src=\"js/StaffAssignParticipants.js\"></script>\n";
-            break;
         case "Forgot Password":
             echo "<script src=\"js/ForgotPassword.js\"></script>\n";
             break;

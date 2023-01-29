@@ -386,10 +386,10 @@ function output_locationgrid($link, $grid, $locations, $mode = 'internal') {
                 $output .= $locationHeader;
                 $output .= '<tr><td class=grid_date colspan=' . $locationcnt . '><a id="grid-' .$dtname . '">' . $dt . ' - ' . $dtname . '</a></td></tr>' . "\n";
             }
-            
+
             // output time
             $output .= '<tr>' . "\n" . '     <td>' . cnv_tm_from_military($tm) . '</td>' . "\n";
-            
+
             // loop thru grid locations
             foreach ($tmarr as $location => $item) {
                 // get event id
@@ -468,7 +468,7 @@ function output_locationgrid($link, $grid, $locations, $mode = 'internal') {
                     $output .= ' title="' . $item['progguiddesc'] . '"';
                     $output .= '>';
                     if ($mode == 'internal') {
-                        $output .= '(<a href="StaffAssignParticipants.php?selsess=' . $id . '" title="Edit session participants">' . $id . '</a>) ';
+                        $output .= '(<a href="assignParticipants.php?sessionId=' . $id . '" title="Edit session participants">' . $id . '</a>) ';
                         $output .= '<a href="EditSession.php?id=' . $id . '" title="Edit session">' . $row['name'] . '</a>' ;
                     } else if ($mode == 'publication') {
                         $output .= '<div title="' . $item['progguiddesc'] . '">' . $row['name'] . '</div>';
@@ -501,7 +501,7 @@ function output_locationgrid($link, $grid, $locations, $mode = 'internal') {
     //test 1 day
     //break;   //test
     //test
-    
+
     }
 
     $output .= '</table>' . "\n";
@@ -692,7 +692,7 @@ function build_location_grid($link, $locations, $mode = 'internal', $grid_interv
     if ($mode == 'public') {
         // Select all scheduled events with a startdatetime and a location assignment that are public
         $query = <<<EOD
-SELECT 
+SELECT
         SCH.sessionid AS id,
         R.display_order,
         ADDTIME("$ConStartDatim$",SCH.starttime) AS starttimeFMT,
@@ -704,13 +704,13 @@ SELECT
         T.typeid AS type,
         S.progguiddesc as progguiddesc,
         S.participantlabel as participantlabel,
-        GROUP_CONCAT(' ',P.pubsname, IF (POS.moderator=1,' (M)','') ORDER BY P.sortedpubsname) as 'participants' 
+        GROUP_CONCAT(' ',P.pubsname, IF (POS.moderator=1,' (M)','') ORDER BY P.sortedpubsname) as 'participants'
     FROM
                   Sessions S
              JOIN Schedule SCH USING (sessionid)
              JOIN Rooms R USING (roomid)
              JOIN Types T USING (typeid)
-        LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid 
+        LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
         LEFT JOIN Participants P ON POS.badgeid=P.badgeid
     WHERE
         S.statusid = 3                              #3 means scheduled
@@ -725,7 +725,7 @@ EOD;
     } else if ($mode == 'publication') {
         // Select all scheduled events with a startdatetime and a location assignment that are public or wobegon
         $query = <<<EOD
-SELECT 
+SELECT
         SCH.sessionid AS id,
         R.display_order,
         ADDTIME("$ConStartDatim$",SCH.starttime) AS starttimeFMT,
@@ -737,13 +737,13 @@ SELECT
         T.typeid AS type,
         S.progguiddesc as progguiddesc,
         S.participantlabel as participantlabel,
-        GROUP_CONCAT(' ',P.pubsname, IF (POS.moderator=1,' (M)','') ORDER BY P.sortedpubsname) as 'participants' 
+        GROUP_CONCAT(' ',P.pubsname, IF (POS.moderator=1,' (M)','') ORDER BY P.sortedpubsname) as 'participants'
     FROM
                   Sessions S
              JOIN Schedule SCH USING (sessionid)
              JOIN Rooms R USING (roomid)
              JOIN Types T USING (typeid)
-        LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid 
+        LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
         LEFT JOIN Participants P ON POS.badgeid=P.badgeid
     WHERE
         S.statusid = 3                              #3 means scheduled
@@ -769,13 +769,13 @@ SELECT
         T.typeid AS type,
         S.progguiddesc as progguiddesc,
         S.participantlabel as participantlabel,
-        GROUP_CONCAT(' ',P.pubsname, IF (POS.moderator=1,' (M)','') ORDER BY P.sortedpubsname) as 'participants' 
+        GROUP_CONCAT(' ',P.pubsname, IF (POS.moderator=1,' (M)','') ORDER BY P.sortedpubsname) as 'participants'
     FROM
                   Sessions S
              JOIN Schedule SCH USING (sessionid)
              JOIN Rooms R USING (roomid)
              JOIN Types T USING (typeid)
-        LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid 
+        LEFT JOIN ParticipantOnSession POS ON SCH.sessionid=POS.sessionid
         LEFT JOIN Participants P ON POS.badgeid=P.badgeid
     WHERE
         S.statusid = 3                        #3 means scheduled
