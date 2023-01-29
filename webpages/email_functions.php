@@ -123,7 +123,7 @@ function renderQueueEmail($goodCount, $arrayOfGood, $badCount, $arrayOfBad) {
     $title = "Results of Queueing Email";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, true);
     echo "<p>$goodCount message(s) were queued for email transmission.<br>\n";
     echo "$badCount message(s) failed.</p>\n";
     echo "<p>List of messages successfully queued:<br>\n";
@@ -189,7 +189,7 @@ function render_verify_email($email, $email_verify, $message_warning) {
     echo "  <div class=\"text-right\">";
     echo "    <button class=\"btn btn-outline-primary\" type=\"submit\" name=\"navigate\" value=\"goback\">Go Back</button>\n";
     echo "    <button class=\"btn btn-primary\" type=\"submit\" name=\"navigate\" value=\"send\">Send</button>\n";
-    echo "  </div>"; 
+    echo "  </div>";
     echo "</div>";
     echo "</div></form></div>\n";
     staff_footer();
@@ -200,7 +200,7 @@ function render_send_email_engine($email, $message_warning) {
     $title = "Pretend to actually send email.";
     require_once('StaffHeader.php');
     require_once('StaffFooter.php');
-    staff_header($title);
+    staff_header($title, true);
 
     if (strlen($message_warning) > 0) {
         echo "<p class=\"message_warning\">$message_warning</p>\n";
@@ -276,7 +276,7 @@ SELECT
             POS.badgeid IN ($badgeidList)
 $extraWhereClause
     ORDER BY
-        POS.badgeid, 
+        POS.badgeid,
         SCH.starttime;
 EOD;
     $result = mysqli_query_exit_on_error($query);
