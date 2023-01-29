@@ -4,7 +4,7 @@
     require_once ('StaffSearchPreviousSessions_FNC.php');
     global $SessionSearchParameters, $message_error, $message, $title;
     $title="Show Previous Sessions";
-    staff_header($title);
+    staff_header($title, true);
     if (!HandleSearchParameters()) {    // Grab the parameters and validate them
         RenderSearchPreviousSessions(); // Will display error message and redisplay form
         staff_footer();
@@ -16,7 +16,6 @@
         exit();
     }
     RenderSearchPreviousSessions();
-    echo "<hr>\n";
     RenderSearchPrevSessionResults();
     staff_footer();
 ?>

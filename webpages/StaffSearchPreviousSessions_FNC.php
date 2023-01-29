@@ -21,20 +21,22 @@ function RenderSearchPreviousSessions() {
     }
 ?>
 
-    <form method="POST" action="ShowPreviousSessions.php" class="well form-inline">
+    <div class="card">
+        <div class="card-body">
+    <form method="POST" action="ShowPreviousSessions.php">
         <fieldset>
             <p>Use this page to search for session records from previous cons to import to the current list of
                 sessions.</p>
-            <div class="row-fluid">
-                <div class="span2">
+            <div class="row">
+                <div class="col-md-3 form-group">
                     <label for="currenttrack" class="control-label">Current Track: </label>
-                    <select name="currenttrack" class="xspan2">
+                    <select name="currenttrack" class="xspan2 form-control">
                         <?php populate_select_from_table("Tracks", $SessionSearchParameters['currenttrack'], "Any", true); //$table_name, $default_value, $option_0_text, $default_flag ?>
                     </select>
                 </div>
-                <div class="span2">
+                <div class="col-md-3 form-group">
                     <label for="previoustrack" class="control-label">Obsolete Track: </label>
-                    <select name="previoustrack" class="xspan2">
+                    <select name="previoustrack" class="xspan2 form-control">
                         <?php $query = <<<EOD
 SELECT
         CONCAT(PC.previousconid,"a",PCT.previoustrackid),
@@ -51,21 +53,23 @@ EOD;
                         populate_select_from_query($query, $SessionSearchParameters['previouscontrack'], "ANY", true); ?>
                     </select>
                 </div>
-                <div class="span2">
+                <div class="col-md-3 form-group">
                     <label class="control-label" for="previouscon">Previous Con: </label>
-                    <select name="previouscon" class="xspan2">
+                    <select name="previouscon" class="xspan2 form-control">
                         <?php populate_select_from_table("PreviousCons", $SessionSearchParameters['previouscon'], "Any", true); //$table_name, $default_value, $option_0_text, $default_flag ?>
                     </select>
                 </div>
-                <div class="span2">
+                <div class="col-md-3 form-group">
                     <label class="control-label" for="type">Type: </label>
-                    <select name="type" class="xspan2">
+                    <select name="type" class="xspan2 form-control">
                         <?php populate_select_from_table("Types", $SessionSearchParameters['type'], "Any", true); //$table_name, $default_value, $option_0_text, $default_flag ?>
                     </select>
                 </div>
-                <div class="span2">
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
                     <label class="control-label" for="status">Status: </label>
-                    <select name="status" class="xspan2">
+                    <select name="status" class="xspan2 form-control">
                         <?php $query = <<<EOD
 SELECT
         ST.statusid,
@@ -80,26 +84,26 @@ EOD;
                         populate_select_from_query($query, $SessionSearchParameters['status'], "ANY", true); ?>
                     </select>
                 </div>
+                <div class="col-md-6 form-group">
+                    <label class="control-label" for="title">Title: </label>
+                    <input class="form-control" type="text" name="title" size="40" value="<?php echo $SessionSearchParameters['title']; ?>">
+                    <small class="form-text text-muted">Enter a word or phrase for which to search. Leave blank for any.</small>
+                </div>
             </div>
-            <br/>
-            <div class="row-fluid">
-                <label class="control-label" for="title">Title: </label>
-                <input type="text" name="title" size="40" value="<?php echo $SessionSearchParameters['title']; ?>">
-                <span class="help-inline">Enter a word or phrase for which to search. Leave blank for any.</span>
-            </div>
-            <br/>
-            <div class="row-fluid">
-                <label class="checkbox">
-                    <input type="checkbox" name="showimported" <?php echo $SessionSearchParameters['showimported'] ? 'checked' : ''; ?>>
+            <div class=" form-group form-check">
+                <input id="showimported" class="form-check-input" type="checkbox" name="showimported" <?php echo $SessionSearchParameters['showimported'] ? 'checked' : ''; ?>>
+                <label for="showimported" class="form-check-label">
                     Include in results the sessions which have been imported already.
                 </label>
             </div>
             <br/>
-            <div class="row-fluid">
+            <div class="">
                 <button type="submit" class="btn btn-primary" value="search">Search</button>
             </div>
         </fieldset>
     </form>
+</div>
+</div>
 <?php
 } // End of RenderSearchPreviousSessions()
 
@@ -157,7 +161,7 @@ function HandleSearchParameters() {
     $message_error = '';
     return (true);
 } // End of HandleSearchParameters()
-    
+
 function PerformPrevSessionSearch () {
     global $SessionSearchParameters, $message_error,$message,$result,$linki;
     $query= <<<EOD
@@ -227,28 +231,26 @@ function RenderSearchPrevSessionResults() {
     $result_array = array();
     while ($result_array[] = mysqli_fetch_array($result, MYSQLI_ASSOC)) ;
     array_pop($result_array);
-    echo "<div class=\"row-fluid\"><form method=POST action=\"SubmitImportSessions.php\" class=\"form-horizontal\">\n";
+    echo "<div class=\"card mt-4\"><div class=\"card-body\"><form method=POST action=\"SubmitImportSessions.php\" class=\"form-horizontal\">\n";
     echo "<div class=\"clearfix\"><button type=submit class=\"btn btn-primary pull-right\" value=\"submitimport\">Import</button></div>\n";
-    echo "<table class=\"table-condensed\">\n";
+    echo "<table class=\"table table-sm\">\n";
     foreach ($result_array as $resultrowindex => $resultrow) {
-        echo "<tr><td colspan=6><hr style='margin: 0;'/></td></tr>\n";
-        echo "<tr><td rowspan=3>&nbsp;</td>";
-        echo "<td colspan=5><strong>" . htmlspecialchars($resultrow['title'], ENT_NOQUOTES) . "<strong></td></tr>\n";
+        echo "<tbody><tr><th colspan=5>" . htmlspecialchars($resultrow['title'], ENT_NOQUOTES) . "</th></tr>\n";
         echo "<tr><td><label class=\"checkbox\"><input type=\"checkbox\" name=\"import$resultrowindex\"";
         if ($resultrow['importedsessionid'] != '') {
             echo " disabled checked";
         }
-        echo ">Import</label>";
+        echo "> Import</label>";
         echo "<input type=\"hidden\" name=\"previousconid$resultrowindex\" value=\"{$resultrow['previousconid']}\">";
         echo "<input type=\"hidden\" name=\"previoussessionid$resultrowindex\" value=\"{$resultrow['previoussessionid']}\"></td>";
         echo "<td><span class=\"label\">{$resultrow['trackname']}</span></td>";
         echo "<td><span class=\"label\">{$resultrow['typename']}</span></td>";
         echo "<td><span class=\"label\">{$resultrow['statusname']}</span></td>";
         echo "<td><span class=\"label label-info\">{$resultrow['previousconname']}</span></td></tr>\n";
-        echo "<td colspan=5 class=\"padding2000\">" . htmlspecialchars($resultrow['progguiddesc'], ENT_NOQUOTES) . "</td></tr>\n";
+        echo "<td colspan=5 class=\"padding2000\">" . htmlspecialchars($resultrow['progguiddesc'], ENT_NOQUOTES) . "</td></tr></tbody>\n";
     }
     echo "<input type=\"hidden\" name=\"lastrownum\" value=\"$resultrowindex\">\n";
-    echo "</table><hr /><div class=\"clearfix\"><button type=submit class=\"btn btn-primary pull-right \" value=\"submitimport\">Import</button></div></form>\n";
+    echo "</table><hr /><div class=\"clearfix\"><button type=submit class=\"btn btn-primary pull-right \" value=\"submitimport\">Import</button></div></form></div></div>\n";
 }  // End of RenderSearchPrevSessionResults()
 
 function ProcessImportSessions() {
