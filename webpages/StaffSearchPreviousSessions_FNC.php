@@ -232,7 +232,7 @@ function RenderSearchPrevSessionResults() {
     while ($result_array[] = mysqli_fetch_array($result, MYSQLI_ASSOC)) ;
     array_pop($result_array);
     echo "<div class=\"card mt-4\"><div class=\"card-body\"><form method=POST action=\"SubmitImportSessions.php\" class=\"form-horizontal\">\n";
-    echo "<div class=\"clearfix\"><button type=submit class=\"btn btn-primary pull-right\" value=\"submitimport\">Import</button></div>\n";
+    echo "<div class=\"py-3\"><button type=submit class=\"btn btn-primary pull-right\" value=\"submitimport\">Import</button></div>\n";
     echo "<table class=\"table table-sm\">\n";
     foreach ($result_array as $resultrowindex => $resultrow) {
         echo "<tbody><tr><th colspan=5>" . htmlspecialchars($resultrow['title'], ENT_NOQUOTES) . "</th></tr>\n";
