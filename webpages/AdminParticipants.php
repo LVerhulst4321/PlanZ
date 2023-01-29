@@ -279,7 +279,7 @@ if (HTML_BIO === TRUE) {
 ?>
               <div class="form-group">
                 <label for="bio" class="">Participant biography:</label>
-                <textarea class="form-control" id="bio" class="mycontrol" rows="4" cols="80" readonly="readonly" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
+                <textarea class="form-control mycontrol" id="bio" rows="4" cols="80" data-maxlength="<?php echo MAX_BIO_LEN?>"></textarea>
               </div>
 
 <?php
