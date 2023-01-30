@@ -21,15 +21,15 @@
         $showbio = 1;
     }
 
-    staff_header($title);
+    staff_header($title, true);
 
 ?>
 
-<p> This tool creates the KonOpas database files to update the KonOpas schedule.</p>
-<p> It also creates the ConClár database files to update the ConClár schedule.</p>
-<br>
-<br>
-<br>
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <p> This tool creates the KonOpas database files to update the KonOpas schedule.</p>
+            <p class="mb-5"> It also creates the ConClár database files to update the ConClár schedule.</p>
 
 <?php
 
@@ -133,7 +133,7 @@
         fclose($resultsFileProd);
         fclose($resultsFileTest);
         echo('<p>The ConClár data file was created.' . "\n");
-        
+
     }
     if (empty($results)) {
         $message_error = "StaffCreateKonOpas.php: retrieveKonOpasData() did not return expected result or error indicator.";
@@ -192,13 +192,12 @@
 
 ?>
 
-<br>
-<br>
-<p> It will take roughly 5-10 minutes for the data to appear in the KonOpas app.</p>
-<p> Data shows up right away in the ConClár app, but the user will need to do a refresh.</p>
-<br>
-<br>
-<br>
+            <p class="mt-5"> It will take roughly 5-10 minutes for the data to appear in the KonOpas app.</p>
+            <p> Data shows up right away in the ConClár app, but the user will need to do a refresh.</p>
+
+        </div>
+    </div>
+</div>
 
 <?php
 
