@@ -1,7 +1,7 @@
 <?php
 // Copyright (c) 2019-2022 Leane Verhulst. All rights reserved. See copyright document for more details.
 
-global $linki, $participant, $message_error, $message2, $congoinfo;
+global $linki, $badgeid, $participant, $message_error, $message2, $congoinfo;
 $title = "Personal Details";
 require('PartCommonCode.php'); // initialize db; check login;
 require_once('ParticipantHeader.php');
