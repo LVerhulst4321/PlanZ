@@ -4,7 +4,7 @@
 function renderMyDetails ($title, $error, $message, $dayjob, $accessibilityissues, $ethnicity, $gender, $sexualorientation, $agerangeid, $pronounid, $pronounother) {
 
     participant_header($title, false, 'Normal', true);
-
+    
     echo("<div class=\"container mt-2\">");
 
     if ($error) {
@@ -21,8 +21,7 @@ function renderMyDetails ($title, $error, $message, $dayjob, $accessibilityissue
     echo "<h5>" . CON_NAME . " Optional Demographic Details</h5>\n";
     echo "</div>";
     echo "<div class=\"card-body\">";
-    echo CON_NAME;
-    echo " is committed to diverse panelist representation on our program items. To help us do that, please consider filling in the following OPTIONAL items of demographic information. All answers will be kept strictly confidential.";
+    echo fetchCustomText('personal_details_intro');
     echo "</div>";
     echo "</div>";
 

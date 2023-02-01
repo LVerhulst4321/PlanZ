@@ -6,6 +6,7 @@ $title = "Personal Details";
 require('PartCommonCode.php'); // initialize db; check login;
 require_once('ParticipantHeader.php');
 require_once('renderMyDetails.php');
+populateCustomTextArray();
 // set $badgeid from session
 $query = <<<EOB
 SELECT
