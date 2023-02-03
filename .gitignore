@@ -24,3 +24,6 @@ webpages/participant_photos/*.webp
 private/
 upload_photos/
 
+#Exclude devtools folders.
+.ddev
+.vscode
