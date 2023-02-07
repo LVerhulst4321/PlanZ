@@ -309,7 +309,7 @@ function perform_search() {
     $json_return = array ();
     $regTypeField = USE_REGTYPE_DESCRIPTION ? "COALESCE(RT.message, CD.regtype) AS regtype" : "CD.regtype";
 
-    if (is_numeric($searchString)) {    
+    if (is_numeric($searchString)) {
         if (DBVER >= "8") {
             $query = <<<EOD
 WITH AnsweredSurvey(participantid, answercount) AS (

@@ -78,7 +78,22 @@ define("REGISTRATION_URL", "");
 define("USE_REGTYPE_DESCRIPTION", FALSE);
         // False -> Display regtype field as registration type - name of registration type in regtype.
         // True -> Display RegTypes.message - registration type code in regtype, description in message field.
-define("USE_PRONOUNS", TRUE); // let participants specify their pronouns
+
+define("USE_DAY_JOB", TRUE); // Let participants specify their daytime occupation on Personal Details page.
+define("LABEL_DAY_JOB", "Day Job:"); // Label for daytime occupation.
+define("USE_AGE_RANGE", TRUE); // Let participants specify their age group.
+define('LABEL_AGE_RANGE', "Age Range:"); // Label for age group.
+define("USE_ETHNICITY", TRUE); // Let participants specify their ethnicity.
+define('LABEL_ETHNICITY', "Race/Ethnicity:"); // Label for ethnicity.
+define("USE_ACCESSIBILITY", TRUE); // Let participants specify their accessibility issues.
+define('LABEL_ACCESSIBILITY', "Do you have any accessibility issues that we should be aware of?"); // Label for accessibility issues.
+define("USE_GENDER", TRUE); // Let participants specify their gender.
+define('LABEL_GENDER', "Gender:"); // Label for gender on Personal Details page.
+define("USE_SEXUAL_ORIENTATION", TRUE); // Let participants specify their sexual orientation.
+define('LABEL_SEXUAL_ORIENTATION', "Sexual Orientation:"); // Label for sexual orientation.
+define("USE_PRONOUNS", TRUE); // Let participants specify their pronouns on Personal Details page.
+define("LABEL_PRONOUNS_ARE", "My pronouns are:"); // Label for pronouns drop-down.
+define("LABEL_PRONOUNS_OTHER", "If you selected \"other\" for your pronouns, provide your pronouns here:"); // Label for "other" pronouns.
 define("REG_PART_PREFIX", ""); // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
 define("REG_PART_DIGITS", 4); // only needed for USE_REG_SYSTEM = FALSE; number of digits to pad counter; if number has fewer than specified digits, will left pad with zeros
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
@@ -125,4 +140,6 @@ define("REPORT_INCLUDE_DIRECTORY", "/var/data/planz/");  // outside of web serve
 define("PUBLIC_NEW_USER", FALSE); // allow new user creation from login screen
 
 define("CONFIRM_SESSION_ASSIGNMENT", TRUE); // Ask participants to confirm their assignments
+
+
 ?>

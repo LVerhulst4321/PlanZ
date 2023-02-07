@@ -57,7 +57,6 @@ document.addEventListener( "DOMContentLoaded", function () {
          *
          * Session History -- SessionHistory.js
          * Invite Participants -- InviteParticipants.js
-         * (Staff) Assign Participants -- StaffAssignParticipants.js
          * Maintain Room Schedule -- MaintainRoomSched.js
          */
     }

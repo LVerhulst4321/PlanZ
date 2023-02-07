@@ -12,8 +12,6 @@ if (!may_I('my_gen_int_write')) {
     exit();
 }
 
-$newrow = $_POST["newrow"];
-
 $dayjob = getString("dayjob");
 $accessibilityissues = getString("accessibilityissues");
 $ethnicity = getString("ethnicity");

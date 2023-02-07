@@ -55,6 +55,7 @@ var $nextBTN = null;
 var searchIndex = 0;
 var badgeList = null;
 var searchCount = -1;
+var avatar = null;
 
 function isDirty(override) {
     //called when user clicks "Search for participants" on the page
@@ -107,7 +108,7 @@ function chooseParticipant(badgeid, override) {
         if ($prevBTN)
             $prevBTN.disabled = searchIndex < 1;
         if ($nextBTN)
-            $nextBTN.disabled = searchIndex == (badgeList.length - 1);   
+            $nextBTN.disabled = searchIndex == (badgeList.length - 1);
     }
     $("#badgeid").val($("#bidSPAN_" + badgeidJQSel).text());
     var lastname = $("#lastnameHID_" + badgeidJQSel).val();
@@ -138,6 +139,12 @@ function chooseParticipant(badgeid, override) {
     var sortedpubsname = $("#spnameHID_" + badgeidJQSel).val();
     $sortedpubsname.val(sortedpubsname).prop("defaultValue", sortedpubsname).prop("readOnly", false);
     var regtype = $("#regtypeHID_" + badgeidJQSel).val();
+    let photo = $("#approvedphotofilenameHID_" + badgeidJQSel).val();
+    if (photo) {
+        $avatar.attr("src", $avatar.attr("data-basedir") + photo);
+    } else {
+        $avatar.attr("src", $avatar.attr("data-default"));
+    }
     $('#regtype').html(regtype);
     $('#warnName').html(pubsname);
     $('#warnNewBadgeID').html(badgeid);
@@ -149,7 +156,7 @@ function chooseParticipant(badgeid, override) {
     $interested.prop("disabled", false);
     var bio = $("#bioHID_" + badgeidJQSel).val();
     var htmlbio = $("#htmlbioHID_" + badgeidJQSel).val();
-    if (htmlbioused) 
+    if (htmlbioused)
         $htmlbio.val(htmlbio);
     else
         $bio.prop("readOnly", false);
@@ -181,7 +188,6 @@ function chooseParticipant(badgeid, override) {
     $("#resultBoxDIV").html("").hide();
     $passwordsDontMatch.hide();
     var answercount = $("#answercountHID_" + badgeidJQSel).val();
-    console.log(answercount);
     if (answercount > 0) {
         $showSurveyDiv.show();
         $showSurveyBtn.prop("disabled", false);
@@ -300,9 +306,14 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     $interested.val(originalInterested);
     $interested.prop("disabled", false);
     $bio.val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio"));
-    if (htmlused) {
+    if (htmlbioused) {
         $htmlbio.val(node.getAttribute("htmlbio")).prop("defaultValue", node.getAttribute("htmlbio"));
         startTinymce();
+    }
+    if (node.getAttribute("approvedphotofilename")) {
+        $avatar.attr("src", $avatar.attr("data-basedir") + node.getAttribute("approvedphotofilename"));
+    } else {
+        $avatar.attr("src", $avatar.attr("data-default"));
     }
     $staffnotes.val(node.getAttribute("staff_notes")).prop("defaultValue", node.getAttribute("staff_notes")).prop("readOnly", false);
     $password.prop("readOnly", false);
@@ -385,6 +396,7 @@ function initializeAdminParticipants() {
     //debugger;
     $interested = $("#interested");
     $bio = $("#bio");
+    $avatar = $("#participantAvatar");
     $htmlbio = $("#htmlbio");
     if ($htmlbio)
         htmlbioused = true;
@@ -767,21 +779,21 @@ function writeSearchResults(data, textStatus, jqXHR) {
     } catch (error) {
         console.log(error);
     }
-    console.log(data_json);
- 
+//    console.log(data_json);
+
     $("#searchResultsDIV").html(data_json["HTML"]).show('fast');
     $('#searchPartsBUTN').button('reset');
     searchCount = data_json["rowcount"];
     if (searchCount > 1) {
         if ($prevBTN) {
-            $prevBTN.style.display = "block";
+            $prevBTN.style.display = "inline-block";
             $prevBTN.disabled = true;
         }
         else
             $prevBTN.style.display = "none";
 
         if ($nextBTN) {
-            $nextBTN.style.display = "block";
+            $nextBTN.style.display = "inline-block";
             $nextBTN.disabled = false;
         }
         else

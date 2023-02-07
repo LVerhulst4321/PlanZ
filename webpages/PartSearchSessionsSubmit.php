@@ -95,13 +95,25 @@ EOD;
 if (($resultXML = mysql_query_XML($queryArray)) === false) {
     RenderError($message_error);
     exit();
-    }
+}
+
+//Run the sessions query to get session ids for the multi collapse class
+if (!$result = mysqli_query_exit_on_error($queryArray["sessions"])) {
+    exit(); // Should have exited already
+}
+$collapse_list = '';
+while ($row = mysqli_fetch_assoc($result)) {
+    $collapse_list .= 'collapse-$row["sessionid"] ';
+}
+
 $paramArray = array();
 $paramArray['may_I'] = may_I('my_panel_interests') ? "1" : "0";
 $paramArray['conName'] = CON_NAME;
 $paramArray["trackIsPrimary"] = TRACK_TAG_USAGE === "TRACK_ONLY" || TRACK_TAG_USAGE === "TRACK_OVER_TAG";
 $paramArray["showTrack"] = TRACK_TAG_USAGE !== "TAG_ONLY";
 $paramArray["showTags"] = TRACK_TAG_USAGE !== "TRACK_ONLY";
+$paramArray["collapse_list"] = $collapse_list;
+
 participant_header($title, false, 'Normal', true);
 echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 RenderXSLT('PartSearchSessionsSubmit.xsl', $paramArray, $resultXML);

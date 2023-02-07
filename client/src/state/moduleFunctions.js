@@ -14,7 +14,7 @@ export function fetchModules() {
             } else {
                 let message = {
                     severity: "danger",
-                    text: "The list of modeules could not be downloaded."
+                    text: "The list of modules could not be downloaded."
                 };
                 store.dispatch(setModules({ list: [] }, message));
             }

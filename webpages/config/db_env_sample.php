@@ -28,6 +28,7 @@ define("ROOT_URL", 'https://' . getenv("HOSTNAME") . '/'); // URL to reach this 
 
 define("ENCRYPT_KEY", ""); // used for encrypting hidden inputs; I suggest finding a random password generator and putting in a 64 character alphanumeric only password
 
+define("CUSTOM_LOGIN_PHP", ""); // Custom login function connected to reg system
 
 
 ?>

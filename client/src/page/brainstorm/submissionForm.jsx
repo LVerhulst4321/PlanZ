@@ -7,6 +7,10 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 
+import store from '../../state/store';
+import { connect } from 'react-redux';
+import { redirectToLogin } from '../../common/redirectToLogin';
+
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -14,10 +18,6 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
-
-import store from '../../state/store';
-import { connect } from 'react-redux';
-import { redirectToLogin } from '../../common/redirectToLogin';
 
 class SubmissionForm extends Component {
 
@@ -112,7 +112,7 @@ class SubmissionForm extends Component {
                         {options}
                     </Form.Control>
                     <Form.Text className="text-muted">
-                        What kind of session is this? e.g. Panels, Academic, etc. Some divisions might not be accepting submissions right now; 
+                        What kind of session is this? e.g. Panels, Academic, etc. Some divisions might not be accepting submissions right now;
                         see the side bar for information about submission dates.
                     </Form.Text>
                 </Form.Group>
@@ -131,7 +131,7 @@ class SubmissionForm extends Component {
                     <Form.Text className="text-muted">Max 100 words</Form.Text>
                 </Form.Group>
             );
-            
+
         } else if (fieldName === "progguiddesc") {
             return (
                 <Form.Group controlId="progguiddesc" key="progguiddesc-field">
@@ -231,7 +231,7 @@ class SubmissionForm extends Component {
 
     getTrackOptionsForDivisionId(divisionId) {
         let division = null;
-        this.getDivisions().forEach((element) => { if (element.id == divisionId) { division = element; } } );
+        this.getDivisions().forEach((element) => { if (element.id === divisionId) { division = element; } } );
         return division ? division.tracks : [];
     }
 
@@ -294,15 +294,15 @@ class SubmissionForm extends Component {
         if (formName === 'title') {
             return formValue != null && formValue !== '';
         } else if (formName === 'progguiddesc' && this.isAcademic(this.getSelectedDivision())) {
-            return formValue != null && formValue != '' && this.wordCount(formValue) <= 100;
+            return formValue != null && formValue !== '' && this.wordCount(formValue) <= 100;
         } else if (formName === 'progguiddesc') {
-            return formValue != null && formValue != '' && formValue.length <= 500;
+            return formValue != null && formValue !== '' && formValue.length <= 500;
         } else if (formName === 'pocketprogtext') {
-            return formValue != null && formValue != '' && this.wordCount(formValue) <= 500;
+            return formValue != null && formValue !== '' && this.wordCount(formValue) <= 500;
         } else if (formName === 'division') {
-            return formValue != null && formValue != '';
+            return formValue != null && formValue !== '';
         } else if (formName === 'track') {
-            return formValue != null && formValue != '';
+            return formValue != null && formValue !== '';
         } else {
             return true;
         }
@@ -347,7 +347,7 @@ class SubmissionForm extends Component {
                 ...this.state,
                 loading: true
             });
-    
+
             axios.post('/api/brainstorm/submit_session.php', this.getAllFormValues())
             .then(res => {
                 this.setState({

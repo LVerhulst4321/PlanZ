@@ -81,7 +81,7 @@
 
     <xsl:template name="showSessionid">
         <xsl:param name="sessionid" />
-        <a href="StaffAssignParticipants.php?selsess={$sessionid}" title="Edit session participants"><xsl:value-of select="$sessionid" /></a>
+        <a href="assignParticipants.php?sessionId={$sessionid}" title="Edit session participants"><xsl:value-of select="$sessionid" /></a>
     </xsl:template>
 
     <xsl:template name="showSessionTitle">
@@ -95,13 +95,13 @@
         <xsl:param name="roomname" />
         <a href="MaintainRoomSched.php?selroom={$roomid}" title="Maintain room schedule"><xsl:value-of select="$roomname" /></a>
     </xsl:template>
-    
+
     <xsl:template name="showSessionidWithTitle">
         <xsl:param name="sessionid" />
         <xsl:param name="title" />
         <a href="EditSession.php?id={$sessionid}" title="{$title}"><xsl:value-of select="$sessionid" /></a>
     </xsl:template>
-    
+
     <xsl:template name="showSessionHistoryLink">
         <xsl:param name="sessionid" />
         <a href="SessionHistory.php?selsess={$sessionid}" title="Show session history page">History</a>

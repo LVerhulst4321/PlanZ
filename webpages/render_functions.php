@@ -75,10 +75,23 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
     while (list($sessionid, $trackname, $typename, $title, $duration, $estatten, $progguiddesc, $persppartinfo, $starttime, $roomname, $statusname, $taglist, $notesforprog, $notesforpart, $servicenotes, $pubstatusname, $sessionhistory)
         = mysqli_fetch_array($result, MYSQLI_NUM)) {
         $html .= "<tr>\n";
-        $rowSpan = $oneLinePerSession ? "" : "rowspan=\"3\"";
+        $rowSpanCnt = 3;
+        if ($persppartinfo) {
+          $rowSpanCnt++;
+        }
+        if ($notesforprog) {
+          $rowSpanCnt++;
+        }
+        if ($notesforpart) {
+          $rowSpanCnt++;
+        }
+        if ($servicenotes) {
+          $rowSpanCnt++;
+        }
+        $rowSpan = $oneLinePerSession ? "" : "rowspan=\"" . $rowSpanCnt . "\"";
         $html .= "  <th $rowSpan id=\"sessidtcell\">";
         if ($showlinks) {
-            $html .= "<a href=\"StaffAssignParticipants.php?selsess=" . $sessionid . "\">" . $sessionid . "</a>";
+            $html .= "<a href=\"assignParticipants.php?sessionId=" . $sessionid . "\">" . $sessionid . "</a>";
         } else {
             $html .= "$sessionid";
         }
@@ -130,7 +143,6 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
         if ($persppartinfo) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Prospective Participant Info: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($persppartinfo,ENT_NOQUOTES)."</td>";
@@ -138,18 +150,13 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
                 $html .= "</tr>\n";
             }
         } else {
-            if (!$oneLinePerSession) {
-                $html .= "<tr>";
-            }
-            $html .= "<td $colSpan8>&nbsp;</td>\n";
-            if (!$oneLinePerSession) {
-                $html .= "</tr>\n";
+            if ($oneLinePerSession) {
+              $html .= "<td $colSpan8>&nbsp;</td>\n";
             }
         }
         if ($notesforprog) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Notes for Programming Committee: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($notesforprog,ENT_NOQUOTES)."</td>";
@@ -157,18 +164,13 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
                 $html .= "</tr>\n";
             }
         } else {
-            if (!$oneLinePerSession) {
-                $html .= "<tr>";
-            }
-            $html .= "<td $colSpan8>&nbsp;</td>\n";
-            if (!$oneLinePerSession) {
-                $html .= "</tr>\n";
+            if ($oneLinePerSession) {
+                $html .= "<td $colSpan8>&nbsp;</td>\n";
             }
         }
         if ($notesforpart) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Notes for Participants: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($notesforpart,ENT_NOQUOTES)."</td>";
@@ -176,18 +178,13 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
                 $html .= "</tr>\n";
             }
         } else {
-            if (!$oneLinePerSession) {
-                $html .= "<tr>";
-            }
-            $html .= "<td $colSpan8>&nbsp;</td>\n";
-            if (!$oneLinePerSession) {
-                $html .= "</tr>\n";
+            if ($oneLinePerSession) {
+                $html .= "<td $colSpan8>&nbsp;</td>\n";
             }
         }
         if ($servicenotes) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Notes for Tech and Hotel: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($servicenotes,ENT_NOQUOTES)."</td>";
@@ -195,18 +192,13 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
                 $html .= "</tr>\n";
             }
         } else {
-            if (!$oneLinePerSession) {
-                $html .= "<tr>";
-            }
-            $html .= "<td $colSpan8>&nbsp;</td>\n";
-            if (!$oneLinePerSession) {
-                $html .= "</tr>\n";
+            if ($oneLinePerSession) {
+                $html .= "<td $colSpan8>&nbsp;</td>\n";
             }
         }
         if ($sessionhistory) {
             if (!$oneLinePerSession) {
                 $html .= "<tr>";
-                $html .= "<td></td>";
                 $html .= "<td $colSpan2>Session History Notes: </td>";
             }
             $html .= "<td $colSpan6>".htmlspecialchars($sessionhistory,ENT_NOQUOTES)."</td>";
@@ -222,7 +214,9 @@ function RenderPrecisToString($result, $showlinks, $href, $sessionSearchArray, $
                 $html .= "</tr>\n";
             }
         }
-        echo "<tr><td colspan=\"8\" class=\"border0020\">&nbsp;</td></tr>\n";
+        if (!$oneLinePerSession) {
+            echo "<tr><td colspan=\"8\" class=\"border0020\">&nbsp;</td></tr>\n";
+        }
     }
     $html .= "</table>\n";
     $html .= "</div></div>";

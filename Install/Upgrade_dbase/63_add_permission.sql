@@ -7,6 +7,6 @@
 
 
 INSERT INTO Permissions(permatomid, phaseid, permroleid, badgeid)
-VALUES (2, NULL, 1 NULL);
+VALUES (2, NULL, 1, NULL);
 
 INSERT INTO PatchLog (patchname) VALUES ('63_add_permission.sql');

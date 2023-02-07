@@ -8,6 +8,8 @@ staff_header($title, $bootstrap4);
 $message = "";
 $alerttype = "success";
 $submittype = "";
+$SurveyUsed = USING_SURVEYS === TRUE ? TRUE : FALSE;
+
 if(may_I("Staff")) {
     $query = [];
     $query['participants'] = <<<EOD
@@ -45,15 +47,18 @@ SELECT
         T.trackname, S.sessionid, S.title;
 EOD;
 
-    // check for any survey stuff defined, before doing survey queries
-    $sql = "SELECT COUNT(*) AS questions FROM SurveyQuestionConfig WHERE searchable = 1;";
-    $result = mysqli_query_exit_on_error($sql);
-    $row = mysqli_fetch_assoc($result);
-    if ($row)
-        $SurveyUsed = $row["questions"]  > 0;
-    else
-        $SurveyUsed = false;
-    mysqli_free_result($result);
+    //if survey flag is turned on, then do a further check
+    if ($SurveyUsed) {
+        // check for any survey stuff defined, before doing survey queries
+        $sql = "SELECT COUNT(*) AS questions FROM SurveyQuestionConfig WHERE searchable = 1;";
+        $result = mysqli_query_exit_on_error($sql);
+        $row = mysqli_fetch_assoc($result);
+        if ($row)
+            $SurveyUsed = $row["questions"]  > 0;
+        else
+            $SurveyUsed = false;
+        mysqli_free_result($result);
+    }
 
     if ($SurveyUsed) {
         // get searchable survey response options

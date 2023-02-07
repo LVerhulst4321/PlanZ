@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import { redirectToLogin } from '../../common/redirectToLogin';
@@ -25,7 +25,7 @@ class AdminModulesPage extends React.Component {
     }
 
     render() {
-        return (       
+        return (
             <div>
                 <SimpleAlert message={this.state.message} />
                 <div className="card mb-3">
@@ -37,7 +37,7 @@ class AdminModulesPage extends React.Component {
                         {this.renderModulesTable()}
                     </div>
                     <div className="card-footer text-right">
-                        <LoadingButton variant="primary" type="button" onClick={() => this.saveChanges()} 
+                        <LoadingButton variant="primary" type="button" onClick={() => this.saveChanges()}
                             enabled={this.state.modules.length !== 0}
                             loading={this.state.loading}>Save</LoadingButton>
                     </div>
@@ -48,7 +48,7 @@ class AdminModulesPage extends React.Component {
 
     renderModulesTable() {
         if (this.props.modules && this.props.modules.list) {
-            const rows = this.props.modules.list.map((m) => { 
+            const rows = this.props.modules.list.map((m) => {
                 let highlight = this.state.modules.indexOf(m.id) >= 0;
                 return (<tr key={'module-' + m.id} className={highlight ? 'highlight' : ''}>
                         <td className="align-middle text-center">{m.id}</td>
@@ -60,7 +60,7 @@ class AdminModulesPage extends React.Component {
                         </td>
                         <td className="align-middle">{m.name}</td>
                         <td className="align-middle">{m.description}</td>
-                    </tr>); 
+                    </tr>);
             });
 
             return (<table className="table table-striped">
@@ -146,7 +146,7 @@ class AdminModulesPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return { 
+    return {
         modules: state.modules || []
     };
 }

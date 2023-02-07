@@ -45,7 +45,7 @@ Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document f
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template match="doc/query[@queryName='schedule']/row" >
         <div class="card my-2 px-1 schedule-card">
             <xsl:choose>
@@ -54,7 +54,7 @@ Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document f
                         <div class="col-0p75">
                             <xsl:choose>
                                 <xsl:when test="$showLinks">
-                                    <a href="StaffAssignParticipants.php?selsess={@sessionid}" >
+                                    <a href="assignParticipants.php?sessionId={@sessionid}" >
                                         <xsl:value-of select="@sessionid" />
                                     </a>
                                 </xsl:when>
@@ -111,7 +111,7 @@ Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document f
                         <div class="col-0p75">
                             <xsl:choose>
                                 <xsl:when test="$showLinks">
-                                    <a href="StaffAssignParticipants.php?selsess={@sessionid}" >
+                                    <a href="assignParticipants.php?sessionId={@sessionid}" >
                                         <xsl:value-of select="@sessionid" />
                                     </a>
                                 </xsl:when>
