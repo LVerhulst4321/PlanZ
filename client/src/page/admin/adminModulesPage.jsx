@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
-import { Alert, Form } from 'react-bootstrap';
+import Alert from 'react-bootstrap/Alert';
+import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import { redirectToLogin } from '../../common/redirectToLogin';

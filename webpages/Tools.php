@@ -47,7 +47,6 @@
     <div class="list-group mt-3 mb-2">
 <?php
     $tools = ToolHelper::getAllTools($linki);
-    error_log("Tools found: " . count($tools));
     foreach ($tools as $tool) {
 ?>
         <div class="list-group-item flex-column align-items-start">
