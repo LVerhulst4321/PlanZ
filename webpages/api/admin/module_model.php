@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/../../db_exceptions.php');
+
 class PlanzModule {
     public $id;
     public $name;
@@ -20,7 +22,7 @@ class PlanzModule {
         SELECT id, name, package_name, description, is_enabled
              FROM module M
            ORDER BY M.name, M.id;
-EOD;        
+EOD;
         $stmt = mysqli_prepare($db, $query);
         return PlanzModule::processSqlStatement($stmt,$query);
     }
@@ -30,7 +32,7 @@ EOD;
         SELECT id, name, package_name, description, is_enabled
           FROM module M
          WHERE is_enabled = 1;
-EOD;        
+EOD;
         $stmt = mysqli_prepare($db, $query);
         return PlanzModule::processSqlStatement($stmt,$query);
     }
@@ -40,7 +42,7 @@ EOD;
            UPDATE module M
               SET is_enabled = ?
             WHERE id = ?;
-EOD;        
+EOD;
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "ii", $value, $this->id);
         if ($stmt->execute()) {
@@ -56,7 +58,7 @@ EOD;
              FROM module M
             WHERE package_name = ?
            ORDER BY M.name, M.id;
-EOD;        
+EOD;
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "s", $packageName);
         $result = PlanzModule::processSqlStatement($stmt,$query);
@@ -79,15 +81,15 @@ EOD;
             return $result;
         } else {
             throw new DatabaseSqlException("Query could not be executed: $query");
-        }        
+        }
     }
 
     function asJson() {
-        return array("id" => $this->id, 
+        return array("id" => $this->id,
             "name" => $this->name,
             "packageName" => $this->packageName,
             "description" => $this->description,
-            "isEnabled" => $this->isEnabled ? true : false 
+            "isEnabled" => $this->isEnabled ? true : false
         );
     }
 
