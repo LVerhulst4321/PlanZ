@@ -1,5 +1,5 @@
 <?php
-require_once('login_functions.php');
+require_once(__DIR__ . '/login_functions.php');
 //	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "", $bootstrap4 = false) {
     global $header_rendered;

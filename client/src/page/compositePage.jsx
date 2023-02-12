@@ -4,6 +4,7 @@ import BrainstormPage from './brainstorm/brainstormPage';
 import AssignmentsPage from './assignment/assignmentsPage';
 import StaffVolunteerPage from './volunteer/staffVolunteerPage';
 import VolunteerSignUpPage from './volunteer/volunteerSignUpPage';
+import PrintRoomScheduleConfigPage from './tool/printRoomScheduleConfig';
 
 /**
  * Implementing this as a sort-of pauper's version of a Router. We're starting with an
@@ -28,6 +29,8 @@ class CompositePage extends React.Component {
             return (<BrainstormPage />);
         } else if (url.pathname === '/assignParticipants.php') {
             return (<AssignmentsPage />);
+        } else if (url.pathname === '/printRoomScheduleConfig.php') {
+            return (<PrintRoomScheduleConfigPage />);
         } else {
             return (<h4>Unknown Page</h4>);
         }

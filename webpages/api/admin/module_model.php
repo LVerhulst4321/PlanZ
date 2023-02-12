@@ -17,6 +17,51 @@ class PlanzModule {
         $this->isEnabled = $isEnabled;
     }
 
+    // Some modules have a "descriptor" to help describe the full feature set
+    // of a module. The Descriptor is implemented in a file that needs to
+    // be "require"-d by any page that uses those functions. This method
+    // provides the name of the file, with the assumption that the file name
+    // follows a pattern that can be derived from the package name.
+    public function getDescriptorFileName() {
+        return "/module/" . str_replace('.', '/', $this->packageName) . "_module.php";
+    }
+
+    // Some modules have a "descriptor" to help describe the full feature set
+    // of a module. The Descriptor is implemented in a class with a special
+    // naming pattern.
+    public function getDescriptorClassName() {
+        $index = strpos($this->packageName, ".");
+        if ($index > 0) {
+            $namespaceName = substr($this->packageName, 0, $index);
+            if ($namespaceName == "planz") {
+                $namespaceName = 'PlanZ\Module\\';
+            } else {
+                $namespaceName = ucfirst(mb_strtolower($namespaceName)) + '\\';
+            }
+
+            $temp = substr($this->packageName, $index + 1);
+            $className = "";
+            while (strpos($temp, '_') !== false) {
+                $index = strpos($temp, '_');
+                $className .= ucfirst(mb_strtolower(substr($temp, 0, $index)));
+                $temp = substr($temp, $index + 1);
+            }
+            $className .= ucfirst(mb_strtolower($temp));
+
+            return $namespaceName . $className . "Module";
+        } else {
+            return null;
+        }
+    }
+
+    public function getDescriptorClass() {
+        try {
+            return new ReflectionClass($this->getDescriptorClassName());
+        } catch (Exception|Error $e) {
+            // skip it
+        }
+    }
+
     public static function findAll($db) {
         $query = <<<EOD
         SELECT id, name, package_name, description, is_enabled

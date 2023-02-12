@@ -1,16 +1,16 @@
 <?php
 //	Copyright (c) 2011-2020 Peter Olszowka. All rights reserved. See copyright document for more details.
-require_once('error_functions.php');
-require_once('Constants.php');
-require_once('data_functions.php');
-require_once('db_functions.php');
-if (file_exists('custom_functions.php'))
-    include_once('custom_functions.php');
-require_once('render_functions.php');
-require_once('validation_functions.php');
-require_once('HtmlHeader.php');
-require_once('CommonHeader.php');
-require_once('RenderXSLT.php');
+require_once(__DIR__ . '/error_functions.php');
+require_once(__DIR__ . '/Constants.php');
+require_once(__DIR__ . '/data_functions.php');
+require_once(__DIR__ . '/db_functions.php');
+if (file_exists(__DIR__ . '/custom_functions.php'))
+    include_once(__DIR__ . '/custom_functions.php');
+require_once(__DIR__ . '/render_functions.php');
+require_once(__DIR__ . '/validation_functions.php');
+require_once(__DIR__ . '/HtmlHeader.php');
+require_once(__DIR__ . '/CommonHeader.php');
+require_once(__DIR__ . '/RenderXSLT.php');
 if (!isset($title)) {
     $title = "";
 }

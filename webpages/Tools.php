@@ -2,7 +2,6 @@
     global $linki, $title;
     $title = "Tools and Utilities";
     require_once(__DIR__ . '/StaffCommonCode.php');
-    require_once(__DIR__ . '/module_registry.php');
     require_once(__DIR__ . '/tool_model.php');
     require_once(__DIR__ . '/api/admin/module_model.php');
 
@@ -15,14 +14,12 @@
             $modules = PlanzModule::findAllEnabledModules($db);
 
             foreach ($modules as $module) {
-                $fileName = ModuleRegistry::getModuleDescriptorFileName($module->packageName);
+                $fileName = $module->getDescriptorFileName();
                 try {
-                    if (file_exists(__DIR__ . ModuleRegistry::getModuleDescriptorFileName($module->packageName))) {
-                        require_once(__DIR__ . ModuleRegistry::getModuleDescriptorFileName($module->packageName));
+                    if (file_exists(__DIR__ . $fileName)) {
+                        require_once(__DIR__ . $fileName);
 
-                        $className = ModuleRegistry::getModuleDescriptorClassName($module->packageName);
-
-                        $moduleDescriptor = ModuleRegistry::getModuleDescriptor($className);
+                        $moduleDescriptor = $module->getDescriptorClass();
 
                         if ($moduleDescriptor) {
                             $method = $moduleDescriptor->getMethod("getTools");
