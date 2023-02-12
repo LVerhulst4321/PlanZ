@@ -129,7 +129,7 @@ The input_file should have field names in first row.  See add_planz_users_sample
 columns in CongoDump you don't care about, you may skip them entirely including skipping them from the header row. The
 other fields are all required.
 
-##  - Mail relay configuration
+## 7 - Mail relay configuration
 
 If you want to have PlanZ send email for password resets for mailmerges to various groups of users, you
 need to arrange for a mail relay serving and configure PlanZ to connect to it.  Consult the documentation for your
