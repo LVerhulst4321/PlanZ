@@ -1,6 +1,7 @@
 ##
 ## Some cons want to print out the schedule for each (physical) room to
-## to post outside of the door. This is a tool that some
+## to post outside of the door. This is a tool that some cons might use
+## and others will not.
 ##
 ## Created by BC Holmes
 ##
