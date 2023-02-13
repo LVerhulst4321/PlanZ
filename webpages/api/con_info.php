@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/../con_data.php');
+
 class ConInfo {
 
     public $id;
@@ -32,17 +34,17 @@ class ConInfo {
         foreach ($cons as $con) {
             $result[] = $con->asJson();
         }
-        return array("list" => $result);        
+        return array("list" => $result);
     }
 
     public static function findCurrentCon($db, $checkEnvironment = true) {
         $query = <<<EOD
-        SELECT 
+        SELECT
                id, name, con_start_date, con_end_date, perennial_name, website_url
-          FROM 
+          FROM
                current_con;
 EOD;
-       
+
         $stmt = mysqli_prepare($db, $query);
         if (mysqli_stmt_execute($stmt)) {
             $resultSet = mysqli_stmt_get_result($stmt);

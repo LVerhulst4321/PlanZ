@@ -1,8 +1,11 @@
 <?php
-    global $participant, $message_error, $message2, $congoinfo, $title, $linki;
-    $title = "Room Schedule";
-    require_once('StaffCommonCode.php');
-    require_once('schedule_functions.php');
+
+global $participant, $message_error, $message2, $congoinfo, $title, $linki;
+$title = "Room Schedule";
+require_once(__DIR__ . '/StaffCommonCode.php');
+require_once(__DIR__ . '/schedule_functions.php');
+
+require_once(__DIR__ . '/api/con_info.php');
 
 function render_rooms_as_xml($sessions) {
     $xml = new DomDocument("1.0", "UTF-8");
@@ -40,6 +43,7 @@ function render_rooms_as_xml($sessions) {
 
             foreach ($sessionList as $s) {
                 $sessionXml = $xml->createElement("session");
+                $sessionXml->setAttribute("pubsNumber", $s->pubsNumber ? $s->pubsNumber : '');
                 $sessionXml->setAttribute("title", $s->title);
                 $sessionXml->setAttribute("startTime", date_format($s->starttime_unformatted, DISPLAY_24_HOUR_TIME ? "H:i" : "h:i"));
                 $sessionXml->setAttribute("endTime", date_format($s->endtime_unformatted, DISPLAY_24_HOUR_TIME ? "H:i" : "h:i a"));
@@ -56,8 +60,9 @@ function render_rooms_as_xml($sessions) {
 }
 
 $sessions = ScheduledSession::findAllScheduledSessionsWithParticipants($linki);
+$conInfo = ConInfo::findCurrentCon($linki);
 
-$paramArray = array();
+$paramArray = array("conName" => $conInfo->name);
 if (defined('CON_THEME') && CON_THEME !== "") {
     $paramArray['additionalCss'] = CON_THEME;
 }

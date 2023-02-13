@@ -8,6 +8,7 @@ require_once('../../db_exceptions.php');
 require_once('../db_support_functions.php');
 require_once('../../name.php');
 require_once('../../time_slot_functions.php');
+require_once(__DIR__ . "/../../room_model.php");
 
 define("ATTEND_IN_PERSON", 1);
 define("ATTEND_EITHER", 2);
@@ -125,7 +126,7 @@ class Availability {
         $thisStartIndex = time_to_row_index($this->start);
         $thisEndIndex = time_to_row_index($this->end);
 
-        return ($thisStartIndex <= $startIndex && $thisEndIndex >= $startIndex 
+        return ($thisStartIndex <= $startIndex && $thisEndIndex >= $startIndex
             && $thisStartIndex <= $endIndex && $thisEndIndex >= $endIndex);
     }
 }
@@ -200,11 +201,11 @@ class TimeSlot {
     }
 
     function overlaps($timeSlot) {
-        if ($this->startTimeIndex() <= $timeSlot->startTimeIndex() && 
+        if ($this->startTimeIndex() <= $timeSlot->startTimeIndex() &&
             $timeSlot->startTimeIndex() <= $this->endTimeIndex()) {
             // we contain the other start time
             return true;
-        } else if ($this->startTimeIndex() <= $timeSlot->endTimeIndex() && 
+        } else if ($this->startTimeIndex() <= $timeSlot->endTimeIndex() &&
             $timeSlot->endTimeIndex() <= $this->endTimeIndex()) {
             // we contain the other end time
             return true;
@@ -268,12 +269,12 @@ class TimeSlot {
 
 function find_all_interested_participants($db) {
     $query = <<<EOD
-     select P.badgeid, PA.maxprog as overall_max, 
+     select P.badgeid, PA.maxprog as overall_max,
             P.pubsname, CD.badgename, CD.firstname, CD.lastname,
-            PAD.day, PAD.maxprog as day_max 
-        FROM Participants P 
-        JOIN CongoDump CD using (badgeid) 
-        LEFT OUTER JOIN ParticipantAvailability PA using (badgeid) 
+            PAD.day, PAD.maxprog as day_max
+        FROM Participants P
+        JOIN CongoDump CD using (badgeid)
+        LEFT OUTER JOIN ParticipantAvailability PA using (badgeid)
         LEFT OUTER JOIN ParticipantAvailabilityDays PAD using (badgeid)
        WHERE P.interested = 1
          AND P.badgeid in (select badgeid from ParticipantSessionInterest where rank in (1, 2, 3) or willmoderate = 1)
@@ -328,7 +329,7 @@ function find_all_rankings($db, $participants) {
        WHERE ss.may_be_scheduled = 1
          AND (PSI.rank in (1, 2, 3) or PSI.willmoderate = 1)
          AND ps.pubstatusname = 'Public'
-         AND s.divisionid in (select divisionid from Divisions where divisionname = 'Panels') 
+         AND s.divisionid in (select divisionid from Divisions where divisionname = 'Panels')
 EOD;
 
     $stmt = mysqli_prepare($db, $query);
@@ -396,15 +397,15 @@ function find_sessions($db, $numberOfSessions) {
     $query = <<<EOD
         select sessionid, title,
             sum(attend1 * 1.2 + attend2 + attend3 * 0.5) as rank
-        from 
+        from
         (SELECT
                 S.sessionid, S.title, T.trackname, T.display_order,
-                case PSI.attend when 1 then 1 else 0 end as attend1, 
-                case PSI.attend when 2 then 1 else 0 end as attend2, 
-                case PSI.attend when 3 then 1 else 0 end as attend3, 
+                case PSI.attend when 1 then 1 else 0 end as attend1,
+                case PSI.attend when 2 then 1 else 0 end as attend2,
+                case PSI.attend when 3 then 1 else 0 end as attend3,
                 P.badgeid
             FROM
-                Sessions S 
+                Sessions S
                 JOIN Tracks T USING (trackid)
                 JOIN Types Ty USING (typeid)
             LEFT JOIN ParticipantSessionInterest PSI USING (sessionid)
@@ -433,7 +434,7 @@ EOD;
             $session->assignedParticipants = array();
             $sessions[$sessionId] = $session;
         }
- 
+
         mysqli_stmt_close($stmt);
         return $sessions;
     } else {
@@ -483,7 +484,7 @@ EOD;
             $slot->roomName = $row->roomname;
             $slots[] = $slot;
         }
- 
+
         mysqli_stmt_close($stmt);
         return $slots;
     } else {
@@ -504,7 +505,7 @@ function collate_persons_into_sessions($sessions, $participants) {
 function sort_by_number_of_potential_participants($s1, $s2) {
     $diff = count($s1->potentialParticipants) - count($s2->potentialParticipants);
     if ($diff === 0) {
-        return strcmp($s1->sessionId, $s2->sessionId); 
+        return strcmp($s1->sessionId, $s2->sessionId);
     } else {
         return $diff;
     }

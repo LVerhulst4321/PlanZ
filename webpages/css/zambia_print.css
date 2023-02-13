@@ -136,3 +136,13 @@
     font-size: 16pt;
     line-height: 1.2em;
 }
+
+.room-sign .page .con-banner {
+     background: #999;
+    font-weight: bold;
+    font-size: 14pt;
+    color: white;
+    text-align: left;
+    padding: 0.25em 0.5em;
+    border-bottom: 1px solid #333;
+}
