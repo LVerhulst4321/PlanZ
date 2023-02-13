@@ -8,6 +8,7 @@ const PrintRoomScheduleConfigPage = () => {
 
     let [loading, setLoading] = useState(true);
     let [message, setMessage] = useState(null);
+    let [paper, setPaper] = useState("letter");
 
     useEffect(() => {
         axios.get('/api/tool/scheduled_session_count.php')
@@ -53,9 +54,18 @@ const PrintRoomScheduleConfigPage = () => {
             <p>
                 Online "rooms" are omitted from the printout.
             </p>
+            <div className="row">
+                <div className="form-group col-md-4">
+                    <label htmlFor='paper-type'>Paper</label>
+                    <select id="paper-type" className="form-control" value={paper} onChange={(e) => setPaper(e.target.value)} >
+                        <option value="a4">A4</option>
+                        <option value="letter">Letter</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div className="card-footer text-right">
-            <Button variant="primary" onClick={() => {window.open('./printRoomSchedule.php', "_blank");}}>Generate</Button>
+            <Button variant="primary" onClick={() => {window.open('./printRoomSchedule.php?paper=' + paper, "_blank");}}>Generate</Button>
         </div>
     </div></>);
 }

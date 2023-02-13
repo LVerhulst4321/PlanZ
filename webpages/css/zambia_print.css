@@ -10,7 +10,7 @@
 .table-tent .panelists { font-size: 12pt; font-style: italic }
 .table-tent .panelists b { font-size: 12pt; font-style: normal }
 .table-tent .lastnote { font-size: 10pt }
-.table-tent-body {
+.table-tent-body, .room-sign-body {
     margin: 0px;
 }
 .table-tent .page {
@@ -95,6 +95,7 @@
 .room-sign .page {
     box-sizing: border-box;
     overflow: hidden;
+    padding: 2rem;
 }
 .room-sign .page h1 {
     font-weight: bold;
