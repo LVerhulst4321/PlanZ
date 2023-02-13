@@ -1,8 +1,8 @@
 <?php
 //	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-    require_once('CommonCode.php');
-    require_once('StaffHeader.php');
-    require_once('StaffFooter.php');
+    require_once(__DIR__ . '/CommonCode.php');
+    require_once(__DIR__ . '/StaffHeader.php');
+    require_once(__DIR__ . '/StaffFooter.php');
     $badgeid = isset($_SESSION['badgeid']) ? $_SESSION['badgeid'] : null;
     if (!(may_I("Staff"))) {
         global $headerErrorMessage, $returnAjaxErrors;

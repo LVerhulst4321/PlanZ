@@ -1,10 +1,10 @@
 <?php
-    global $participant, $message_error, $message2, $congoinfo, $title;
+    global $participant, $message_error, $message2, $congoinfo, $title, $linki;
     $title = "Table Tents";
     require_once('StaffCommonCode.php');
     require_once('schedule_functions.php');
 
-$xml = get_scheduled_events_with_participants_as_xml();
+$xml = get_scheduled_events_with_participants_as_xml($linki);
 $paramArray = array();
 if (defined('CON_THEME') && CON_THEME !== "") {
     $paramArray['additionalCss'] = CON_THEME;

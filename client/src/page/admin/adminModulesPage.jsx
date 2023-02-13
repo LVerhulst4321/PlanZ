@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import Alert from 'react-bootstrap/Alert';
+import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import { redirectToLogin } from '../../common/redirectToLogin';
@@ -28,6 +29,8 @@ class AdminModulesPage extends React.Component {
         return (
             <div>
                 <SimpleAlert message={this.state.message} />
+                <Alert variant='info'>Modules are optional features of the PlanZ application. Not all cons will want to use these features,
+                    so they may be turned off and on for your instance of PlanZ.</Alert>
                 <div className="card mb-3">
                     <div className="card-header">
                         <h2>Administer Modules</h2>
@@ -51,14 +54,13 @@ class AdminModulesPage extends React.Component {
             const rows = this.props.modules.list.map((m) => {
                 let highlight = this.state.modules.indexOf(m.id) >= 0;
                 return (<tr key={'module-' + m.id} className={highlight ? 'highlight' : ''}>
-                        <td className="align-middle text-center">{m.id}</td>
+                        <td className="align-middle">{m.name}</td>
                         <td className="align-middle">
                             <Form.Control as="select" value={this.getEnabledValue(m)} onChange={(e) => this.setEnabledValue(e.target.value, m)}>
                                 <option value={'false'}>Not enabled</option>
                                 <option value={'true'}>Enabled</option>
                             </Form.Control>
                         </td>
-                        <td className="align-middle">{m.name}</td>
                         <td className="align-middle">{m.description}</td>
                     </tr>);
             });
@@ -66,9 +68,8 @@ class AdminModulesPage extends React.Component {
             return (<table className="table table-striped">
                 <thead>
                     <tr>
-                        <th className="text-center">Id</th>
-                        <th>Status</th>
                         <th>Name</th>
+                        <th>Status</th>
                         <th>Description</th>
                     </tr>
                 </thead>

@@ -2,15 +2,15 @@
     margin-top: 0in;
     margin-bottom: 0in;
     margin-left: 0in;
-    margin-right: 0in;    
+    margin-right: 0in;
 }
 
-.table-tent .panelname { font-weight: bold; font-size: 18pt } 
-.table-tent .paneldescribe { font-size: 14pt; margin-top: 10pt; } 
-.table-tent .panelists { font-size: 12pt; font-style: italic } 
-.table-tent .panelists b { font-size: 12pt; font-style: normal } 
-.table-tent .lastnote { font-size: 10pt } 
-.table-tent-body {
+.table-tent .panelname { font-weight: bold; font-size: 18pt }
+.table-tent .paneldescribe { font-size: 14pt; margin-top: 10pt; }
+.table-tent .panelists { font-size: 12pt; font-style: italic }
+.table-tent .panelists b { font-size: 12pt; font-style: normal }
+.table-tent .lastnote { font-size: 10pt }
+.table-tent-body, .room-sign-body {
     margin: 0px;
 }
 .table-tent .page {
@@ -21,9 +21,17 @@
     height: 8.5in;
     width: 11in;
 }
+.paper-letter .page.portrait {
+    width: 8.5in;
+    height: 11in;
+}
 .table-tent.paper-a4 .page {
     height: 210mm;
     width: 297mm;
+}
+.paper-a4 .page.portrait {
+    width: 210mm;
+    height: 297mm;
 }
 .table-tent.tent-type-fold-2 .front,
 .table-tent.tent-type-fold-2 .back {
@@ -43,43 +51,88 @@
 
 .table-tent .front {
     box-sizing: border-box;
-    display: flex; 
+    display: flex;
     justify-content: center;
     align-items: center;
-    text-align:center; 
+    text-align:center;
     font-weight: bold;
     transform: rotate(-180deg);
     -webkit-transform: rotate(-180deg);
-    -moz-transform: rotate(-180deg); 
+    -moz-transform: rotate(-180deg);
     overflow: hidden;
     padding: 0.75in;
 }
 .table-tent .back {
     box-sizing: border-box;
-    display: flex; 
+    display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     padding: 0.75in;
 }
-.table-tent .title { 
-    font-size: 52pt; 
-    font-weight: bold; 
+.table-tent .title {
+    font-size: 52pt;
+    font-weight: bold;
     line-height:72pt;
     text-align:center;
     margin-top: 0px;
     margin-bottom: 0px;
 }
 .table-tent p { margin-top: 2px; margin-bottom: 2px; }
-.table-tent { 
-    margin-left:auto; 
+.table-tent {
+    margin-left:auto;
     font-family:"Futura Condensed",sans-serif;
-    margin-right:auto; 
+    margin-right:auto;
 }
-.table-tent .panelist { 
-    text-align:center; 
-    line-height:72pt; 
+.table-tent .panelist {
+    text-align:center;
+    line-height:72pt;
     font-size: 80pt;
     margin-top: 0px;
     margin-bottom: 0px;
+}
+
+.room-sign .page {
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 2rem;
+}
+.room-sign .page h1 {
+    font-weight: bold;
+    font-size: 52pt;
+    text-align: center;
+    padding-top: .35in;
+    padding-bottom: .35in;
+    line-height: 1.2em;
+}
+
+.room-sign .page .day {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 22pt;
+    color: #333;
+    border-top: 1px solid #333;
+    background: #eee;
+    padding: 0.3em 0.5em;
+    text-align: center;
+}
+
+.room-sign .page .session-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: baseline;
+}
+
+.room-sign .page .session-row .session-time {
+    width: 20%;
+    font-family: sans-serif;
+    font-size: 14pt;
+    text-align: right;
+}
+
+.room-sign .page .session-row .session-title {
+    font-weight: bold;
+    width: 65%;
+    font-size: 16pt;
+    line-height: 1.2em;
 }
