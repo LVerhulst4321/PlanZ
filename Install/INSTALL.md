@@ -95,16 +95,16 @@ use DemoDbase.dump or SampleDbase.dump.
 
 Checking out the html and php code.
 
-   cd /var/www/public_html
-   git clone https://github.com/leaneverhulst/PlanZed.git planzdemo
+    cd /var/www/public_html
+    git clone https://github.com/leaneverhulst/PlanZed.git planzdemo
 
 ## 4 - Tweak the configuration to use your database and specify other preferences
 
 You want to copy config/db_name_sample.php to config/db_name.php
-and edit it as needed.  In other words, db_name.php should be in the config
-directory of PlanZ.  The file db_functions.php loads this file, so you may edit the
+and edit it as needed.  In other words, `db_name.php` should be in the config
+directory of PlanZ.  The file `db_functions.php` loads this file, so you may edit the
 location if necessary.
-Then copy config/db_env_sample.php to a location outside of the webroot and
+Then copy `config/db_env_sample.php` to a location outside of the webroot and
 have your system administrator set up the variables required in that file. Then
 rename the file to db_env.php and update the location in the db_name.php file.
 
@@ -119,13 +119,13 @@ or whatever your URL is...
 PlanZ can take a feed from a registration system to create and configure users.  However, the
 code for handling that is specific to each registration system and not in the master branch.
 
-There is a script add_planz_users.php in scripts directory to add users.
+There is a script `add_planz_users.php` in scripts directory to add users.
 
 Usage:
 
     php -f add_planz_users.php input_file.csv
 
-The input_file should have field names in first row.  See add_planz_users_sample_input.csv.  If there are one or more
+The input_file should have field names in first row.  See `add_planz_users_sample_input.csv`.  If there are one or more
 columns in CongoDump you don't care about, you may skip them entirely including skipping them from the header row. The
 other fields are all required.
 
@@ -145,10 +145,15 @@ mail relay service and configure the following constants in db_env.php:
 - Likely options for SMTP_PORT are "587", "2525", "25", or "465".
 - Options for SMTP_PROTOCOL are "", "SSL", or "TLS".  Blank/Default is no encryption.
 
-## 8 - Backups are a good thing
+## 8 - Build and Deploy the React Application
+
+Follow the [build instructions](../client/README.md) for building the React application. The resulting `dist/` directory
+needs to be deployed to your server.
+
+## 9 - Backups are a good thing
 
 If you are changing php and html files, I suggest you fork PlanZ on github and commit your changes to your fork.
 
-If you care about dbase content, see backup_mysql and clean_backups in the
+If you care about dbase content, see `backup_mysql` and `clean_backups` in the
 scripts directory.  You'll want to run them or something similar.
 
