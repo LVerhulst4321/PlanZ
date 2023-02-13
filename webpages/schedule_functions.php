@@ -1,11 +1,14 @@
 <?php
 
+require_once(__DIR__ . "/db_exceptions.php");
+
 class ScheduledSession {
     public $title;
     public $sessionid;
     public $progguiddesc;
     public $starttime;
     public $starttime_unformatted;
+    public $endtime_unformatted;
     public $duration;
     public $roomname;
     public $roomid;
@@ -30,6 +33,7 @@ class ScheduledSession {
     SELECT
             S.sessionid, S.title, S.progguiddesc, R.roomname, SCH.roomid, PS.pubstatusname,
             DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%a %l:%i %p') AS starttime,
+            ADDTIME('$ConStartDatim',ADDTIME(SCH.starttime, S.duration)) as endtimeraw,
             ADDTIME('$ConStartDatim',SCH.starttime) as starttimeraw,
             DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
             T.trackname, KC.kidscatname, S.hashtag
@@ -50,24 +54,29 @@ EOD;
 
         $sessions = array();
         $sessionsById = array();
-        $resultSet = mysqli_stmt_get_result($stmt);
-        while ($row = mysqli_fetch_assoc($resultSet)) {
-            $session = new ScheduledSession();
-            $session->title = $row["title"] ?? '';
-            $session->sessionid = $row["sessionid"] ?? '';
-            $session->progguiddesc = $row["progguiddesc"] ?? '';
-            $session->roomname = $row["roomname"] ?? '';
-            $session->trackname = $row["trackname"] ?? '';
-            $session->hashtag = $row["hashtag"] ?? '';
-            $session->starttime = $row["starttime"] ?? '';
-            $session->starttime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row["starttimeraw"] );
-            $session->participants = array();
+        if (mysqli_stmt_execute($stmt)) {
+            $resultSet = mysqli_stmt_get_result($stmt);
+            while ($row = mysqli_fetch_object($resultSet)) {
+                $session = new ScheduledSession();
+                $session->title = $row->title ?? '';
+                $session->sessionid = $row->sessionid ?? '';
+                $session->progguiddesc = $row->progguiddesc ?? '';
+                $session->roomname = $row->roomname ?? '';
+                $session->trackname = $row->trackname ?? '';
+                $session->hashtag = $row->hashtag ?? '';
+                $session->starttime = $row->starttime ?? '';
+                $session->starttime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row->starttimeraw );
+                $session->endtime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row->endtimeraw );
+                $session->participants = array();
 
 
-            $sessions[] = $session;
-            $sessionsById[$session->sessionid] = $session;
+                $sessions[] = $session;
+                $sessionsById[$session->sessionid] = $session;
+            }
+            $stmt->close();
+        } else {
+            throw new DatabaseSqlException("Could not process query: $query1");
         }
-        $stmt->close();
 
 
         $query2 =<<<'EOD'
@@ -87,20 +96,24 @@ EOD;
 EOD;
 
         $stmt = mysqli_prepare($db, $query2);
-        $resultSet = mysqli_stmt_get_result($stmt);
-        while ($row = mysqli_fetch_assoc($resultSet)) {
-            $session = $sessionsById[$row["sessionid"]];
-            if ($session) {
-                $participant = new ScheduledParticipant();
-                $participant->pubsname = $row["pubsname"] ?? '';
-                $participant->moderator = $row["moderator"] ?? '';
-                $participant->badgeid = $row["badgeid"] ?? '';
-                $participant->pronouns = $row["pronouns"] ?? '';
+        if (mysqli_stmt_execute($stmt)) {
+            $resultSet = mysqli_stmt_get_result($stmt);
+            while ($row = mysqli_fetch_assoc($resultSet)) {
+                $session = $sessionsById[$row["sessionid"]];
+                if ($session) {
+                    $participant = new ScheduledParticipant();
+                    $participant->pubsname = $row["pubsname"] ?? '';
+                    $participant->moderator = $row["moderator"] ?? '';
+                    $participant->badgeid = $row["badgeid"] ?? '';
+                    $participant->pronouns = $row["pronouns"] ?? '';
 
-                $session->participants[] = $participant;
+                    $session->participants[] = $participant;
+                }
             }
+            $stmt->close();
+        } else {
+            throw new DatabaseSqlException("Could not process query: $query1");
         }
-        $stmt->close();
 
         $sessionsByBadgeId = array();
         for ($i = (count($sessions) - 1); $i >=0 ; $i--) {
