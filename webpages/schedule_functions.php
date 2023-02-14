@@ -63,6 +63,7 @@ EOD;
                 $session->sessionid = $row->sessionid ?? '';
                 $session->progguiddesc = $row->progguiddesc ?? '';
                 $session->roomname = $row->roomname ?? '';
+                $session->roomid = $row->roomid;
                 $session->trackname = $row->trackname ?? '';
                 $session->hashtag = $row->hashtag ?? '';
                 $session->starttime = $row->starttime ?? '';

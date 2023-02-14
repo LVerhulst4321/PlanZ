@@ -21,7 +21,9 @@ const PrintRoomScheduleConfigPage = () => {
             if (res.data.count === 0) {
                 setMessage({
                     severity: "warning",
-                    text: "No sessions are currently scheduled, so we don't expect anything to be printed."
+                    text: selectedDay
+                        ? "No sessions are scheduled on the selected day, so we don't expect anything to be printed."
+                        : "No sessions are currently scheduled, so we don't expect anything to be printed."
                 });
             } else {
                 setMessage(null);

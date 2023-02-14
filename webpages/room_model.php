@@ -41,6 +41,18 @@ class Room {
         return $height;
     }
 
+    function getLeafChildren() {
+        $result = array();
+        if ($this->children == null || count($this->children) == 0) {
+            $result[] = $this;
+        } else {
+            foreach ($this->children as $child) {
+                $result = array_merge($result, $child->getLeafChildren());
+            }
+        }
+        return $result;
+    }
+
     static function sortInDisplayOrder($r1, $r2) {
         return $r1->displayOrder - $r2->displayOrder;
     }
@@ -79,6 +91,21 @@ class Room {
             }
             $column += ($room->getColumnWidth());
         }
+    }
+
+    static function findRoomById($rooms, $id) {
+        $result = null;
+        foreach ($rooms as $room) {
+            if ($room->roomId == $id) {
+                return $room;
+            } else if ($room->children != null) {
+                $temp = Room::findRoomById($room->children, $id);
+                if ($temp != null) {
+                    return $temp;
+                }
+            }
+        }
+        return $result;
     }
 
     static function findAllRoomsAndCollateParents($db) {

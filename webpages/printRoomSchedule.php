@@ -6,8 +6,9 @@ require_once(__DIR__ . '/StaffCommonCode.php');
 require_once(__DIR__ . '/schedule_functions.php');
 
 require_once(__DIR__ . '/api/con_info.php');
+require_once(__DIR__ . '/room_model.php');
 
-function render_rooms_as_xml($sessions, $selectedDay) {
+function render_rooms_as_xml($sessions, $selectedDay, $roomList) {
     $xml = new DomDocument("1.0", "UTF-8");
     $doc = $xml -> createElement("doc");
     $doc = $xml -> appendChild($doc);
@@ -15,22 +16,28 @@ function render_rooms_as_xml($sessions, $selectedDay) {
     $rooms = array();
 
     foreach ($sessions as $s) {
-        $room = $s->roomname;
-        $day = date_format($s->starttime_unformatted, "l");
+        $room = Room::findRoomById($roomList, $s->roomid);
 
-        if (!array_key_exists($room, $rooms)) {
-            $rooms[$room] = array();
-        }
+        if ($room != null) {
+            foreach ($room->getLeafChildren() as $leaf) {
+                $roomname = $leaf->roomName;
+                $day = date_format($s->starttime_unformatted, "l (d M)");
 
-        $roomDays = $rooms[$room];
-        if (!array_key_exists($day, $roomDays)) {
-            $roomDays[$day] = array($s);
-        } else {
-            $temp = $roomDays[$day];
-            $temp[] = $s;
-            $roomDays[$day] = $temp;
+                if (!array_key_exists($roomname, $rooms)) {
+                    $rooms[$roomname] = array();
+                }
+
+                $roomDays = $rooms[$roomname];
+                if (!array_key_exists($day, $roomDays)) {
+                    $roomDays[$day] = array($s);
+                } else {
+                    $temp = $roomDays[$day];
+                    $temp[] = $s;
+                    $roomDays[$day] = $temp;
+                }
+                $rooms[$roomname] = $roomDays;
+            }
         }
-        $rooms[$room] = $roomDays;
     }
 
     foreach ($rooms as $name => $dayArray) {
@@ -64,6 +71,7 @@ function render_rooms_as_xml($sessions, $selectedDay) {
 
 $sessions = ScheduledSession::findAllScheduledSessionsWithParticipants($linki);
 $conInfo = ConInfo::findCurrentCon($linki);
+$rooms = Room::findAllRoomsAndCollateParents($linki);
 
 $day = array_key_exists("day", $_REQUEST) ? $_REQUEST["day"] : null;
 
@@ -76,5 +84,5 @@ if (array_key_exists("paper", $_REQUEST)) {
     $paramArray['paper'] = mb_strtolower($paper, "utf-8");
 }
 
-RenderXSLT('printRoomSchedule.xsl', $paramArray, render_rooms_as_xml($sessions, $day));
+RenderXSLT('printRoomSchedule.xsl', $paramArray, render_rooms_as_xml($sessions, $day, $rooms));
 ?>
