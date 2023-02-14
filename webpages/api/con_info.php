@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/../con_data.php');
+require_once(__DIR__ . '/format_functions.php');
 
 class ConInfo {
 
@@ -20,9 +21,21 @@ class ConInfo {
         $this->websiteUrl = $websiteUrl;
     }
 
+    public function allConDays() {
+        $result = array();
+        $d = clone $this->startDate;
+        $result[] = $d;
+        while (strcmp(date_format($d, 'Y-m-d'), date_format($this->endDate, 'Y-m-d')) < 0) {
+            $d = (clone $d)->add(new DateInterval('P1D'));
+            $result[] = $d;
+        }
+        return $result;
+    }
+
     function asJson() {
         $result = array("id" => $this->id, "name" => $this->name,
-            "startDate" => $this->startDate, "endDate" => $this->endDate);
+            "startDate" => date_format($this->startDate, "Y-m-d"),
+            "endDate" => date_format($this->endDate, "Y-m-d"));
         if ($this->perennialName != null && $this->websiteUrl != null) {
             $result["links"] = array("website" => array("name" => $this->perennialName, "url" => $this->websiteUrl));
         }
@@ -51,7 +64,10 @@ EOD;
             if (mysqli_num_rows($resultSet) == 1) {
                 $dbobject = mysqli_fetch_object($resultSet);
                 mysqli_stmt_close($stmt);
-                $result = new ConInfo($dbobject->id, $dbobject->name, $dbobject->con_start_date, $dbobject->con_end_date, $dbobject->perennial_name, $dbobject->website_url);
+                $result = new ConInfo($dbobject->id, $dbobject->name,
+                    convert_database_date_no_time_to_date($dbobject->con_start_date),
+                    convert_database_date_no_time_to_date($dbobject->con_end_date),
+                    $dbobject->perennial_name, $dbobject->website_url);
                 return $result;
             } else if ($checkEnvironment) {
                 mysqli_stmt_close($stmt);

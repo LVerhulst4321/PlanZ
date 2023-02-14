@@ -5,21 +5,14 @@ require_once (__DIR__ . '/../../config/db_name.php');
 require_once(__DIR__ . '/../db_support_functions.php');
 require_once(__DIR__ . '/../authentication.php');
 require_once(__DIR__ . '/../http_session_functions.php');
-require_once(__DIR__ . '/../../schedule_functions.php');
+require_once(__DIR__ . '/../con_info.php');
 
-function count_sessions($sessions, $day) {
-    if ($day) {
-        $count = 0;
-        foreach ($sessions as $s) {
-            $formattedDay = date_format($s->starttime_unformatted, 'Y-m-d');
-            if ($formattedDay == $day) {
-                $count = $count + 1;
-            }
-        }
-        return $count;
-    } else {
-        return count($sessions);
+function format_days($days) {
+    $result = array();
+    foreach ($days as $day) {
+        $result[] = array("day" => date_format($day, 'Y-m-d'), "formatted" => date_format($day, "l, d M"));
     }
+    return $result;
 }
 
 $db = connect_to_db(true);
@@ -30,9 +23,8 @@ try {
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         http_response_code(405);
     } else if ($authentication->isProgrammingStaff()) {
-        $day = array_key_exists("day", $_REQUEST) ? $_REQUEST["day"] : null;
-        $sessions = ScheduledSession::findAllScheduledSessionsWithParticipants($db);
-        $result = array("count" => count_sessions($sessions, $day));
+        $conInfo = ConInfo::findCurrentCon($db);
+        $result = array("days" => format_days($conInfo->allConDays()));
 
         header('Content-type: application/json');
         $json_string = json_encode($result);
