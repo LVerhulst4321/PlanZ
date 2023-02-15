@@ -7,6 +7,7 @@ $title = "Time Slots";
 require_once('StaffCommonCode.php'); // Checks for staff permission among other things
 require_once('time_slot_functions.php');
 require_once('schedule_table_renderer.php');
+require_once(__DIR__ . "/room_model.php");
 
 class TimeSlot implements ScheduleCellData {
     public $day;
@@ -86,21 +87,21 @@ class TimeSlotDataProvider implements ScheduleCellDataProvider {
                 break;
             }
         }
-    
+
         return $result;
     }
 
     function filterByDay($day) {
         $result = array();
-    
+
         foreach ($this->timeSlots as $slot) {
             if ($slot->day == $day) {
                 $result[] = $slot;
             }
         }
-    
+
         return $result;
-    }    
+    }
 }
 
 function select_rooms() {

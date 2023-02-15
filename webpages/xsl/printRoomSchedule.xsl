@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="additionalCss" select="''" />
     <xsl:param name="paper" select="'letter'" />
+    <xsl:param name="conName" select="''" />
     <xsl:output encoding="UTF-8" indent="yes" method="html" />
     <xsl:template match="/">
         <html>
@@ -32,13 +33,21 @@
             <xsl:for-each select="day">
                 <div class="page portrait">
                     <div>
+                        <xsl:if test="$conName != ''">
+                            <div class="con-banner"><xsl:value-of select="$conName" /></div>
+                        </xsl:if>
                         <h1 class="title"><xsl:value-of select="../@name" /></h1>
                         <p class="day"><xsl:value-of select="@name" /></p>
                     </div>
                     <xsl:for-each select="session">
                         <div class="session-row">
                             <div class="session-time"><xsl:value-of select="@startTime" />&#8211;<xsl:value-of select="@endTime" /></div>
-                            <div class="session-title"><xsl:value-of select="@title" /></div>
+                            <div class="session-title">
+                                <xsl:if test="@pubsNumber != ''">
+                                    <b><xsl:value-of select="@pubsNumber" />. </b>
+                                </xsl:if>
+                                <xsl:value-of select="@title" />
+                            </div>
                         </div>
                     </xsl:for-each>
                 </div>

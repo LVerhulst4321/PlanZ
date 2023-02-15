@@ -3,22 +3,30 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import SimpleAlert from '../../common/simpleAlert';
+import { redirectToLogin } from '../../common/redirectToLogin';
 
 const PrintRoomScheduleConfigPage = () => {
 
+    let [days, setDays] = useState([]);
+    let [selectedDay, setSelectedDay] = useState("");
     let [loading, setLoading] = useState(true);
     let [message, setMessage] = useState(null);
     let [paper, setPaper] = useState("letter");
 
-    useEffect(() => {
-        axios.get('/api/tool/scheduled_session_count.php')
+    const fetchCount = (day) => {
+        setLoading(true);
+        axios.get('/api/tool/scheduled_session_count.php' + (day ? "?day=" + day : ""))
         .then(res => {
             setLoading(false);
             if (res.data.count === 0) {
                 setMessage({
                     severity: "warning",
-                    text: "No sessions are currently scheduled, so we don't expect anything to be printed."
+                    text: day
+                        ? "No sessions are scheduled on the selected day, so we don't expect anything to be printed."
+                        : "No sessions are currently scheduled, so we don't expect anything to be printed."
                 });
+            } else {
+                setMessage(null);
             }
         })
         .catch(error => {
@@ -27,17 +35,39 @@ const PrintRoomScheduleConfigPage = () => {
             } else {
                 setMessage({
                     severity: "danger",
-                    text: "We've hit a bit of a technical snag trying to get information about that session."
+                    text: "We've hit a bit of a technical snag trying to get some data from the server."
                 });
             }
         });
+    }
+
+
+    useEffect(() => {
+        axios.get('/api/tool/scheduled_session_reference_data.php')
+        .then(res => {
+            setDays(res.data?.days);
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                setMessage({
+                    severity: "danger",
+                    text: "We've hit a bit of a technical snag trying to get some data from the server."
+                });
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        fetchCount();
     }, []);
 
     return (<>
         {loading
         ? (<div className="text-center">
                 <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="sr-only">Loading...</span>
                 </Spinner>
             </div>)
         : null}
@@ -62,10 +92,25 @@ const PrintRoomScheduleConfigPage = () => {
                         <option value="letter">Letter</option>
                     </select>
                 </div>
+
+                <div className="form-group col-md-4">
+                    <label htmlFor='day'>Day</label>
+                    <select id="day" className="form-control" value={selectedDay} onChange={(e) => {
+                        setSelectedDay(e.target.value);
+                        fetchCount(e.target.value);
+                    }}>
+                        <option value="">All days</option>
+                        {days?.map(d => {
+                            return (<option value={d.day} key={d.day}>{d.formatted}</option>);
+                        })}
+                    </select>
+                </div>
             </div>
         </div>
         <div className="card-footer text-right">
-            <Button variant="primary" onClick={() => {window.open('./printRoomSchedule.php?paper=' + paper, "_blank");}}>Generate</Button>
+            <Button variant="primary" onClick={() => {
+                window.open('./printRoomSchedule.php?paper=' + paper + (selectedDay ? "&day=" + encodeURIComponent(selectedDay) : ""), "_blank");
+            }}>Generate</Button>
         </div>
     </div></>);
 }

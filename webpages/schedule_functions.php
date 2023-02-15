@@ -15,6 +15,7 @@ class ScheduledSession {
     public $trackname;
     public $hashtag;
     public $participants;
+    public $pubsNumber;
 
     function participantById($badgeid) {
         $result = null;
@@ -36,7 +37,7 @@ class ScheduledSession {
             ADDTIME('$ConStartDatim',ADDTIME(SCH.starttime, S.duration)) as endtimeraw,
             ADDTIME('$ConStartDatim',SCH.starttime) as starttimeraw,
             DATE_FORMAT(S.duration,'%i') AS durationmin, DATE_FORMAT(S.duration,'%k') AS durationhrs,
-            T.trackname, KC.kidscatname, S.hashtag
+            T.trackname, KC.kidscatname, S.hashtag, S.pubsno
         FROM
                  Sessions S
             JOIN Schedule SCH USING (sessionid)
@@ -62,11 +63,13 @@ EOD;
                 $session->sessionid = $row->sessionid ?? '';
                 $session->progguiddesc = $row->progguiddesc ?? '';
                 $session->roomname = $row->roomname ?? '';
+                $session->roomid = $row->roomid;
                 $session->trackname = $row->trackname ?? '';
                 $session->hashtag = $row->hashtag ?? '';
                 $session->starttime = $row->starttime ?? '';
                 $session->starttime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row->starttimeraw );
                 $session->endtime_unformatted = DateTime::createFromFormat( "Y-m-d H:i:s", $row->endtimeraw );
+                $session->pubsNumber = $row->pubsno;
                 $session->participants = array();
 
 
