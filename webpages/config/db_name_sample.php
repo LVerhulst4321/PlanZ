@@ -64,6 +64,8 @@ define("DEFAULT_USER_PASSWORD", "changeme"); // Note, PlanZ will never directly 
         // create users with a default password, but some external integrations to create users do so.  In that case, PlanZ can
         // identify users with this default password and prompt them to change it as well as report to staff. If your installation
         // does not use a default password, leave this empty ''.
+define("NEW_ACCOUNT_LINK_TIMEOUT", "PT48H"); // How long until new account link expires See https://www.php.net/manual/en/dateinterval.construct.php for format.
+define("NEW_ACCOUNT_LINK_TIMEOUT_DISPLAY", "2 days"); // Text description of NEW_ACCOUNT_LINK_TIMEOUT
 define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag fields are used -- one of 4 following values:
         // "TAG_ONLY" : Track field is not used and will be hidden where possible.
         //      NOTE: TAG_ONLY requires that trackid 1 exist in Tracks, be the hidden track for TAG_ONLY and have selfselect be set to 1 (1, "Tag Based", 10, 1)
