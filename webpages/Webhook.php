@@ -106,15 +106,15 @@ function insert_participant_into_db($data) {
         throw new ClientException("ERR_BADGEID_EXISTS", "badgeid '$data->badgeid' already exists");
     }
 
-    $permrole_placeholders = join(",", array_fill(0, count($data->roles), "?"));
-    $types = str_repeat("s", count($data->roles));
+    $permrole_placeholders = join(",", array_fill(0, count($data->perm_roles), "?"));
+    $types = str_repeat("s", count($data->perm_roles));
     $query = "SELECT COUNT(*) count FROM PermissionRoles WHERE permrolename IN ($permrole_placeholders)";
-    $result = mysqli_query_with_prepare_and_error_handling($query, $types, $data->roles);
+    $result = mysqli_query_with_prepare_and_error_handling($query, $types, $data->perm_roles);
     $row = mysqli_fetch_assoc($result);
     if (!$row) {
         throw new Exception("Error querying for role names");
     }
-    if ($row["count"] != count($data->roles)) {
+    if ($row["count"] != count($data->perm_roles)) {
         throw new ClientException("ERR_ROLE_NOT_EXIST", "One or more roles does not exist");
     }
 
@@ -139,8 +139,8 @@ function insert_participant_into_db($data) {
         throw new Exception("Failed to insert into CongoDump table. Insert updated $rows rows.");
     }
 
-    $types = str_repeat("s", count($data->roles) + 1);
-    $ins_array = [$data->badgeid, ...$data->roles];
+    $types = str_repeat("s", count($data->perm_roles) + 1);
+    $ins_array = [$data->badgeid, ...$data->perm_roles];
     $query = <<<EOD
     INSERT INTO UserHasPermissionRole
         (badgeid, permroleid)
@@ -148,7 +148,7 @@ function insert_participant_into_db($data) {
     EOD;
     $rows = mysql_cmd_with_prepare($query, $types, $ins_array);
     var_dump($ins_array);
-    if (is_null($rows) || $rows !== count($data->roles)) {
+    if (is_null($rows) || $rows !== count($data->perm_roles)) {
         throw new Exception("Failed to insert into CongoDump table. Insert updated $rows rows.");
     }
 }
@@ -244,8 +244,8 @@ function add_participant($data, $ipaddress) {
         throw new ClientException("ERR_MALFORMED_BODY", "Missing required member 'badgename', 'firstname' or 'lastname' in body");
     }
 
-    if (!$data->roles) {
-        throw new ClientException("ERR_MALFORMED_BODY", "Missing required member 'roles' in body");
+    if (!$data->perm_roles) {
+        throw new ClientException("ERR_MALFORMED_BODY", "Missing required member 'perm_roles' in body");
     }
 
     foreach (
@@ -257,8 +257,8 @@ function add_participant($data, $ipaddress) {
         }
     }
 
-    if (!is_array($data->roles) || array_sum(array_map('is_string', $data->roles)) != count($data->roles)) {
-        throw new ClientException("ERR_MALFORMED_BODY", "Member 'roles' must be an array of strings");
+    if (!is_array($data->perm_roles) || array_sum(array_map('is_string', $data->perm_roles)) != count($data->perm_roles)) {
+        throw new ClientException("ERR_MALFORMED_BODY", "Member 'perm_roles' must be an array of strings");
     }
 
     insert_participant_into_db($data);

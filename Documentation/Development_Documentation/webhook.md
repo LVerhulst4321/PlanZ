@@ -75,11 +75,11 @@ and add the header
 If the same client made a request to POST request to
 `https://example.com:8080/web/Webhook.php?action=AddParticipant`
 with the body
-`{"badgeid": "M001", "email": "participant@example.com", "firstname": "Participant", "lastname": "Jones", "badgename": "Participant Jones", "roles": ["Program Participant"]}`
+`{"badgeid": "M001", "email": "joebloggs@example.com", "firstname": "Joe", "lastname": "Bloggs", "badgename": "Joe Bloggs", "perm_roles": ["Program Participant"]}`
 it could compute the signature as
-`hmac("POST\n/web/Webhook.php?action=AddParticipant\neyJiYWRnZWlkIjogIk0wMDEiLCAiZW1haWwiOiAicGFydGljaXBhbnRAZXhhbXBsZS5jb20iLCAiZmlyc3RuYW1lIjogIlBhcnRpY2lwYW50IiwgImxhc3RuYW1lIjogIkpvbmVzIiwgImJhZGdlbmFtZSI6ICJQYXJ0aWNpcGFudCBKb25lcyIsICJyb2xlcyI6IFsiUHJvZ3JhbSBQYXJ0aWNpcGFudCJdfQ==", "super secret")`
+`hmac("POST\n/web/Webhook.php?action=AddParticipant\neyJiYWRnZWlkIjogIk0wMDEiLCAiZW1haWwiOiAiam9lYmxvZ2dzQGV4YW1wbGUuY29tIiwgImZpcnN0bmFtZSI6ICJKb2UiLCAibGFzdG5hbWUiOiAiQmxvZ2dzIiwgImJhZGdlbmFtZSI6ICJKb2UgQmxvZ2dzIiwgInBlcm1fcm9sZXMiOiBbIlByb2dyYW0gUGFydGljaXBhbnQiXX0=", "super secret")`
 and add the header
-`Authorization: Demo 3b8d7a3fc0e352bdbf30a0be49afc1c4d1ff351e4a25f38eebf12d5ce0acdec9`.
+`Authorization: Demo 4fc662c74e34d3886cc97148386808988689fd76b7d4cee292e30d62205493cc`.
 
 ## Actions
 The webhook allows the client to perform several actions, which can be selected
@@ -101,10 +101,10 @@ GET https://example.com:8080/web/Webhook.php?action=GetBadgeIdsForEmail&email=pa
 
 ### Request
 
-| Parameter | Description                                     | Type   | Required | Example                   |
-| --------- | ----------------------------------------------- | ------ | -------- | ------------------------- |
-| action    | The action to perform.                          | string | Yes      | `GetBadgeIdsForEmail`     |
-| email     | The email address to look up the badge ids for. | string | Yes      | `participant@example.com` |
+| Parameter | Description                                     | Type   | Required | Example                 |
+| --------- | ----------------------------------------------- | ------ | -------- | ----------------------- |
+| action    | The action to perform.                          | string | Yes      | `GetBadgeIdsForEmail`   |
+| email     | The email address to look up the badge ids for. | string | Yes      | `joebloggs@example.com` |
 
 ### 200 OK
 
@@ -138,11 +138,11 @@ them a welcome email that asks them to set their password.
 POST https://example.com:8080/web/Webhook.php?action=AddParticipant
 {
   "badgeid": "M001",
-  "email": "participant@example.com",
-  "firstname": "Participant",
-  "lastname": "Jones",
-  "badgename": "Participant Jones",
-  "roles": ["Program Participant"]
+  "email": "joebloggs@example.com",
+  "firstname": "Joe",
+  "lastname": "Bloggs",
+  "badgename": "Joe Bloggs",
+  "perm_roles": ["Program Participant"]
 }
 
 200 OK
@@ -213,7 +213,7 @@ The request body must be a JSON document following the schema below:
       "description": "Country of the participant's postal address.",
       "type": "string"
     },
-    "roles": {
+    "perm_roles": {
       "description": "List of permission roles to assign to the participant. Each must be the name of a participant role configured in PlanZ.",
       "type": "array",
       "items": {
