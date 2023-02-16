@@ -15,30 +15,47 @@ class ClientException extends Exception {
 class AuthorizationException extends Exception { }
 
 function verify_signature() {
-    $headers = apache_request_headers();
-    if (!isset($headers["Authorization"])) {
+    // Some of the paths must use the same error message to avoid leaking
+    // details to the client. For example, if we used a different message for
+    // an unknown client vs an invalid signature, we would leak the client
+    // names.
+    $unauthorized_error_msg = "Unauthorized";
+
+    $headers = array_change_key_case(apache_request_headers(), CASE_LOWER);
+    if (!isset($headers["authorization"])) {
         throw new AuthorizationException("Missing required Authorization header");
     }
-    $auth_header = $headers["Authorization"];
+    $auth_header = $headers["authorization"];
     $auth_header_parts = explode(" ", $auth_header, 3);
 
     if ($auth_header_parts[0] != "PlanZ:1") {
         throw new AuthorizationException("Unknown authentication version " . $auth_header_parts[0]);
     }
 
-    $client_name = $auth_header_parts[1];
-    if (!isset(WEBHOOK_KEYS[$client_name])) {
-        throw new AuthorizationException("Unauthorized");
+    if (!isset($headers["x-planz-requesttime"])) {
+        throw new AuthorizationException("Missing required X-PlanZ-RequestTime header");
     }
 
-    $webhook_data = strtoupper($_SERVER["REQUEST_METHOD"]) . "\n" . $_SERVER["REQUEST_URI"] . "\n";
-    $body_content = "";
-    $body = fopen("php://input" , "r");
-    while (!feof($body)) {
-        $body_content .= fread($body, 4096);
+    $client_name = $auth_header_parts[1];
+    if (!isset(WEBHOOK_KEYS[$client_name])) {
+        throw new AuthorizationException($unauthorized_error_msg);
     }
-    fclose($body);
-    $webhook_data .= base64_encode($body_content);
+
+    $request_time_str = $headers["x-planz-requesttime"];
+    $request_time = DateTimeImmutable::createFromFormat("Ymd\THis\Z", $request_time_str);
+    if (!$request_time) {
+        throw new AuthorizationException("Malformed X-PlanZ-RequestTime header");
+    }
+    $tolerance = new DateInterval(WEBHOOK_TIME_TOLERANCE);
+    $lower_bound = $request_time->sub($tolerance);
+    $upper_bound = $request_time->add($tolerance);
+    $now = new DateTimeImmutable("NOW");
+    // We don't want clients weakening the security by trying to make requests with a timestamp far in the future.
+    if ($now < $lower_bound || $now > $upper_bound) {
+        throw new AuthorizationException("Request authorization has timed out");
+    }
+
+    $webhook_data = strtoupper($_SERVER["REQUEST_METHOD"]) . "\n" . $_SERVER["REQUEST_URI"] . "\n" . $request_time_str . "\n" . base64_encode(file_get_contents("php://input"));
 
     foreach (WEBHOOK_KEYS[$client_name] as $secret) {
         $webhook_sig = hash_hmac("sha256", $webhook_data, $secret);
@@ -47,7 +64,7 @@ function verify_signature() {
         }
     }
     
-    throw new AuthorizationException("Unauthorized");
+    throw new AuthorizationException($unauthorized_error_msg);
 }
 
 function send_error($http_status, $code, $error, $instance=null) {

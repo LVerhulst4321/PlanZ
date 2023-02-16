@@ -13,8 +13,8 @@ called a "webhook key". It combines the key with the request data to create an
 header.
 
 ### Configuring webhook keys
-In `db_env.php`, the `WEBHOOK_KEYS` variable defines the client names and their
-keys. For example:
+In `[db_env.php](webpages/config/db_env_sample.php)`, the `WEBHOOK_KEYS`
+variable defines the client names and their keys. For example:
 
 ```php
 define("WEBHOOK_KEYS", array(
@@ -51,15 +51,27 @@ the signature is
 The method for generating the signature depends on the authorization mechanism.
 Currently the only version supported is "PlanZ:1".
 
-The signature is `hmac(request_method + "\n" + request_uri + "\n" + base64(request body), key)`.
+The PlanZ:1 mechanism requires the client to send an additional header
+`X-PlanZ-RequestTime`. This contains the UTC time that the request was sent in
+the format `YYYYMMDD'T'HHMMSSZ` (e.g. `20230216T174832Z`) The request will
+only be valid if it is processed within 5 minutes either side of that time
+(the window can be configured via `WEBHOOK_TIME_TOLERANCE` in
+`[db_name.php](webpages/config/db_name_sample.php)`).
 
-`request_method` is the uppercase HTTP request method. For example, `GET` or `POST`.
+The signature is
+`hmac(request_method + "\n" + request_uri + "\n" + x_planz_requesttime_header + "\n" + base64(request body), key)`.
+
+`request_method` is the uppercase HTTP request method. For example, `GET` or
+`POST`.
 
 `request_uri` is the path of the request, including query parameters.
 For example, if the request was to
-`https://example.com:8080/web/Webhook.php?action=AddParticipant`,
+`https://example.com:8080/Webhook.php?action=AddParticipant`,
 then the `request_uri` would be
-`/web/Webhook.php?action=AddParticipant`
+`/Webhook.php?action=AddParticipant`
+
+`x_planz_requesttime_header` is the value of the header `X-PlanZ-RequestTime`
+header that the client sent in the request.
 
 `base64(request_body)` is the request body encoded using
 [base64](https://en.wikipedia.org/wiki/Base64) with padding. If there is no
@@ -70,20 +82,21 @@ key as the secret.
 
 For example, if a client called `Demo` had the key `super secret` and made a GET
 request to
-`https://example.com:8080/web/Webhook.php?action=GetBadgeIdsForEmail&email=participant@example.com`,
+`https://example.com:8080/Webhook.php?action=GetBadgeIdsForEmail&email=participant@example.com`
+at 2023-02-16 17:48:32 UTC,
 it would compute the signature as
-`hmac("GET\n/web/Webhook.php?action=GetBadgeIdsForEmail&email=participant@example.com\n", "super secret")`
+`hmac("GET\n/Webhook.php?action=GetBadgeIdsForEmail&email=participant@example.com\n20230216T174832\n", "super secret")`
 and add the header
-`Authorization: PlanZ:1 Demo b2d99a83a7025bcf0e441acb81ab5defde198c51ca1a5332f1809d33b1fab469`.
+`Authorization: PlanZ:1 Demo 4811910949a4c5ce69826c992035b85d26ed7904003cd30d318fcdfa569b2883`.
 
 If the same client made a request to POST request to
-`https://example.com:8080/web/Webhook.php?action=AddParticipant`
-with the body
+`https://example.com:8080/Webhook.php?action=AddParticipant`
+at 2023-02-16 17:48:32 UTC with the body
 `{"badgeid": "M001", "email": "joebloggs@example.com", "firstname": "Joe", "lastname": "Bloggs", "badgename": "Joe Bloggs", "perm_roles": ["Program Participant"]}`
 it could compute the signature as
-`hmac("POST\n/web/Webhook.php?action=AddParticipant\neyJiYWRnZWlkIjogIk0wMDEiLCAiZW1haWwiOiAiam9lYmxvZ2dzQGV4YW1wbGUuY29tIiwgImZpcnN0bmFtZSI6ICJKb2UiLCAibGFzdG5hbWUiOiAiQmxvZ2dzIiwgImJhZGdlbmFtZSI6ICJKb2UgQmxvZ2dzIiwgInBlcm1fcm9sZXMiOiBbIlByb2dyYW0gUGFydGljaXBhbnQiXX0=", "super secret")`
+`hmac("POST\n/Webhook.php?action=AddParticipant\n20230216T174832\neyJiYWRnZWlkIjogIk0wMDEiLCAiZW1haWwiOiAiam9lYmxvZ2dzQGV4YW1wbGUuY29tIiwgImZpcnN0bmFtZSI6ICJKb2UiLCAibGFzdG5hbWUiOiAiQmxvZ2dzIiwgImJhZGdlbmFtZSI6ICJKb2UgQmxvZ2dzIiwgInBlcm1fcm9sZXMiOiBbIlByb2dyYW0gUGFydGljaXBhbnQiXX0=", "super secret")`
 and add the header
-`Authorization: PlanZ:1 Demo 4fc662c74e34d3886cc97148386808988689fd76b7d4cee292e30d62205493cc`.
+`Authorization: PlanZ:1 Demo 8c2942d9bcb9dbcca655998057dcfc5342fed8f2718e3925ba28e4b90d78b22e`.
 
 ## Actions
 The webhook allows the client to perform several actions, which can be selected
@@ -97,7 +110,7 @@ the same email has been used for multiple participants.
 
 ### Example
 ```
-GET https://example.com:8080/web/Webhook.php?action=GetBadgeIdsForEmail&email=participant@example.com
+GET https://example.com:8080/Webhook.php?action=GetBadgeIdsForEmail&email=participant@example.com
 
 200 OK
 {"badgeids": ["M001"]}
@@ -140,7 +153,7 @@ is allowed to do in the UI.
 ### Example
 
 ```
-GET https://example.com:8080/web/Webhook.php?action=GetPermissionRoles
+GET https://example.com:8080/Webhook.php?action=GetPermissionRoles
 
 200 OK
 {
@@ -207,7 +220,7 @@ them a welcome email that asks them to set their password.
 
 ### Example
 ```
-POST https://example.com:8080/web/Webhook.php?action=AddParticipant
+POST https://example.com:8080/Webhook.php?action=AddParticipant
 {
   "badgeid": "M001",
   "email": "joebloggs@example.com",

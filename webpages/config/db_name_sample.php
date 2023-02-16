@@ -143,5 +143,5 @@ define("PUBLIC_NEW_USER", FALSE); // allow new user creation from login screen
 
 define("CONFIRM_SESSION_ASSIGNMENT", TRUE); // Ask participants to confirm their assignments
 
-
+define("WEBHOOK_TIME_TOLERANCE", "PT05M"); // How long to allow signed webhook requests to be considered valid.
 ?>
