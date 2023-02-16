@@ -95,6 +95,33 @@ EOD;
     ));
 }
 
+function get_participant_roles() {
+    $query = <<<EOD
+SELECT
+    permrolename as name,
+    notes
+FROM
+    PermissionRoles;
+EOD;
+    $result = mysqli_query_with_error_handling($query, false);
+    if (!$result) {
+        throw new Exception("Error querying database");
+    }
+
+    $rows = mysqli_num_rows($result);
+    mysqli_data_seek($result, 0);
+    $permrolesarray = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $permrolesarray[] = $row;
+    }
+    mysqli_free_result($result);
+
+    header("Content-Type: application/json; charset=utf-8");
+    echo json_encode(array(
+        "perm_roles" => $permrolesarray
+    ));
+}
+
 function insert_participant_into_db($data) {
     $query = "SELECT 1 FROM Participants WHERE badgeid = ?";
     $result = mysqli_query_with_prepare_and_error_handling($query, "s", array($data->badgeid));
@@ -290,6 +317,9 @@ try {
         case "GetBadgeIdsForEmail":
             $email = get_required_param("email");
             get_badge_id_for_email($email);
+            break;
+        case "GetParticipantRoles":
+            get_participant_roles();
             break;
         case "AddParticipant":
             $ipaddress = $_SERVER['REMOTE_ADDR'];

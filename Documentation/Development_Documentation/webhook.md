@@ -128,6 +128,74 @@ ids.
 }
 ```
 
+## GetPermissionRoles
+
+Gets the permission roles that are configured. These define what the participant
+is allowed to do in the UI.
+
+### Example
+
+```
+GET https://example.com:8080/web/Webhook.php?action=GetPermissionRoles
+
+200 OK
+{
+  "perm_roles": [
+    {
+      "name": "Administrator",
+      "notes": "Reconfigure reports + ???"
+    },
+    {
+      "name": "Staff",
+      "notes": "Can access staff pages"
+    },
+    {
+      "name": "Program Participant",
+      "notes": "Login as Participant"
+    }
+  ]
+}
+```
+
+### Request
+
+| Parameter | Description                                     | Type   | Required | Example              |
+| --------- | ----------------------------------------------- | ------ | -------- | -------------------- |
+| action    | The action to perform.                          | string | Yes      | `GetPermissionRoles` |
+
+
+### 200 OK
+
+The lookup was successful. The body will contain a JSON document with the
+permission roles.
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "type": "object",
+  "properties": {
+    "perm_roles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the permission role.",
+            "type": "string"
+          },
+          "notes": {
+            "description": "A human readable description of what the role enables the user to do.",
+            "type": "string"
+          }
+        },
+        "required": ["name", "notes"]
+      }
+    }
+  },
+  "required": ["perm_roles"]
+}
+```
+
 ## AddParticipant
 
 Adds a participant to the database, gives them the specified roles, and sends
