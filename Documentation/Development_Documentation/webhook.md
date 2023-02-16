@@ -35,17 +35,21 @@ the old key from the config. This allows you to rotate the keys without any
 downtime.
 
 ### Computing the Authorization header
-The client must send an Authorization header that consists of the client name
-and a signature for the request.
+The client must send an Authorization header that consists of the authorization
+mechanism, the client name, and a signature for the request.
 
 For example:
 
 ```
-Authorization: Demo 400250a22286e5372617536d8da39b502726a02dd3a1f347cab43adc037febf9
+Authorization: PlanZ:1 Demo 400250a22286e5372617536d8da39b502726a02dd3a1f347cab43adc037febf9
 ```
 
-Here the client name is "Demo" and the signature is
+Here the authorization mechanism is "PlanZ:1", the client name is "Demo", and
+the signature is
 `400250a22286e5372617536d8da39b502726a02dd3a1f347cab43adc037febf9`.
+
+The method for generating the signature depends on the authorization mechanism.
+Currently the only version supported is "PlanZ:1".
 
 The signature is `hmac(request_method + "\n" + request_uri + "\n" + base64(request body), key)`.
 
@@ -70,7 +74,7 @@ request to
 it would compute the signature as
 `hmac("GET\n/web/Webhook.php?action=GetBadgeIdsForEmail&email=participant@example.com\n", "super secret")`
 and add the header
-`Authorization: Demo b2d99a83a7025bcf0e441acb81ab5defde198c51ca1a5332f1809d33b1fab469`.
+`Authorization: PlanZ:1 Demo b2d99a83a7025bcf0e441acb81ab5defde198c51ca1a5332f1809d33b1fab469`.
 
 If the same client made a request to POST request to
 `https://example.com:8080/web/Webhook.php?action=AddParticipant`
@@ -79,7 +83,7 @@ with the body
 it could compute the signature as
 `hmac("POST\n/web/Webhook.php?action=AddParticipant\neyJiYWRnZWlkIjogIk0wMDEiLCAiZW1haWwiOiAiam9lYmxvZ2dzQGV4YW1wbGUuY29tIiwgImZpcnN0bmFtZSI6ICJKb2UiLCAibGFzdG5hbWUiOiAiQmxvZ2dzIiwgImJhZGdlbmFtZSI6ICJKb2UgQmxvZ2dzIiwgInBlcm1fcm9sZXMiOiBbIlByb2dyYW0gUGFydGljaXBhbnQiXX0=", "super secret")`
 and add the header
-`Authorization: Demo 4fc662c74e34d3886cc97148386808988689fd76b7d4cee292e30d62205493cc`.
+`Authorization: PlanZ:1 Demo 4fc662c74e34d3886cc97148386808988689fd76b7d4cee292e30d62205493cc`.
 
 ## Actions
 The webhook allows the client to perform several actions, which can be selected

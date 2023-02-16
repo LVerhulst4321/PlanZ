@@ -20,9 +20,13 @@ function verify_signature() {
         throw new AuthorizationException("Missing required Authorization header");
     }
     $auth_header = $headers["Authorization"];
-    $auth_header_parts = explode(" ", $auth_header, 2);
-    $client_name = $auth_header_parts[0];
-    
+    $auth_header_parts = explode(" ", $auth_header, 3);
+
+    if ($auth_header_parts[0] != "PlanZ:1") {
+        throw new AuthorizationException("Unknown authentication version " . $auth_header_parts[0]);
+    }
+
+    $client_name = $auth_header_parts[1];
     if (!isset(WEBHOOK_KEYS[$client_name])) {
         throw new AuthorizationException("Unauthorized");
     }
@@ -38,7 +42,7 @@ function verify_signature() {
 
     foreach (WEBHOOK_KEYS[$client_name] as $secret) {
         $webhook_sig = hash_hmac("sha256", $webhook_data, $secret);
-        if ($webhook_sig == $auth_header_parts[1]) {
+        if ($webhook_sig == $auth_header_parts[2]) {
             return;
         }
     }
