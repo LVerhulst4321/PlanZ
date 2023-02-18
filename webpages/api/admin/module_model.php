@@ -36,7 +36,7 @@ class PlanzModule {
             if ($namespaceName == "planz") {
                 $namespaceName = 'PlanZ\Module\\';
             } else {
-                $namespaceName = ucfirst(mb_strtolower($namespaceName)) + '\\';
+                $namespaceName = ucfirst(mb_strtolower($namespaceName)) . '\\';
             }
 
             $temp = substr($this->packageName, $index + 1);
