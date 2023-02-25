@@ -751,7 +751,7 @@ function validateBioCharacterLength() {
     if (bioDirty)
         tinymce.triggerSave();
 
-    count = $htmlbio.val().length;
+    count = $htmlbio.val()?.length;
     if (count <= max_bio_len) // skip the ajax, it can't be longer than the html version
         return true;
 

@@ -289,7 +289,7 @@ if (HTML_BIO === TRUE) {
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="staffnotes" class="">Staff notes re. participant:</label>
-                    <textarea class="form-control" id="staffnotes" rows="6" cols="80" readonly="readonly" class="mycontrol"></textarea>
+                    <textarea class="form-control mycontrol" id="staffnotes" rows="6" cols="80" readonly="readonly"></textarea>
                 </div>
 <?php
 if (HTML_BIO === TRUE) {
