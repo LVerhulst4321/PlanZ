@@ -1,11 +1,12 @@
-import React from 'react';
-import AdminModulesPage from './admin/adminModulesPage';
-import BrainstormPage from './brainstorm/brainstormPage';
-import AssignmentsPage from './assignment/assignmentsPage';
-import StaffVolunteerPage from './volunteer/staffVolunteerPage';
-import VolunteerSignUpPage from './volunteer/volunteerSignUpPage';
-import PrintRoomScheduleConfigPage from './tool/printRoomScheduleConfig';
-import SessionEnumerationConfigPage from './tool/sessionEnumerationConfig';
+import React from "react";
+import AdminModulesPage from "./admin/adminModulesPage";
+import BrainstormPage from "./brainstorm/brainstormPage";
+import AssignmentsPage from "./assignment/assignmentsPage";
+import StaffVolunteerPage from "./volunteer/staffVolunteerPage";
+import VolunteerSignUpPage from "./volunteer/volunteerSignUpPage";
+import PrintRoomScheduleConfigPage from "./tool/printRoomScheduleConfig";
+import SessionEnumerationConfigPage from "./tool/sessionEnumerationConfig";
+import DevLoginPage from "./login/login";
 
 /**
  * Implementing this as a sort-of pauper's version of a Router. We're starting with an
@@ -34,6 +35,8 @@ class CompositePage extends React.Component {
             return (<SessionEnumerationConfigPage />);
         } else if (url.pathname === '/printRoomScheduleConfig.php') {
             return (<PrintRoomScheduleConfigPage />);
+        } else if (url.pathname === "/devLogin.php") {
+            return <DevLoginPage />;
         } else {
             return (<h4>Unknown Page</h4>);
         }
