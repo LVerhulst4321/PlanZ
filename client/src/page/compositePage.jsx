@@ -18,28 +18,29 @@ import DevLoginPage from "./login/login";
  * We can revisit this pattern later.
  */
 class CompositePage extends React.Component {
-  render() {
-    let url = new URL(window.location.href);
-    if (url.pathname === "/StaffVolunteerPage.php") {
-      return <StaffVolunteerPage />;
-    } else if (url.pathname === "/AdminModules.php") {
-      return <AdminModulesPage />;
-    } else if (url.pathname === "/volunteering.php") {
-      return <VolunteerSignUpPage />;
-    } else if (url.pathname === "/brainstorm.php") {
-      return <BrainstormPage />;
-    } else if (url.pathname === "/assignParticipants.php") {
-      return <AssignmentsPage />;
-    } else if (url.pathname === "/assignSessionNumberConfig.php") {
-      return <SessionEnumerationConfigPage />;
-    } else if (url.pathname === "/printRoomScheduleConfig.php") {
-      return <PrintRoomScheduleConfigPage />;
-    } else if (url.pathname === "/devLogin.php") {
-      return <DevLoginPage />;
-    } else {
-      return <h4>Unknown Page</h4>;
+
+    render() {
+        let url = new URL(window.location.href);
+        if (url.pathname === '/StaffVolunteerPage.php') {
+            return (<StaffVolunteerPage />);
+        } else if (url.pathname === '/AdminModules.php') {
+            return (<AdminModulesPage />);
+        } else if (url.pathname === '/volunteering.php') {
+            return (<VolunteerSignUpPage />);
+        } else if (url.pathname === '/brainstorm.php') {
+            return (<BrainstormPage />);
+        } else if (url.pathname === '/assignParticipants.php') {
+            return (<AssignmentsPage />);
+        } else if (url.pathname === '/assignSessionNumberConfig.php') {
+            return (<SessionEnumerationConfigPage />);
+        } else if (url.pathname === '/printRoomScheduleConfig.php') {
+            return (<PrintRoomScheduleConfigPage />);
+        } else if (url.pathname === "/devLogin.php") {
+            return <DevLoginPage />;
+        } else {
+            return (<h4>Unknown Page</h4>);
+        }
     }
-  }
 }
 
 export default CompositePage;
