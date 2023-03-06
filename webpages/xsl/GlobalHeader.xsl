@@ -6,14 +6,14 @@
     <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "Consent", "No_Permission", "Password_Reset" -->
     <xsl:param name="no_user_required" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="CON_NAME" select="''" />
-    <xsl:param name="headerimg" select="'images/Plan-Z-Logo-250.png'" />
+    <xsl:param name="headerimg" select="'/images/Plan-Z-Logo-250.png'" />
     <xsl:param name="headerimgalt" select="'PlanZ &quot;Z&quot; logo'" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="header_error_message" select="''" />
     <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:param name="PUBLIC_NEW_USER" select="false()" /><!-- TRUE/FALSE -->
-    <xsl:param name="LOGIN_PHP" select="'doLogin.php'" />
+    <xsl:param name="LOGIN_PHP" select="'/doLogin.php'" />
     <xsl:template match="/">
         <header class="header-wrapper" data-pbo="GlobalHeader.xsl:14">
             <div id="reg-header-container" class="collapsible-wrapper">

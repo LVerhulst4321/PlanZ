@@ -266,13 +266,13 @@ function populateCustomTextArray() {
 
 // Used in function prepare_db_and_more()
 // Opens database channel
-if( file_exists( './config/db_name.php' ) ) {
-    require_once( './config/db_name.php' );
+if (file_exists(__DIR__ . '/config/db_name.php')) {
+    include_once __DIR__ . '/config/db_name.php';
 } else {
     echo '<strong>FATAL ERROR: Config file not found.</strong><br />';
 }
 if (USE_REG_SYSTEM === TRUE) {
-    require_once ('./custom_reg.php'); // Calls an extra file which contains authentication methods for interfacing with con Registration.
+    include_once __DIR__ . '/custom_reg.php'; // Calls an extra file which contains authentication methods for interfacing with con Registration.
 }
 
 

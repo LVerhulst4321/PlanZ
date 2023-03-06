@@ -15,22 +15,22 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
 ?>
     <link rel="shortcut icon" href="<?php echo CON_THEME_FAVICON ?>">
 <?php } else { ?>
-    <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <?php } ?>
 <?php if ($bootstrap4) { ?>
-    <link rel="stylesheet" href="external/bootstrap4.5.0/bootstrap.min.css" type="text/css" >
-    <link rel="stylesheet" href="external/bootstrap-multiselect-1.1.7/bootstrap-multiselect.min.css" type="text/css" >
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/external/bootstrap4.5.0/bootstrap.min.css" type="text/css" >
+    <link rel="stylesheet" href="/external/bootstrap-multiselect-1.1.7/bootstrap-multiselect.min.css" type="text/css" >
+    <link rel="stylesheet" href="/https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 <?php } else { ?>
-    <link rel="stylesheet" href="external/jqueryui1.8.16/jquery-ui-1.8.16.custom.css" type="text/css">
-    <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap.css" type="text/css" >
-    <link rel="stylesheet" href="external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
+    <link rel="stylesheet" href="/external/jqueryui1.8.16/jquery-ui-1.8.16.custom.css" type="text/css">
+    <link rel="stylesheet" href="/external/bootstrap2.3.2/bootstrap.css" type="text/css" >
+    <link rel="stylesheet" href="/external/bootstrap2.3.2/bootstrap-responsive.css" type="text/css" >
 <?php } ?>
-    <link rel="stylesheet" href="external/choices9.0.0/choices.min.css" type="text/css" >
-    <link rel="stylesheet" href="external/tabulator-4.9.3/css/tabulator.min.css" type="text/css" >
-    <link rel="stylesheet" href="css/zambia_common.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/external/choices9.0.0/choices.min.css" type="text/css" >
+    <link rel="stylesheet" href="/external/tabulator-4.9.3/css/tabulator.min.css" type="text/css" >
+    <link rel="stylesheet" href="/css/zambia_common.css" type="text/css" media="screen" />
 <?php if ($bootstrap4) { ?>
-    <link rel="stylesheet" href="css/zambia_bs4.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/zambia_bs4.css" type="text/css" media="screen" />
 <?php
     if (defined('CON_THEME') && CON_THEME !== "") {
 ?>
@@ -48,7 +48,7 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
     } else {
         echo "    <link rel=\"stylesheet\" href=\"external/dataTables1.10.16/dataTables.css\" type=\"text/css\" />\n";
     }
-    
+
     if ($reportColumns) {
         echo "<meta id=\"reportColumns\" data-report-columns=\"";
         echo htmlentities(json_encode($reportColumns));

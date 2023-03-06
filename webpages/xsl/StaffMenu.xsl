@@ -46,28 +46,28 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <a href="StaffSearchSessions.php">Search Sessions</a>
+                    <a href="/StaffSearchSessions.php">Search Sessions</a>
                   </li>
                   <li>
-                    <a href="CreateSession.php">Create New Session</a>
+                    <a href="/CreateSession.php">Create New Session</a>
                   </li>
                   <li>
-                    <a href="ViewSessionCountReport.php">View Session Counts</a>
+                    <a href="/ViewSessionCountReport.php">View Session Counts</a>
                   </li>
                   <li>
-                    <a href="ViewAllSessions.php">View All Sessions</a>
+                    <a href="/ViewAllSessions.php">View All Sessions</a>
                   </li>
                   <li>
-                    <a href="ViewPrecis.php?showlinks=0">View Precis</a>
+                    <a href="/ViewPrecis.php?showlinks=0">View Precis</a>
                   </li>
                   <li>
-                    <a href="ViewPrecis.php?showlinks=1">View Precis with Links</a>
+                    <a href="/ViewPrecis.php?showlinks=1">View Precis with Links</a>
                   </li>
                   <li>
-                    <a href="StaffSearchPreviousSessions.php">Import Sessions</a>
+                    <a href="/StaffSearchPreviousSessions.php">Import Sessions</a>
                   </li>
                   <li>
-                    <a href="SessionHistory.php">Session History</a>
+                    <a href="/SessionHistory.php">Session History</a>
                   </li>
                 </ul>
               </li>
@@ -78,24 +78,24 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <a href="AdminParticipants.php">Administer</a>
+                    <a href="/AdminParticipants.php">Administer</a>
                   </li>
                   <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
                     <li>
-                      <a href="AdminPhotos.php">Photos</a>
+                      <a href="/AdminPhotos.php">Photos</a>
                     </li>
                   </xsl:if>
                   <li>
-                    <a href="InviteParticipants.php">Invite to a Session</a>
+                    <a href="/InviteParticipants.php">Invite to a Session</a>
                   </li>
                   <xsl:if test="$emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
                     <li>
-                      <a href="StaffSendEmailCompose.php">Send email</a>
+                      <a href="/StaffSendEmailCompose.php">Send email</a>
                     </li>
                   </xsl:if>
                   <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">
                     <li>
-                      <a href="AddUser.php">Create User</a>
+                      <a href="/AddUser.php">Create User</a>
                     </li>
                   </xsl:if>
                 </ul>
@@ -118,7 +118,7 @@
                   </xsl:choose>
                   <li class='divider'/>
                   <li>
-                    <a href='staffReportsInCategory.php'>All Reports</a>
+                    <a href='/staffReportsInCategory.php'>All Reports</a>
                   </li>
                 </ul>
               </li>
@@ -130,21 +130,21 @@
                 <ul class="dropdown-menu">
                   <xsl:if test="$AutoScheduler">
                     <li>
-                      <a href="Autoscheduler.php">Auto-Scheduler</a>
+                      <a href="/Autoscheduler.php">Auto-Scheduler</a>
                     </li>
                   </xsl:if>
                   <li>
-                    <a href="MaintainRoomSched.php">Maintain Room Schedule</a>
+                    <a href="/MaintainRoomSched.php">Maintain Room Schedule</a>
                   </li>
                   <li>
-                    <a href="StaffMaintainSchedule.php">Grid Scheduler</a>
+                    <a href="/StaffMaintainSchedule.php">Grid Scheduler</a>
                   </li>
                   <li>
-                    <a href="CurrentSchedule.php">Current Schedule</a>
+                    <a href="/CurrentSchedule.php">Current Schedule</a>
                   </li>
                   <xsl:if test="$ShowVolunteer">
                     <li>
-                      <a class="dropdown-item" href="StaffVolunteerPage.php">Create Volunteer Schedule</a>
+                      <a class="dropdown-item" href="/StaffVolunteerPage.php">Create Volunteer Schedule</a>
                     </li>
                   </xsl:if>
 
@@ -152,10 +152,10 @@
               </li>
               <li class="divider-vertical"/>
               <li>
-                <a href="StaffPage.php">Overview</a>
+                <a href="/StaffPage.php">Overview</a>
               </li>
               <li>
-                  <a href="Tools.php">Tools</a>
+                  <a href="/Tools.php">Tools</a>
               </li>
               <li class="divider-vertical"/>
               <li>
@@ -178,38 +178,38 @@
                   <ul class="dropdown-menu">
                     <xsl:if test="$AdminPhases">
                       <li>
-                        <a href="AdminPhases.php">Administer Phases</a>
+                        <a href="/AdminPhases.php">Administer Phases</a>
                       </li>
                     </xsl:if>
                     <xsl:if test="$ConfigureReports">
                       <li>
-                        <a href="BuildReportMenus.php">Build Report Menus</a>
+                        <a href="/BuildReportMenus.php">Build Report Menus</a>
                       </li>
                     </xsl:if>
                     <xsl:if test="$Administrator">
                       <li>
-                        <a href="ConfigurationAdmin.php">Edit Configuration Settings</a>
+                        <a href="/ConfigurationAdmin.php">Edit Configuration Settings</a>
                       </li>
                       <li>
-                        <a href="EditCustomText.php">Edit Custom Text</a>
+                        <a href="/EditCustomText.php">Edit Custom Text</a>
                       </li>
                       <li>
-                        <a href="EditSurvey.php">Edit Survey</a>
+                        <a href="/EditSurvey.php">Edit Survey</a>
                       </li>
                     </xsl:if>
                     <xsl:if test="$EditAnyTable">
                         <li>
-                          <a href="ConfigTableEditor.php">Edit Configuration Tables</a>
+                          <a href="/ConfigTableEditor.php">Edit Configuration Tables</a>
                         </li>
                     </xsl:if>
                     <xsl:if test="$ExportSchedule">
                       <li>
-                        <a href="StaffCreateKonOpas.php">Update KonOpas and ConClar</a>
+                        <a href="/StaffCreateKonOpas.php">Update KonOpas and ConClar</a>
                       </li>
                     </xsl:if>
                     <xsl:if test="$AdminModules">
                       <li>
-                        <a href="AdminModules.php">Administer Modules</a>
+                        <a href="/AdminModules.php">Administer Modules</a>
                       </li>
                     </xsl:if>
                   </ul>
@@ -219,7 +219,7 @@
             <ul class="nav pull-right">
               <li class="divider-vertical"/>
               <li>
-                <a id="ParticipantView" href="welcome.php">Participant View</a>
+                <a id="ParticipantView" href="/welcome.php">Participant View</a>
               </li>
             </ul>
           </div>
