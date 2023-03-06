@@ -63,6 +63,7 @@ function getObsRoomData(
             DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins,
             S.progguiddesc AS `desc`,
             S.progguidhtml AS `deschtml`,
+            DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%W') as day,
             DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
             DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time,
             GROUP_CONCAT(TA.tagname SEPARATOR ',') AS taglist,
