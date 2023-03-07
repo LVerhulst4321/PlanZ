@@ -53,10 +53,10 @@
                                      alt="Shrink header to a thin strip" title="Shrink header to a thin strip" >
                                     <xsl:choose>
                                         <xsl:when test="$header_version='Participant'">
-                                            <xsl:attribute name="src">{$basepath}images/blue-up.png</xsl:attribute>
+                                            <xsl:attribute name="src"><xsl:value-of select="$basepath" />images/blue-up.png</xsl:attribute>
                                         </xsl:when>
                                         <xsl:when test="$header_version='Staff'">
-                                            <xsl:attribute name="src">{$basepath}images/green-up.png</xsl:attribute>
+                                            <xsl:attribute name="src"><xsl:value-of select="$basepath" />images/green-up.png</xsl:attribute>
                                         </xsl:when>
                                     </xsl:choose>
                                 </img>
@@ -99,10 +99,10 @@
                                     aria-role="button">
                                     <xsl:choose>
                                         <xsl:when test="$header_version='Participant'">
-                                            <xsl:attribute name="src">{$basepath}images/blue-down.png</xsl:attribute>
+                                            <xsl:attribute name="src"><xsl:value-of select="$basepath" />images/blue-down.png</xsl:attribute>
                                         </xsl:when>
                                         <xsl:when test="$header_version='Staff'">
-                                            <xsl:attribute name="src">{$basepath}images/green-down.png</xsl:attribute>
+                                            <xsl:attribute name="src"><xsl:value-of select="$basepath" />images/green-down.png</xsl:attribute>
                                         </xsl:when>
                                     </xsl:choose>
                                 </img>

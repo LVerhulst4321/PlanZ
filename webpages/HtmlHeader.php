@@ -15,7 +15,7 @@ function html_header($title, $bootstrap4 = false, $isDataTables = false, $report
 ?>
     <link rel="shortcut icon" href="<?php echo BASE_PATH.CON_THEME_FAVICON ?>">
 <?php } else { ?>
-    <link href="<?php echo BASE_PATH; ?>/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="<?php echo BASE_PATH; ?>images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <?php } ?>
 <?php if ($bootstrap4) { ?>
     <link rel="stylesheet" href="<?php echo BASE_PATH; ?>external/bootstrap4.5.0/bootstrap.min.css" type="text/css" >
