@@ -13,6 +13,7 @@ if( file_exists( '/etc/planz/db_env_sample.php' ) ) {
 
 define("CON_NAME", "PlanZ Demo");
 define("CON_URL", "http://samplecon.org");
+define("BASE_PATH", "/"); // Base path links will be relative to. Only change if hosting in a subdirectory.
 define("BRAINSTORM_EMAIL", "brain@somewhere.net");
 define("PROGRAM_EMAIL", "program@somewhere.net");
 define("CON_NUM_DAYS", 3); // code works for 1 - 8
@@ -127,7 +128,7 @@ define("CON_THEME_FAVICON", "");
         // if you want a con-specific favicon , you can reference an image file here.
         // for example: define("CON_THEME_FAVICON", "themes/reallybigcon/myfavicon.png");
 define("CON_HEADER_IMG", "");
-        // to improve the con branding, you can define a con-specific header image that will take the place of the 
+        // to improve the con branding, you can define a con-specific header image that will take the place of the
         // PlanZ illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
 define("CON_HEADER_IMG_ALT", "");
         // to improve the con branding, you can specify the alt-text of the header image. For example:

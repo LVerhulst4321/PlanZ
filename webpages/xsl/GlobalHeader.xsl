@@ -6,14 +6,15 @@
     <xsl:param name="login_page_status" select="'Normal'" /><!-- "Login", "Logout", "Normal", "Consent", "No_Permission", "Password_Reset" -->
     <xsl:param name="no_user_required" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="CON_NAME" select="''" />
-    <xsl:param name="headerimg" select="'/images/Plan-Z-Logo-250.png'" />
+    <xsl:param name="basepath" select="'/'"/>
+    <xsl:param name="headerimg" select="'images/Plan-Z-Logo-250.png'" />
     <xsl:param name="headerimgalt" select="'PlanZ &quot;Z&quot; logo'" />
     <xsl:param name="badgename" select="''" />
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="header_error_message" select="''" />
     <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:param name="PUBLIC_NEW_USER" select="false()" /><!-- TRUE/FALSE -->
-    <xsl:param name="LOGIN_PHP" select="'/doLogin.php'" />
+    <xsl:param name="LOGIN_PHP" select="'doLogin.php'" />
     <xsl:template match="/">
         <header class="header-wrapper" data-pbo="GlobalHeader.xsl:14">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -28,7 +29,7 @@
                     </xsl:choose>
                     <div class="header-contents">
                         <img class="d-none d-lg-block" >
-                            <xsl:attribute name="src"><xsl:value-of select="$headerimg" /></xsl:attribute>
+                            <xsl:attribute name="src"><xsl:value-of select="concat($basepath, $headerimg)" /></xsl:attribute>
                             <xsl:attribute name="alt"><xsl:value-of select="$headerimgalt" /></xsl:attribute>
                         </img>
                         <h1 class="wide-medium-only">
@@ -58,12 +59,12 @@
                                         </xsl:when>
                                     </xsl:choose>
                                 </img>
-                                <a href="logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
+                                <a href="{$basepath}logout.php" class="btn btn-primary pull-right" title="Click to log out">Log out</a>
                             </div>
                         </xsl:when>
                         <xsl:when test="not($no_user_required)">
                             <div>
-                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="{$LOGIN_PHP}" data-pbo="GlobalHeader.xsl:59">
+                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="concat($basepath, $LOGIN_PHP)" data-pbo="GlobalHeader.xsl:59">
                                     <fieldset id="login-box">
                                         <xsl:choose>
                                             <xsl:when test="$login_page_status='Normal'">
@@ -117,14 +118,14 @@
                                             <xsl:when test="$RESET_PASSWORD_SELF and $PUBLIC_NEW_USER">
                                                 <div class="control-group">
                                                     <div class="controls">
-                                                        <a href="ForgotPassword.php">New user or forgot your password</a>
+                                                        <a href="{$basepath}ForgotPassword.php">New user or forgot your password</a>
                                                     </div>
                                                 </div>
                                             </xsl:when>
                                             <xsl:when test="$RESET_PASSWORD_SELF and not($PUBLIC_NEW_USER)">
                                                 <div class="control-group">
                                                     <div class="controls">
-                                                        <a href="ForgotPassword.php">Forgot your password</a>
+                                                        <a href="{$basepath}ForgotPassword.php">Forgot your password</a>
                                                     </div>
                                                 </div>
                                             </xsl:when>
@@ -164,15 +165,15 @@
                                     <xsl:text>Welcome, </xsl:text>
                                     <xsl:value-of select="$badgename" />
                                 </p>
-                                <a class="btn btn-primary btn-mini" href="logout.php" title="Click to log out">Log out</a>
+                                <a class="btn btn-primary btn-mini" href="{$basepath}logout.php" title="Click to log out">Log out</a>
                                 <img id="show-header-but" alt="Expand header to normal size" title="Expand header to normal size"
                                     aria-role="button">
                                     <xsl:choose>
                                         <xsl:when test="$header_version='Participant'">
-                                            <xsl:attribute name="src">images/blue-down.png</xsl:attribute>
+                                            <xsl:attribute name="src">{$basepath}images/blue-down.png</xsl:attribute>
                                         </xsl:when>
                                         <xsl:when test="$header_version='Staff'">
-                                            <xsl:attribute name="src">images/green-down.png</xsl:attribute>
+                                            <xsl:attribute name="src">{$basepath}images/green-down.png</xsl:attribute>
                                         </xsl:when>
                                     </xsl:choose>
                                 </img>

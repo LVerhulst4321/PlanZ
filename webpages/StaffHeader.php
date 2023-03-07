@@ -42,6 +42,7 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
     if ($isLoggedIn) {
         $paramArray = array();
         $paramArray["title"] = $title;
+        $paramArray["basepath"] = BASE_PATH;
         $paramArray["adduser"] = !USE_REG_SYSTEM;
         if (isset($_SESSION['badgename'])) {
             $paramArray["badgename"] = $_SESSION['badgename'];

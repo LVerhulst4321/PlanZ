@@ -11,6 +11,7 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["logged_in"] = $isLoggedIn;
     $paramArray["login_page_status"] = $loginPageStatus;
     $paramArray["CON_NAME"] = CON_NAME;
+    $paramArray["basepath"] = BASE_PATH;
     $paramArray["badgename"] = isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '';
     if (defined('CON_HEADER_IMG') && CON_HEADER_IMG !== "") {
         $paramArray["headerimg"] = CON_HEADER_IMG;

@@ -45,6 +45,7 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
         if ($bootstrap4) {
             $paramArray = array();
             $paramArray["title"] = $title;
+            $paramArray["basepath"] = BASE_PATH;
             $paramArray["my_suggestions"] = may_I('my_suggestions_write') ? true : false;
             $paramArray["SessionFeedback"] = may_I('SessionFeedback') ? true : false;
             $paramArray["SessionInterests"] = may_I('my_panel_interests') ? true : false;
