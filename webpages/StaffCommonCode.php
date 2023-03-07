@@ -10,7 +10,7 @@
         if (isset($returnAjaxErrors) && $returnAjaxErrors) {
             RenderErrorAjax($headerErrorMessage);
         } else {
-            require ('login.php');
+            require (__DIR__ . '/login.php');
         }
         exit();
         };

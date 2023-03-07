@@ -5,6 +5,7 @@
 -->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="title" select="''" />
+  <xsl:param name="basepath" select="'/'"/>
   <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
   <xsl:param name="survey" select="'false'" />
   <xsl:param name="my_suggestions" select="'true'" />
@@ -22,72 +23,72 @@
       <div class="collapse navbar-collapse flex-wrap" id="navbarSupportedContent">
         <ul class="navbar-nav">
           <li class="nav-item py-0">
-            <a class="nav-link py-1" href="welcome.php">Overview</a>
+            <a class="nav-link py-1" href="{$basepath}welcome.php">Overview</a>
           </li>
           <li class="nav-item py-0">
-            <a class="nav-link py-1" href="my_contact.php">Profile</a>
+            <a class="nav-link py-1" href="{$basepath}my_contact.php">Profile</a>
           </li>
           <li class="nav-item py-0">
-            <a class="nav-link py-1" href="my_details.php">Personal Details</a>
+            <a class="nav-link py-1" href="{$basepath}my_details.php">Personal Details</a>
           </li>
           <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="my_photo.php">Photo</a>
+              <a class="nav-link py-1" href="{$basepath}my_photo.php">Photo</a>
             </li>
           </xsl:if>
           <xsl:if test="$survey">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="PartSurvey.php">Survey</a>
+              <a class="nav-link py-1" href="{$basepath}PartSurvey.php">Survey</a>
             </li>
           </xsl:if>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='my_availability']">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="my_sched_constr.php">Availability</a>
+              <a class="nav-link py-1" href="{$basepath}my_sched_constr.php">Availability</a>
             </li>
           </xsl:if>
           <li class="nav-item py-0">
-            <a class="nav-link py-1" href="my_interests.php">General Interests</a>
+            <a class="nav-link py-1" href="{$basepath}my_interests.php">General Interests</a>
           </li>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='search_panels']">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="PartSearchSessions.php">Search Sessions</a>
+              <a class="nav-link py-1" href="{$basepath}PartSearchSessions.php">Search Sessions</a>
             </li>
           </xsl:if>
           <xsl:if test="$SessionInterests">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="PartPanelInterests.php">Session Interests</a>
+              <a class="nav-link py-1" href="{$basepath}PartPanelInterests.php">Session Interests</a>
             </li>
           </xsl:if>
           <xsl:if test="$SessionFeedback">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="SessionFeedback.php">Interest Survey</a>
+              <a class="nav-link py-1" href="{$basepath}SessionFeedback.php">Interest Survey</a>
             </li>
           </xsl:if>
           <xsl:if test="$my_suggestions">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="my_suggestions.php">My Suggestions</a>
+              <a class="nav-link py-1" href="{$basepath}my_suggestions.php">My Suggestions</a>
             </li>
           </xsl:if>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='my_schedule']">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="MySchedule.php">My Schedule</a>
+              <a class="nav-link py-1" href="{$basepath}MySchedule.php">My Schedule</a>
             </li>
           </xsl:if>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='Volunteering']">
             <li class="nav-item py-0">
-              <a class="nav-link py-1" href="./volunteering.php">Volunteering</a>
+              <a class="nav-link py-1" href="{$basepath}volunteering.php">Volunteering</a>
             </li>
-          </xsl:if>          
+          </xsl:if>
           <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='BrainstormSubmit']">
             <li class="nav-item py-0 ml-4">
-              <a class="nav-link py-1" href="./brainstorm.php">Suggest a Session</a>
+              <a class="nav-link py-1" href="{$basepath}brainstorm.php">Suggest a Session</a>
             </li>
           </xsl:if>
         </ul>
         <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='Staff']">
           <div class="navbar-nav ml-auto">
             <div class="nav-item py-0">
-              <a id="StaffView" class="nav-link py-1" href="StaffPage.php">Staff View</a>
+              <a id="StaffView" class="nav-link py-1" href="{$basepath}StaffPage.php">Staff View</a>
             </div>
           </div>
         </xsl:if>

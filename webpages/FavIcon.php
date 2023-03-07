@@ -5,9 +5,9 @@
 require_once('./config/db_name.php');
 
 if (defined('CON_HEADER_IMG') && CON_THEME_FAVICON !== "") {
-    header('Location: ' . CON_THEME_FAVICON);
+    header('Location: '. BASE_PATH . CON_THEME_FAVICON);
 } else {
-    header('Location: images/favicon.ico');
+    header('Location: ' . BASE_PATH . 'images/favicon.ico');
 }
 
 ?>
