@@ -103,6 +103,7 @@ function getObsRoomData(
             "id"     => $row->id,
             "title"  => $row->title,
             "tags"   => $tagsArray,
+            "day"    => $row->day,
             "date"   => $row->date,
             "time"   => $row->time,
             "mins"   => $row->mins,
