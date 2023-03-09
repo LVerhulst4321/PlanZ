@@ -6,12 +6,15 @@ require_once(__DIR__ . "/../../tool_model.php");
 
 use Tool;
 
-class RoomScheduleModule {
+class RoomScheduleModule extends Tool {
 
-    public static function getTools() {
-        $result = array();
+    /**
+     * {@inheritDoc}
+     */
+    public static function getTools(): array {
+        $result = [];
 
-        $result[] = new Tool("Room Schedule", "Produce a printable version of the room schedule, by day.", "printRoomScheduleConfig.php");
+        $result[] = new RoomScheduleModule("Room Schedule", "Produce a printable version of the room schedule, by day.", "printRoomScheduleConfig.php");
         return $result;
     }
 }

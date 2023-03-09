@@ -1,43 +1,48 @@
 <?php
-    global $linki, $title;
-    $title = "Tools and Utilities";
-    require_once(__DIR__ . '/StaffCommonCode.php');
-    require_once(__DIR__ . '/tool_model.php');
-    require_once(__DIR__ . '/api/admin/module_model.php');
+global $linki, $title;
+$title = "Tools and Utilities";
+require_once __DIR__ . '/StaffCommonCode.php';
+require_once __DIR__ . '/tool_model.php';
+require_once __DIR__ . '/api/admin/module_model.php';
 
-    class ToolHelper {
+class ToolHelper
+{
+    /**
+     * Search installed modules for Tools.
+     *
+     * @param mysqli $db Database object to read tools from.
+     *
+     * @return array
+     */
+    public static function getAllTools(mysqli $db): array
+    {
+        $result = [];
+        $modules = PlanzModule::findAllEnabledModules($db);
+        foreach ($modules as $module) {
+            $fileName = $module->getDescriptorFileName();
+            try {
+                if (file_exists(__DIR__ . $fileName)) {
+                    include_once __DIR__ . $fileName;
 
-        public static function getAllTools($db) {
+                    $moduleDescriptor = $module->getDescriptorClass();
 
-            $result = array(new Tool("Table Tents", "Produce a printable version of the table tents for the various con sessions.", "TableTentsConfig.php"));
-
-            $modules = PlanzModule::findAllEnabledModules($db);
-
-            foreach ($modules as $module) {
-                $fileName = $module->getDescriptorFileName();
-                try {
-                    if (file_exists(__DIR__ . $fileName)) {
-                        require_once(__DIR__ . $fileName);
-
-                        $moduleDescriptor = $module->getDescriptorClass();
-
-                        if ($moduleDescriptor) {
-                            $method = $moduleDescriptor->getMethod("getTools");
-                            if ($method->getModifiers() & ReflectionMethod::IS_STATIC) {
-                                $tools = $method->invoke(null);
-                                $result = array_merge($result, $tools);
-                            }
+                    if ($moduleDescriptor) {
+                        $method = $moduleDescriptor->getMethod("getTools");
+                        if ($method->getModifiers() & ReflectionMethod::IS_STATIC) {
+                            $tools = $method->invoke(null);
+                            $result = array_merge($result, $tools);
                         }
                     }
-                } catch (Exception|Error $e) {
-                    // skip it
                 }
+            } catch (Exception|Error $e) {
+                // skip it
             }
-            return $result;
         }
+        return $result;
     }
+}
 
-    staff_header($title, true);
+staff_header($title, true);
 
 ?>
 
@@ -68,7 +73,5 @@
 
 </div>
 <div class="container-fluid">
-
-
 
 <?php staff_footer(); ?>

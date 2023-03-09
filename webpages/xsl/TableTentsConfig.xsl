@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding="UTF-8"?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:param name="basepath" select="'/'"/>
     <xsl:template match="/">
 
         <form action="TableTents.php" method="GET" target="_blank">
@@ -9,7 +10,7 @@
                 </div>
                 <div class="card-body">
                     <p>The Table Tents feature creates printable "tents" that name the participants on a session (typically used for panels).
-                    In many cons, the tents are printed out in the Green Room, and the panel moderator picks them up just before the panel 
+                    In many cons, the tents are printed out in the Green Room, and the panel moderator picks them up just before the panel
                     is scheduled to begin.</p>
 
                     <div class="row">
@@ -30,7 +31,7 @@
                         the audience.</p>
 
                         <div class="text-center">
-                            <img src="./images/table-tent.svg" style="height: 325px; width: 500px;" />
+                            <img src="{$basepath}images/table-tent.svg" style="height: 325px; width: 500px;" />
                         </div>
                     </div>
 
@@ -38,7 +39,7 @@
                         <p>These tents are self supporting. Fold in 3 and display with participant's name facing forwards.</p>
 
                         <div class="text-center">
-                            <img src="./images/table-tent-fold3.svg" style="height: 325px; width: 500px;" />
+                            <img src="{$basepath}images/table-tent-fold3.svg" style="height: 325px; width: 500px;" />
                         </div>
                     </div>
 
@@ -79,10 +80,10 @@
                     </div>
                     <div class="separator-pages-yes">
                         <p>A separator page will be printed before each session's table tents to help group them.</p>
-                    </div>                    
+                    </div>
                     <div class="separator-pages-no hidden">
                         <p>No separator page will be printed. You will have to separate each session's tents by the session title on each tent.</p>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Generate</button>

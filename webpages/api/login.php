@@ -12,20 +12,20 @@ require_once("jwt_functions.php");
 require_once("participant_functions.php");
 
 // the standard db_functions file makes certain assumptions about the end-client being
-// HTML (to which it renders error pages), and those assumptions aren't good 
+// HTML (to which it renders error pages), and those assumptions aren't good
 // in a REST/JSON world.
 function resolve_login($userid, $password) {
     $db = connect_to_db();
     try {
         $query = <<<EOD
- SELECT 
-        P.password, P.data_retention, P.badgeid, C.firstname, C.lastname, C.badgename, C.regtype 
-   FROM 
-        Participants P 
+ SELECT
+        P.password, P.data_retention, P.badgeid, C.firstname, C.lastname, C.badgename, C.regtype
+   FROM
+        Participants P
    JOIN CongoDump C USING (badgeid)
-  WHERE 
+  WHERE
          P.badgeid = ?
-      OR 
+      OR
          C.email = ?;
 EOD;
 
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Authorization: Bearer ".$loginResult);
         $result = array( "success" => true, "message" => "I like you. I really like you." );
         echo json_encode($result);
-            
+
     } else {
         $result = array( "success" => false, "message" => "You're not of the body!" );
         http_response_code(401);
