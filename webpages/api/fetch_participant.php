@@ -2,8 +2,8 @@
 // Copyright (c) 2022 BC Holmes. All rights reserved. See copyright document for more details.
 // This function serves as a REST API to access session history information.
 
-if (!include ('../config/db_name.php')) {
-    include ('../config/db_name.php');
+if (file_exists(__DIR__ . '/../config/db_name.php')) {
+    include __DIR__ . '/../config/db_name.php';
 }
 require_once('./http_session_functions.php');
 require_once('../db_exceptions.php');
@@ -64,7 +64,7 @@ EOD;
         $rs = mysqli_stmt_get_result($stmt);
         while ($row = mysqli_fetch_object($rs)) {
             $name = PersonName::from($row);
-            $result = array( 
+            $result = array(
                 "badgeId" => $row->badgeid,
                 "name" => $name->asArray(),
                 "interested" => $row->interested == 1 ? true : false,

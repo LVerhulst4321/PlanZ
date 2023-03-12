@@ -2,8 +2,8 @@
 // Copyright (c) 2021 BC Holmes. All rights reserved. See copyright document for more details.
 // This function provides support for mobile apps such as WisSched and FogGuide
 
-if (!include ('../config/db_name.php')) {
-    include ('../config/db_name.php');
+if (file_exists(__DIR__ . '/../config/db_name.php')) {
+    include __DIR__ . '/../config/db_name.php';
 }
 
 require_once('../db_exceptions.php');

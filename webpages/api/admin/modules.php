@@ -5,8 +5,8 @@ namespace PlanZ;
 // Copyright (c) 2022 BC Holmes. All rights reserved. See copyright document for more details.
 // This function provides basic management for modules: allowing admins to enable modules.
 
-if (!include ('../../config/db_name.php')) {
-    include ('../../config/db_name.php');
+if (file_exists(__DIR__ . '/../../config/db_name.php')) {
+    include __DIR__ . '/../../config/db_name.php';
 }
 require_once('../../db_exceptions.php');
 require_once('../../login_functions.php');

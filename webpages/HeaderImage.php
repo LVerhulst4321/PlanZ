@@ -2,8 +2,8 @@
 //	Created by BC Holmes
 //  This file providees a consistent URL for requesting the PlanZ configurable header image
 
-if (!include ('./config/db_name.php')) {
-    include ('./config/db_name.php');
+if (file_exists(__DIR__ . '/config/db_name.php')) {
+    include __DIR__ . '/config/db_name.php';
 }
 
 if (defined('CON_HEADER_IMG') && CON_HEADER_IMG !== "") {
