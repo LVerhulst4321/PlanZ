@@ -4,9 +4,10 @@
 //Need to add some code to prevent it from being accessed any other way, but leave it exposed for now for testing.
 
 error_reporting(E_ERROR);
-require_once('webpages/db_functions.php'); //reset connection to db and check if logged in
-require_once('webpages/email_functions.php');
-require_once('webpages/external/swiftmailer-5.4.8/lib/swift_required.php');
+require_once __DIR__ . '/../webpages/db_functions.php';
+require_once __DIR__ . '/../webpages/email_functions.php';
+require_once __DIR__ .
+    '/../webpages/external/swiftmailer-5.4.8/lib/swift_required.php';
 
 if (prepare_db_and_more() === false) {
     echo "Unable to connect to database.\nNo further execution possible.\n";
@@ -19,9 +20,15 @@ $mailer = get_swift_mailer();
 //$logger = new Swift_Plugins_Loggers_EchoLogger();
 //$mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
 
-$sql = "SELECT emailqueueid, emailto, emailfrom, emailcc, emailsubject, body, status, emailtimestamp FROM EmailQueue;";
+// If SMTP_MAX_MESSAGES set, add LIMIT clause to SQL.
+if (defined('SMTP_MAX_MESSAGES') && SMTP_MAX_MESSAGES != '0' && is_numeric(SMTP_MAX_MESSAGES)) {
+    $limit = "LIMIT " . SMTP_MAX_MESSAGES;
+} else {
+    $limit = '';
+}
+$sql = "SELECT emailqueueid, emailto, emailfrom, emailcc, emailsubject, body, status, emailtimestamp FROM EmailQueue $limit;";
 $result = mysqli_query_exit_on_error($sql);
-while($row = mysqli_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
     $action = "";
     $queueid = $row["emailqueueid"];
     echo "checking: $queueid\n";
@@ -37,7 +44,7 @@ while($row = mysqli_fetch_assoc($result)) {
         if ($row["emailcc"] != "") {
             $message->addBcc($emailcc);
         }
-        $message->setBody($row["body"],'text/plain');
+        $message->setBody($row["body"], 'text/plain');
         $emailto = $row["emailto"];
         try {
             $message->addTo($emailto);
