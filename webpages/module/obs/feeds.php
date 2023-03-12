@@ -17,7 +17,7 @@ require_once __DIR__ . '/../../db_functions.php';
 require_once __DIR__ . '/../../error_functions.php';
 require_once __DIR__ . '/../../render_functions.php';
 require_once __DIR__ . '/../../StaffCommonCode.php';
-require_once 'obs_functions.php';
+require_once __DIR__ . '/obs_functions.php';
 
 staff_header($title, true);
 
@@ -40,11 +40,12 @@ function showObsFeedOptions(): void
 
         // Check extract directory set.
     if (!defined("OBS_EXTRACT_DIRECTORY")) {
+        $configUrl = BASE_PATH . 'ConfigurationAdmin.php';
         echo <<<EOD
             <h2>Extract directory not defined</h2>
             <p>
                 The setting OBS_EXTRACT_DIRECTORY is not defined.
-                Use the <a href="ConfigurationAdmin.php">configuration editor</a>
+                Use the <a href="$configUrl">configuration editor</a>
                 to set value of OBS_EXTRACT_DIRECTORY, then save.
             </p>
         EOD;

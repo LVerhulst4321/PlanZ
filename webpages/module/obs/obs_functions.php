@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Extract OPS feeds.
+ * Extract OBS feeds.
  *
- * PHP version 7.1+
+ * PHP version 7.4+
  *
  * @category Module
  * @package  PlanZ

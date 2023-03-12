@@ -11,11 +11,13 @@
  * @license  Zambia Software Licence
  * @link     https://github.com/LVerhulst4321/PlanZ
  */
-namespace PlanZ\Module;
+namespace Obs;
 
+require_once __DIR__ . "/../module_base.php";
 require_once __DIR__ . "/../../tool_model.php";
 
-use Tool;
+use PlanZ\ModuleBase;
+use PlanZ\Tool;
 
 /**
  * OBS Feed module for PlanZ.
@@ -26,7 +28,7 @@ use Tool;
  * @license  Zambia Software Licence
  * @link     https://github.com/LVerhulst4321/PlanZ
  */
-class ObsFeedModule
+class ObsFeedModule extends ModuleBase
 {
     /**
      * Function to get tools entry menu.

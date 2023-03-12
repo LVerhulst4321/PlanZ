@@ -7,7 +7,7 @@
 INSERT INTO `module`
 (`name`, `package_name`, `description`, `is_enabled`)
 values
-('OBS Feeds', 'planz.obs_feed',
+('OBS Feeds', 'obs.obs_feed',
 'Create extract of sessions per day/room for OBS.', 0);
 
-INSERT INTO PatchLog (patchname) VALUES ('96ZED_obs_feed_module.sql');
+INSERT INTO PatchLog (patchname) VALUES ('97ZED_obs_feed_module.sql');
