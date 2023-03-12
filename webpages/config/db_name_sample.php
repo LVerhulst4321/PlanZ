@@ -32,7 +32,8 @@ define("DISPLAY_24_HOUR_TIME", FALSE); // TRUE: times in 24 hour clock. FALSE: t
 define("DURATION_IN_MINUTES", FALSE); // TRUE: in mmm; FALSE: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION", "1:15"); // must correspond to DURATION_IN_MINUTES
-define("SMTP_QUEUEONLY", FALSE); // TRUE = add to DB queue, schedule processEmailQueue.php as a cron job do the send; FALSE send immediately, add to queue only on transport failure
+define("SMTP_QUEUEONLY", FALSE); // TRUE = add to DB queue, schedule /scripts/processEmailQueue.php as a cron job do the send; FALSE send immediately, add to queue only on transport failure
+define("SMTP_MAX_MESSAGES", "100"); // Maximum number of messages to send per cron run. Set to 0 for no limit.
 define("PREF_TTL_SESNS_LMT", 10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT", 5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS", 8); // Number of rows of availability records to render
