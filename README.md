@@ -15,11 +15,11 @@ new name was desired.
 * Reports for various departments such as technical services and hotel liaison
 
 ## Requirements
-* PHP 7.1 or greater (Tested on 7.2)
+* PHP 7.4 or greater (mostly tested on 8.1, but there may be some minor issues with 8.X)
   * XSLT library
   * Multibyte library (mbstring)
-* Apache (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
-* MySQL (Tested on 5.6 & 8.0)
+* Apache of Nginx (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
+* MySQL or MariaDB (Tested on MySQL 5.6 & 8.0, and on MariaDB 10.5)
 * SMTP connection for use as mail relay (only if you want to send email from PlanZ)
   * Note: many hosts limit use of their mail relays in ways not compatible with PlanZ
 * The participant photo upload option requires the PHP extension GD library
