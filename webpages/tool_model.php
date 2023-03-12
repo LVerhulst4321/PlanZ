@@ -1,7 +1,9 @@
 <?php
 
+namespace PlanZ;
+
 /**
- * Tool base class.
+ * Tool class.
  *
  * @category Module_Base
  * @package  PlanZ
@@ -9,7 +11,7 @@
  * @license  Zambia Software Licence
  * @link     https://github.com/LVerhulst4321/PlanZ
  */
-abstract class Tool
+class Tool
 {
     public string $name;
     public string $description;
@@ -28,13 +30,6 @@ abstract class Tool
         $this->description = $description;
         $this->href = $href;
     }
-
-    /**
-     * Child class must contain function that returns an array of Tool objects.
-     *
-     * @return array
-     */
-    public abstract static function getTools(): array;
 }
 
 ?>

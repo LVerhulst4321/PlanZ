@@ -1,8 +1,16 @@
 <?php
 
-require_once(__DIR__ . '/../../db_exceptions.php');
+namespace PlanZ;
 
-class PlanzModule {
+use DatabaseSqlException;
+use Error;
+use Exception;
+use ReflectionClass;
+
+require_once __DIR__ . '/../../db_exceptions.php';
+
+class PlanZModule
+{
     public $id;
     public $name;
     public $packageName;
@@ -57,7 +65,7 @@ class PlanzModule {
             return 'PlanZ\Module\\';
         }
         // Split package prefix into words, and capitalize each word.
-        return 'PlanZ\\' . $this->makePascalCase($name) . '\\';
+        return $this->makePascalCase($name) . '\\';
     }
 
     /**
@@ -88,30 +96,30 @@ class PlanzModule {
 
     public static function findAll($db) {
         $query = <<<EOD
-        SELECT id, name, package_name, description, is_enabled
-             FROM module M
-           ORDER BY M.name, M.id;
-EOD;
+            SELECT id, name, package_name, description, is_enabled
+            FROM module M
+            ORDER BY M.name, M.id;
+        EOD;
         $stmt = mysqli_prepare($db, $query);
-        return PlanzModule::processSqlStatement($stmt,$query);
+        return self::processSqlStatement($stmt, $query);
     }
 
     public static function findAllEnabledModules($db) {
         $query = <<<EOD
-        SELECT id, name, package_name, description, is_enabled
-          FROM module M
-         WHERE is_enabled = 1;
-EOD;
+            SELECT id, name, package_name, description, is_enabled
+            FROM module M
+            WHERE is_enabled = 1;
+        EOD;
         $stmt = mysqli_prepare($db, $query);
-        return PlanzModule::processSqlStatement($stmt,$query);
+        return self::processSqlStatement($stmt, $query);
     }
 
     public function updateEnabled($db, $value) {
         $query = <<<EOD
-           UPDATE module M
-              SET is_enabled = ?
+            UPDATE module M
+            SET is_enabled = ?
             WHERE id = ?;
-EOD;
+        EOD;
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "ii", $value, $this->id);
         if ($stmt->execute()) {
@@ -123,14 +131,14 @@ EOD;
 
     public static function findByPackageName($db, $packageName) {
         $query = <<<EOD
-        SELECT id, name, package_name, description, is_enabled
-             FROM module M
+            SELECT id, name, package_name, description, is_enabled
+            FROM module M
             WHERE package_name = ?
-           ORDER BY M.name, M.id;
-EOD;
+            ORDER BY M.name, M.id;
+        EOD;
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "s", $packageName);
-        $result = PlanzModule::processSqlStatement($stmt,$query);
+        $result = self::processSqlStatement($stmt, $query);
         if (count($result) == 1) {
             return $result[0];
         } else {
@@ -143,7 +151,13 @@ EOD;
             $result = [];
             $resultSet = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_object($resultSet)) {
-                $record = new PlanzModule($row->id, $row->name, $row->package_name, $row->description, $row->is_enabled);
+                $record = new self(
+                    $row->id,
+                    $row->name,
+                    $row->package_name,
+                    $row->description,
+                    $row->is_enabled
+                );
                 $result[] = $record;
             }
             mysqli_stmt_close($stmt);

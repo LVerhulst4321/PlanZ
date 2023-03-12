@@ -3,7 +3,7 @@
 /**
  * Module to provide feed to OBS per room.
  *
- * PHP version 7.1+
+ * PHP version 7.4+
  *
  * @category Module
  * @package  PlanZ
@@ -11,11 +11,12 @@
  * @license  Zambia Software Licence
  * @link     https://github.com/LVerhulst4321/PlanZ
  */
-namespace PlanZ\TableTents;
+namespace TableTents;
 
-require_once __DIR__ . "/../../tool_model.php";
+require_once __DIR__ . "/../module_base.php";
 
-use Tool;
+use PlanZ\ModuleBase;
+use PlanZ\Tool;
 
 /**
  * OBS Feed module for PlanZ.
@@ -26,7 +27,7 @@ use Tool;
  * @license  Zambia Software Licence
  * @link     https://github.com/LVerhulst4321/PlanZ
  */
-class TableTentsModule extends Tool
+class TableTentsModule extends ModuleBase
 {
     /**
      * {@inheritDoc}
@@ -37,7 +38,7 @@ class TableTentsModule extends Tool
     {
         $result = [];
 
-        $result[] = new TableTentsModule(
+        $result[] = new Tool(
             "Table Tents",
             "Produce a printable version of the table tents for the various con sessions.",
             "module/table_tents/TableTentsConfig.php",

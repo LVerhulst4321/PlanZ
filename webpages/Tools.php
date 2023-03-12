@@ -1,9 +1,15 @@
 <?php
+
+namespace PlanZ;
+
 global $linki, $title;
 $title = "Tools and Utilities";
 require_once __DIR__ . '/StaffCommonCode.php';
 require_once __DIR__ . '/tool_model.php';
 require_once __DIR__ . '/api/admin/module_model.php';
+
+use mysqli;
+use ReflectionMethod;
 
 class ToolHelper
 {
@@ -17,7 +23,7 @@ class ToolHelper
     public static function getAllTools(mysqli $db): array
     {
         $result = [];
-        $modules = PlanzModule::findAllEnabledModules($db);
+        $modules = PlanZModule::findAllEnabledModules($db);
         foreach ($modules as $module) {
             $fileName = $module->getDescriptorFileName();
             try {
