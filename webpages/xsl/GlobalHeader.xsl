@@ -64,7 +64,7 @@
                         </xsl:when>
                         <xsl:when test="not($no_user_required)">
                             <div>
-                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="concat($basepath, $LOGIN_PHP)" data-pbo="GlobalHeader.xsl:59">
+                                <form id="login-form" name="loginform" class="form-horizontal" method="post" action="{concat($basepath, $LOGIN_PHP)}" data-pbo="GlobalHeader.xsl:59">
                                     <fieldset id="login-box">
                                         <xsl:choose>
                                             <xsl:when test="$login_page_status='Normal'">

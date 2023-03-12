@@ -1,4 +1,7 @@
 <?php
+
+namespace PlanZ;
+
 // Copyright (c) 2022 BC Holmes. All rights reserved. See copyright document for more details.
 // This function provides basic management for modules: allowing admins to enable modules.
 
@@ -13,6 +16,9 @@ require_once('../../data_functions.php');
 require_once('../http_session_functions.php');
 require_once('./module_model.php');
 
+use Authentication;
+use Exception;
+
 function update_current_modules_and_permissions($db, $badgeId) {
     set_permission_set($badgeId, $db);
     set_modules($db);
@@ -23,10 +29,10 @@ $db = connect_to_db(true);
 $authentication = new Authentication();
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isAdminModulesAllowed()) {
-        $modules = PlanzModule::findAll($db);
+        $modules = PlanZModule::findAll($db);
         header('Content-type: application/json; charset=utf-8');
 
-        $json_string = json_encode(array("modules" => PlanzModule::asJsonArray($modules)));
+        $json_string = json_encode(array("modules" => PlanZModule::asJsonArray($modules)));
         echo $json_string;
     } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $authentication->isAdminModulesAllowed()) {
 
@@ -35,7 +41,7 @@ try {
         $db->begin_transaction();
         try {
             foreach ($json as $key => $value) {
-                $planzModule = PlanzModule::findByPackageName($db, $key);
+                $planzModule = PlanZModule::findByPackageName($db, $key);
                 if ($planzModule) {
                     $planzModule->updateEnabled($db, $value ? 1 : 0);
                 }

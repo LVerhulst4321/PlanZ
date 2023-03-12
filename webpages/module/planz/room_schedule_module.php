@@ -2,14 +2,19 @@
 
 namespace PlanZ\Module;
 
-require_once(__DIR__ . "/../../tool_model.php");
+require_once __DIR__ . "/../module_base.php";
+require_once __DIR__ . "/../../tool_model.php";
 
-use Tool;
+use PlanZ\ModuleBase;
+use PlanZ\Tool;
 
-class RoomScheduleModule {
+class RoomScheduleModule extends ModuleBase {
 
-    public static function getTools() {
-        $result = array();
+    /**
+     * {@inheritDoc}
+     */
+    public static function getTools(): array {
+        $result = [];
 
         $result[] = new Tool("Room Schedule", "Produce a printable version of the room schedule, by day.", "printRoomScheduleConfig.php");
         return $result;

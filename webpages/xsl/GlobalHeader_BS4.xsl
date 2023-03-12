@@ -138,7 +138,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                        <form id="login-form" class="col-md-6" name="loginform" method="post" action="concat($basepath, $LOGIN_PHP)" data-pbo="GlobalHeader_BS4.xsl:60">
+                        <form id="login-form" class="col-md-6" name="loginform" method="post" action="{concat($basepath, $LOGIN_PHP)}" data-pbo="GlobalHeader_BS4.xsl:60">
                             <fieldset id="login-box mt-3">
                                 <div class="form-group">
                                     <label for="badgeid" class="sr-only"><xsl:value-of select="$USER_ID_PROMPT" /></label>

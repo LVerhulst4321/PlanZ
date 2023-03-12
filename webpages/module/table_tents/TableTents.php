@@ -1,11 +1,11 @@
 <?php
-    global $participant, $message_error, $message2, $congoinfo, $title, $linki;
-    $title = "Table Tents";
-    require_once('StaffCommonCode.php');
-    require_once('schedule_functions.php');
+global $participant, $message_error, $message2, $congoinfo, $title, $linki;
+$title = "Table Tents";
+require_once __DIR__ . '/../../StaffCommonCode.php';
+require_once __DIR__ . '/../../schedule_functions.php';
 
 $xml = get_scheduled_events_with_participants_as_xml($linki);
-$paramArray = array();
+$paramArray = ["basepath" => BASE_PATH];
 if (defined('CON_THEME') && CON_THEME !== "") {
     $paramArray['additionalCss'] = CON_THEME;
 }
