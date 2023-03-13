@@ -11,7 +11,7 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false, $
 <?php } ?>
     <script src="<?php echo BASE_PATH; ?>external/choices9.0.0/choices.min.js"></script>
 <?php if ($isDataTables && $bootstrap4) { ?>
-    <script src="https:://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <?php } else if ($isDataTables) { ?>
     <script src="<?php echo BASE_PATH; ?>external/dataTables1.10.16/jquery.dataTables.js"></script>
 <?php }
