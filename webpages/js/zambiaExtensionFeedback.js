@@ -7,7 +7,7 @@ $(function() {
 
         fetch: function(term) {
             $('#load-spinner').show();
-            $.ajax({ 
+            $.ajax({
                 url: 'api/session_feedback_list.php' + (term ? '?q=' + encodeURIComponent(term) : ''),
                 method: 'GET',
                 success: function(data) {
@@ -38,7 +38,7 @@ $(function() {
             let $select = $(e.target);
             let sessionId = $select.closest('.session-block').data('sessionid');
             let name = $select.attr('name');
-            let value = $select.prop("tagName") === 'SELECT' ? $select.val() : $select.prop('checked'); 
+            let value = $select.prop("tagName") === 'SELECT' ? $select.val() : $select.prop('checked');
             $.zambia.feedback.sendToUpdateServer(sessionId, name, value);
         },
 
@@ -60,7 +60,7 @@ $(function() {
 
         sendToUpdateServer: (sessionId, name, value) => {
             $.zambia.clearAlerts('danger');
-            $.ajax({ 
+            $.ajax({
                 url: 'api/session_feedback_update.php',
                 data: JSON.stringify({
                     "sessionId": sessionId,
@@ -111,28 +111,28 @@ $(function() {
                             let $row1 = $('<div class="row"></row>');
                             let $attendQuestion = $('<div class="form-row col-lg-6 align-items-baseline"><label class="col-auto small" for="attend-question">Are you likely to attend this session?</label>' +
                                 '<div class="col-auto">' +
-                                '<select id="attend-question" class="form-control form-control-sm col-auto" name="attend">' + 
-                                    '<option value=""></option><option value="1">Very likely</option><option value="2">Likely</option><option value="3">Maybe</option><option value="4">Unlikely</option><option value="5">Very unlikely</option></select>' 
+                                '<select id="attend-question" class="form-control form-control-sm col-auto" name="attend">' +
+                                    '<option value=""></option><option value="1">Very likely</option><option value="2">Likely</option><option value="3">Maybe</option><option value="4">Unlikely</option><option value="5">Very unlikely</option></select>'
                                     + '</div></div>');
-                            let $virtualQuestion = $('<div class="form-row col-lg-6 align-items-baseline">' 
+                            let $virtualQuestion = $('<div class="form-row col-lg-6 align-items-baseline">'
                                     + '<label class="col-auto small" for="attend-question-' + session.sessionId + '">If so, how will you attend this session?</label>'
                                     + '<div class="col-auto" name="attendance-type">'
-                                    + '<select id="attend-question-' + session.sessionId + '" class="form-control form-control-sm col-auto" name="attend-type">' + 
-                                        '<option value=""></option><option value="1">In-person</option><option value="2">Virtually</option><option value="3">Either works</option></select>' 
+                                    + '<select id="attend-question-' + session.sessionId + '" class="form-control form-control-sm col-auto" name="attend-type">' +
+                                        '<option value=""></option><option value="1">In-person</option><option value="2">Virtually</option><option value="3">Either works</option></select>'
                                         + '</div></div>');
                             let $row2 = $('<div class="row"></row>');
                             let $assignmentQuestion = $('<div class="form-row col-lg-6 align-items-baseline"><label class="col-auto small" for="attend-question">Do you want to be assigned to this session?</label>' +
                                 '<div class="col-auto">' +
-                                '<select id="attend-question" class="form-control form-control-sm col-auto" name="interest">' + 
-                                    '<option value=""></option><option value="1">So much yes!</option><option value="2">Yes</option><option value="3">Maybe</option><option value="4">Only as a last resort</option><option value="5">Nope nope nope nope!</option></select>' 
+                                '<select id="attend-question" class="form-control form-control-sm col-auto" name="interest">' +
+                                    '<option value=""></option><option value="1">So much yes!</option><option value="2">Yes</option><option value="3">Maybe</option><option value="4">Only as a last resort</option><option value="6">Nope nope nope nope!</option></select>'
                                     + '</div></div>');
-                            let $moderatorQuestion = $('<div class="form-row col-lg-6 align-items-baseline">' 
+                            let $moderatorQuestion = $('<div class="form-row col-lg-6 align-items-baseline">'
                                                         + '<div class="form-check mb-2">'
                                                         +   '<input class="form-check-input" type="checkbox" id="moderate-' + session.sessionId + '"  name="moderate" />'
                                                         +   '<label class="form-check-label small" for="moderate-' + session.sessionId + '">'
                                                         +      'I volunteer to moderate this panel'
                                                         +   '</label></div></div>');
-                            let $row3 = $('<div class="row"><div class="col-12 form-group">' 
+                            let $row3 = $('<div class="row"><div class="col-12 form-group">'
                                 + '<label for="reason-' + session.sessionId + '" class="small sr-only">Panel qualifications</label>'
                                 + '<input type="text" class="form-control form-control-sm" id="reason-' + session.sessionId + '" placeholder="Tell us why you\'d be great on this session..." name="comments" />'
                             + '</div></div>');

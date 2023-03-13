@@ -91,7 +91,7 @@ EOD;
         JOIN CongoDump CD ON CD.badgeid = PSI.badgeid
         WHERE PSI.sessionid=?
           AND ((PSI.rank IS NOT NULL
-          AND PSI.rank < 5) OR (PSI.willmoderate = 1))
+          AND PSI.rank < 6) OR (PSI.willmoderate = 1))
           AND P.badgeid NOT IN (
                 select badgeid from ParticipantOnSession POS WHERE POS.sessionid = ?)
         ORDER BY badgename;
