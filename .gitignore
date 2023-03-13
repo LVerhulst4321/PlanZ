@@ -7,6 +7,8 @@ client/dist/
 webpages/brainstorm/build
 webpages/brainstorm/node_modules/
 webpages/vendor/
+webpages/dist/
+webpages/obs/
 
 # Exclude non-sample config files.
 webpages/config/db_name.php
