@@ -2,8 +2,8 @@
 // Copyright (c) 2021 BC Holmes. All rights reserved. See copyright document for more details.
 // This function finds the panel list that we want to solicit participant feedback for.
 
-if (!include ('../config/db_name.php')) {
-    include ('../config/db_name.php');
+if (file_exists(__DIR__ . '/../config/db_name.php')) {
+    include __DIR__ . '/../config/db_name.php';
 }
 require_once('../db_exceptions.php');
 require_once('./db_support_functions.php');
@@ -53,7 +53,7 @@ function find_session_for_feedback($db, $badgeid, $term) {
        $clause
      ORDER BY t.display_order, s.sessionid;
 EOD;
-   
+
     $stmt = mysqli_prepare($db, $query);
     mysqli_stmt_bind_param($stmt, "s", $badgeid);
     if (mysqli_stmt_execute($stmt)) {

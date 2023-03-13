@@ -40,19 +40,21 @@
 }
 
 .bs4 {
-    .nav-tabs {
-        border-bottom: 2px solid @gray;
-        
-        .nav-link {
-            background-color: @lightest-gray;
-            border: 2px solid @gray;
-            margin-left: 1px;
-            margin-right: 1px;
-        }
+    .config-table-editor {
+        .nav-tabs {
+            border-bottom: 2px solid @gray;
 
-        .nav-item.show .nav-link, .nav-link.active {
-            background-color: @white;
-            border-color: @near-black @near-black @gray;
+            .nav-link {
+                background-color: @lightest-gray;
+                border: 2px solid @gray;
+                margin-left: 1px;
+                margin-right: 1px;
+            }
+
+            .nav-item.show .nav-link, .nav-link.active {
+                background-color: @white;
+                border-color: @near-black @near-black @gray;
+            }
         }
     }
 }
@@ -109,7 +111,7 @@
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-    
+
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -164,10 +166,10 @@
 .tag-chk-label-wrapper {
     padding-bottom:0.3rem;
     padding-top:0.3rem;
-    
+
     &.disabled {
         background-color:@lightest-gray;
-        
+
         .tag-chk-label {
             font-style: italic;
         }
@@ -196,7 +198,7 @@
     padding-right: 1.5rem;
 }
 
-input[type='text'], input[type='password'] {
+input[type='text']:not(.form-control), input[type='password']:not(.form-control) {
     padding-left: 4px;
     padding-right: 4px;
 }
@@ -309,22 +311,65 @@ input[type='text'].disabled {
 /* End of Tabulator overrides */
 .session-status-definitions {
     max-width: 90rem;
-    
+
     dt {
         margin-left: 2rem;
     }
-    
+
     dd {
         margin-left: 4rem;
     }
 }
 
-table.dataTable.table-sm { 
+footer {
+    padding-top: 1rem;
+}
+
+table.dataTable.table-sm {
     thead th {
         padding: 0.3rem 18px 0.3rem 0.3rem;
     }
-    tbody th, 
+    tbody th,
     tbody td {
         padding: 0.3rem;
     }
+}
+
+@media (pointer: fine) {
+    .visible-on-hover button.btn {
+        display: none;
+        transition: 1s;
+    }
+    .visible-on-hover:hover button.btn {
+        display: inline;
+        transition: 1s;
+    }
+}
+
+table.table {
+    tr.highlight {
+        td {
+            background-color: #f6ebc8;
+        }
+    }
+}
+
+table.table.table-striped tr.highlight:nth-child(odd) td {
+    background-color: #d1c7a6;
+}
+
+.participant-avatar {
+    width: 24rem;
+    height: 24rem;
+    object-fit: cover;
+}
+
+.participant-avatar-sm {
+    width: 5rem;
+    height: 5rem;
+}
+
+.participant-avatar-xs {
+    width: 2rem;
+    height: 2rem;
 }

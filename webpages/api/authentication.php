@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/../data_functions.php');
+
 class Authentication {
     function isLoggedIn() {
         return isset($_SESSION['badgeid']);

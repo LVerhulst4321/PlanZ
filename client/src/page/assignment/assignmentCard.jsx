@@ -11,7 +11,7 @@ const AssignmentCard = ({assignee, assigned, session}) => {
         <Card.Body className="p-3">
 
             <div className="d-flex" style={{ gap: "1rem" }}>
-                <div style={{ flexGrow: "0" }}>
+                <div style={{ flexGrow: "0", flexShrink: "0" }}>
                     <img src={assignee.links.avatar} className="rounded-circle participant-avatar participant-avatar-sm img-thumbnail" alt={'Avatar for ' + assignee.name} />
                 </div>
                 <div className="d-flex flex-column justify-content-between" style={{ flexGrow: "1" }}>

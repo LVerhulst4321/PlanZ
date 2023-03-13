@@ -27,5 +27,5 @@ Your browser should automatically open http://localhost:8080. At the moment, '/'
 unknown page. But if, for example, you manually open http://localhost:8080/brainstorm.php, you should see
 the brainstorm page. Note that these things are true:
 
-- the header and footer do not appear, because they're served by the back-end server.
+- the header and footer are static placeholders; normally, the header and footer are rendered by the server.
 - server requests currently fail because there's no way to log in.

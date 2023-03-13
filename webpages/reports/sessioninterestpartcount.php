@@ -16,16 +16,16 @@ SELECT
         COUNT(sessionid) AS interested,
         CD.badgename,
         concat(CD.firstname,' ',CD.lastname) AS name,
-        PA.maxprog 
+        PA.maxprog
     FROM
                   Participants P
              JOIN CongoDump CD USING (badgeid)
         LEFT JOIN ParticipantSessionInterest PSI USING (badgeid)
         LEFT OUTER JOIN ParticipantAvailability PA USING (badgeid)
     WHERE
-        P.interested = 1 
+        P.interested = 1
         AND ((PSI.rank is not NULL
-        AND PSI.rank != 0 AND PSI.rank != 5) OR PSI.willmoderate = 1)
+        AND PSI.rank != 0 AND PSI.rank != 6) OR PSI.willmoderate = 1)
     GROUP BY
         P.badgeid, P.pubsname, CD.badgename, name
     ORDER BY

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File created by Peter Olszowka July 17, 2020
  * Copyright (c) 2020-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
  */
@@ -265,38 +265,36 @@ footer {
 table.dataTable.table-sm thead th {
   padding: 0.3rem 18px 0.3rem 0.3rem;
 }
-table.dataTable.table-sm tbody th, table.dataTable.table-sm tbody td {
+table.dataTable.table-sm tbody th,
+table.dataTable.table-sm tbody td {
   padding: 0.3rem;
 }
 @media (pointer: fine) {
   .visible-on-hover button.btn {
-      display: none;
-      transition: 1s;
+    display: none;
+    transition: 1s;
   }
   .visible-on-hover:hover button.btn {
-      display: inline;
-      transition: 1s;
+    display: inline;
+    transition: 1s;
   }
 }
-
 table.table tr.highlight td {
   background-color: #f6ebc8;
 }
-
 table.table.table-striped tr.highlight:nth-child(odd) td {
   background-color: #d1c7a6;
 }
-
 .participant-avatar {
   width: 24rem;
-  max-width: 100%;
+  height: 24rem;
   object-fit: cover;
 }
-
 .participant-avatar-sm {
   width: 5rem;
+  height: 5rem;
 }
-
 .participant-avatar-xs {
   width: 2rem;
+  height: 2rem;
 }

@@ -2,7 +2,7 @@
     global $title;
     function reactPage($pageTitle, $permissionAtom) {
         $title = $pageTitle;
-        require_once('StaffCommonCode.php');
+        require_once(__DIR__ . '/StaffCommonCode.php');
         staff_header($title, true);
 
         if (isLoggedIn() && may_I($permissionAtom)) {
@@ -12,15 +12,15 @@
 
             <div id="app"></div>
             <script src="dist/planzReactApp.js"></script>
-<?php 
+<?php
         } else {
 ?>
         <div class="alert alert-warning">You do not have access to this function.</a>
-<?php 
-        } 
+<?php
+        }
 ?>
     </div>
 <?php
-        staff_footer(); 
+        staff_footer();
     }
 ?>

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:param name="basepath" select="'/'"/>
     <xsl:param name="additionalCss" select="''" />
     <xsl:param name="paper" select="'letter'" />
     <xsl:output encoding="UTF-8" indent="yes" method="html" />
     <xsl:template match="/">
         <html>
             <head>
-                <link rel="stylesheet" href="css/zambia_print.css" type="text/css" />
+                <link rel="stylesheet" href="{$basepath}css/zambia_print.css" type="text/css" />
                 <xsl:if test="not($additionalCss = '')">
                     <link rel="stylesheet" type="text/css">
-                        <xsl:attribute name="href"> 
-                            <xsl:value-of select="$additionalCss" />
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="concat($basepath, $additionalCss)" />
                         </xsl:attribute>
                     </link>
                 </xsl:if>
@@ -25,13 +26,13 @@
     <xsl:template match="doc/session">
         <section>
             <xsl:attribute name="class">
-                <xsl:value-of select="'table-tent tent-type-'" /> 
+                <xsl:value-of select="'table-tent tent-type-'" />
                 <xsl:value-of select="$tentType" />
-                <xsl:value-of select="' paper-'" /> 
+                <xsl:value-of select="' paper-'" />
                 <xsl:value-of select="$paper" />
-                <xsl:value-of select="' fold-lines-'" /> 
+                <xsl:value-of select="' fold-lines-'" />
                 <xsl:value-of select="$foldLines" />
-                <xsl:value-of select="' separator-pages-'" /> 
+                <xsl:value-of select="' separator-pages-'" />
                 <xsl:value-of select="$separatorPages" />
             </xsl:attribute>
             <xsl:if test="$separatorPages = 'yes'">

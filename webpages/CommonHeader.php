@@ -1,5 +1,5 @@
 <?php
-require_once('login_functions.php');
+require_once(__DIR__ . '/login_functions.php');
 //	Copyright (c) 2020 Peter Olszowka. All rights reserved. See copyright document for more details.
 function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageStatus, $headerErrorMessage = "", $bootstrap4 = false) {
     global $header_rendered;
@@ -11,6 +11,7 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["logged_in"] = $isLoggedIn;
     $paramArray["login_page_status"] = $loginPageStatus;
     $paramArray["CON_NAME"] = CON_NAME;
+    $paramArray["basepath"] = BASE_PATH;
     $paramArray["badgename"] = isset($_SESSION['badgename']) ? $_SESSION['badgename'] : '';
     if (defined('CON_HEADER_IMG') && CON_HEADER_IMG !== "") {
         $paramArray["headerimg"] = CON_HEADER_IMG;

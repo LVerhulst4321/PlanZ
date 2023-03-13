@@ -2,6 +2,8 @@
 // Copyright (c) 2021, 2022 BC Holmes. All rights reserved. See copyright document for more details.
 // These functions provide support for common database queries.
 
+require_once(__DIR__ . '/../db_exceptions.php');
+
 function connect_to_db($set_timezone = false) {
     $db = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
     if (!$db) {

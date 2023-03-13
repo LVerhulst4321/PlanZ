@@ -14,7 +14,7 @@ function RenderXSLT($xslFilename, $paramArray = [], $xmlDoc = false, $noecho = f
         $xmlDoc->appendChild($emptyDoc);
     }
     $xsl = new DomDocument;
-    $xsl->load("xsl/$xslFilename");
+    $xsl->load(__DIR__ . "/xsl/$xslFilename");
     $xslt = new XsltProcessor();
     $xslt->importStylesheet($xsl);
     if (is_array($paramArray) && count($paramArray) > 0) {
@@ -29,7 +29,7 @@ function RenderXSLT($xslFilename, $paramArray = [], $xmlDoc = false, $noecho = f
 
     if ($noecho)
         return $html;
- 
+
     echo $html;
 }
 ?>

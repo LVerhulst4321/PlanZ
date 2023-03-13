@@ -6,6 +6,7 @@
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="title" select="''"/>
     <!-- Page title -->
+    <xsl:param name="basepath" select="'/'"/>
     <xsl:param name="reportMenuList" select="''"/>
     <xsl:param name="badgename" select="'Current User'"/>
     <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
@@ -60,14 +61,14 @@
                             Sessions
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarSessionsDropdown">
-                            <a class="dropdown-item" href="StaffSearchSessions.php">Search Sessions</a>
-                            <a class="dropdown-item" href="CreateSession.php">Create New Session</a>
-                            <a class="dropdown-item" href="ViewSessionCountReport.php">View Session Counts</a>
-                            <a class="dropdown-item" href="ViewAllSessions.php">View All Sessions</a>
-                            <a class="dropdown-item" href="ViewPrecis.php?showlinks=0">View Precis</a>
-                            <a class="dropdown-item" href="ViewPrecis.php?showlinks=1">View Precis with Links</a>
-                            <a class="dropdown-item" href="StaffSearchPreviousSessions.php">Import Sessions</a>
-                            <a class="dropdown-item" href="SessionHistory.php">Session History</a>
+                            <a class="dropdown-item" href="{$basepath}StaffSearchSessions.php">Search Sessions</a>
+                            <a class="dropdown-item" href="{$basepath}CreateSession.php">Create New Session</a>
+                            <a class="dropdown-item" href="{$basepath}ViewSessionCountReport.php">View Session Counts</a>
+                            <a class="dropdown-item" href="{$basepath}ViewAllSessions.php">View All Sessions</a>
+                            <a class="dropdown-item" href="{$basepath}ViewPrecis.php?showlinks=0">View Precis</a>
+                            <a class="dropdown-item" href="{$basepath}ViewPrecis.php?showlinks=1">View Precis with Links</a>
+                            <a class="dropdown-item" href="{$basepath}StaffSearchPreviousSessions.php">Import Sessions</a>
+                            <a class="dropdown-item" href="{$basepath}SessionHistory.php">Session History</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown mr-2 py-0">
@@ -77,16 +78,16 @@
                             Participants
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarParticipantsDropdown">
-                            <a class="dropdown-item" href="AdminParticipants.php">Administer</a>
+                            <a class="dropdown-item" href="{$basepath}AdminParticipants.php">Administer</a>
                             <xsl:if test="$PARTICIPANT_PHOTOS = '1'">
-                              <a class="dropdown-item" href="AdminPhotos.php">Photos</a>
+                              <a class="dropdown-item" href="{$basepath}AdminPhotos.php">Photos</a>
                             </xsl:if>
-                            <a class="dropdown-item" href="InviteParticipants.php">Invite to a Session</a>
+                            <a class="dropdown-item" href="{$basepath}InviteParticipants.php">Invite to a Session</a>
                             <xsl:if test="$emailAvailable = '1' and /doc/query[@queryname='permission_set']/row[@permatomtag='SendEmail']">
-                                <a class="dropdown-item" href="StaffSendEmailCompose.php">Send email</a>
+                                <a class="dropdown-item" href="{$basepath}StaffSendEmailCompose.php">Send email</a>
                             </xsl:if>
                             <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='CreateUser']">
-                                <a class="dropdown-item" href="AddUser.php">Create User</a>
+                                <a class="dropdown-item" href="{$basepath}AddUser.php">Create User</a>
                             </xsl:if>
                         </div>
                     </li>
@@ -106,7 +107,7 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                             <div class="dropdown-divider"/>
-                            <a class="dropdown-item" href='staffReportsInCategory.php'>All Reports</a>
+                            <a class="dropdown-item" href='/staffReportsInCategory.php'>All Reports</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown mr-2 py-0">
@@ -117,21 +118,21 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarSchedulingDropdown">
                             <xsl:if test="$AutoScheduler">
-                                <a class="dropdown-item" href="Autoscheduler.php">Auto-Scheduler</a>
+                                <a class="dropdown-item" href="{$basepath}Autoscheduler.php">Auto-Scheduler</a>
                             </xsl:if>
-                            <a class="dropdown-item" href="MaintainRoomSched.php">Maintain Room Schedule</a>
-                            <a class="dropdown-item" href="StaffMaintainSchedule.php">Grid Scheduler</a>
-                            <a class="dropdown-item" href="CurrentSchedule.php">Current Schedule</a>
+                            <a class="dropdown-item" href="{$basepath}MaintainRoomSched.php">Maintain Room Schedule</a>
+                            <a class="dropdown-item" href="{$basepath}StaffMaintainSchedule.php">Grid Scheduler</a>
+                            <a class="dropdown-item" href="{$basepath}CurrentSchedule.php">Current Schedule</a>
                             <xsl:if test="$ShowVolunteer">
-                                <a class="dropdown-item" href="StaffVolunteerPage.php">Create Volunteer Schedule</a>
+                                <a class="dropdown-item" href="{$basepath}StaffVolunteerPage.php">Create Volunteer Schedule</a>
                             </xsl:if>
                         </div>
                     </li>
                     <li class="nav-item py-0 mr-2">
-                        <a class="nav-link py-1" href="StaffPage.php">Overview</a>
+                        <a class="nav-link py-1" href="{$basepath}StaffPage.php">Overview</a>
                     </li>
                     <li class="nav-item py-0 mr-4">
-                        <a class="nav-link py-1" href="Tools.php">Tools</a>
+                        <a class="nav-link py-1" href="{$basepath}Tools.php">Tools</a>
                     </li>
                 </ul>
                 <form method="post" action="ShowSessions.php" class="form-inline my-0 my-lg-0 mr-4">
@@ -155,24 +156,24 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarAdminDropdown">
                                 <xsl:if test="$AdminPhases">
-                                    <a class="dropdown-item" href="AdminPhases.php">Administer Phases</a>
+                                    <a class="dropdown-item" href="{$basepath}AdminPhases.php">Administer Phases</a>
                                 </xsl:if>
                                 <xsl:if test="$ConfigureReports">
-                                    <a class="dropdown-item" href="BuildReportMenus.php">Build Report Menus</a>
+                                    <a class="dropdown-item" href="{$basepath}BuildReportMenus.php">Build Report Menus</a>
                                 </xsl:if>
                                 <xsl:if test="$Administrator">
-                                    <a class="dropdown-item" href="ConfigurationAdmin.php">Edit Configuration Settings</a>
-                                    <a class="dropdown-item" href="EditCustomText.php">Edit Custom Text</a>
-                                    <a class="dropdown-item" href="EditSurvey.php">Edit Survey</a>
+                                    <a class="dropdown-item" href="{$basepath}ConfigurationAdmin.php">Edit Configuration Settings</a>
+                                    <a class="dropdown-item" href="{$basepath}EditCustomText.php">Edit Custom Text</a>
+                                    <a class="dropdown-item" href="{$basepath}EditSurvey.php">Edit Survey</a>
                                 </xsl:if>
                                 <xsl:if test="$EditAnyTable">
-                                    <a class="dropdown-item" href="ConfigTableEditor.php">Edit Configuration Tables</a>
+                                    <a class="dropdown-item" href="{$basepath}ConfigTableEditor.php">Edit Configuration Tables</a>
                                 </xsl:if>
                                 <xsl:if test="$ExportSchedule">
-                                    <a class="dropdown-item" href="StaffCreateKonOpas.php">Update KonOpas and ConClar</a>
+                                    <a class="dropdown-item" href="{$basepath}StaffCreateKonOpas.php">Update KonOpas and ConClar</a>
                                 </xsl:if>
                                 <xsl:if test="$AdminModules">
-                                    <a class="dropdown-item" href="AdminModules.php">Administer Modules</a>
+                                    <a class="dropdown-item" href="{$basepath}AdminModules.php">Administer Modules</a>
                                 </xsl:if>
                             </div>
                         </div>
@@ -180,7 +181,7 @@
                 </xsl:if>
                 <div class="navbar-nav ml-auto mr-2">
                     <div class="nav-item py-0">
-                        <a id="ParticipantView" class="nav-link py-1" href="welcome.php">Participant View</a>
+                        <a id="ParticipantView" class="nav-link py-1" href="{$basepath}welcome.php">Participant View</a>
                     </div>
                 </div>
                  <div class="navbar-nav dropdown py-0">
@@ -190,11 +191,11 @@
                         <xsl:value-of select="$badgename"/>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarSessionsDropdown">
-                        <a class="dropdown-item" href="./my_contact.php">Profile</a>
-                        <a class="dropdown-item" href="MySchedule.php">My Schedule</a>
-                        <a class="dropdown-item" href="my_sched_constr.php">Availability</a>
+                        <a class="dropdown-item" href="{$basepath}my_contact.php">Profile</a>
+                        <a class="dropdown-item" href="{$basepath}MySchedule.php">My Schedule</a>
+                        <a class="dropdown-item" href="{$basepath}my_sched_constr.php">Availability</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="./logout.php">Log out</a>
+                        <a class="dropdown-item" href="{$basepath}logout.php">Log out</a>
                     </div>
                 </div>
             </div>

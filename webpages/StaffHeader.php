@@ -7,8 +7,8 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
     global $fullPage;
     $isLoggedIn = isLoggedIn();
     if ($isLoggedIn && REQUIRE_CONSENT && (empty($_SESSION['data_consent']) || $_SESSION['data_consent'] !== 1)) {
-        require_once('ParticipantHeader.php');
-        require_once('ParticipantFooter.php');
+        require_once(__DIR__ . '/ParticipantHeader.php');
+        require_once(__DIR__ . '/ParticipantFooter.php');
         participant_header(''); // force data consent page
         exit();
     }
@@ -42,6 +42,7 @@ function staff_header($title, $bootstrap4 = false, $is_report = false, $reportCo
     if ($isLoggedIn) {
         $paramArray = array();
         $paramArray["title"] = $title;
+        $paramArray["basepath"] = BASE_PATH;
         $paramArray["adduser"] = !USE_REG_SYSTEM;
         if (isset($_SESSION['badgename'])) {
             $paramArray["badgename"] = $_SESSION['badgename'];

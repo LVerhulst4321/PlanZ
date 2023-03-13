@@ -13,6 +13,7 @@ if( file_exists( '/etc/planz/db_env_sample.php' ) ) {
 
 define("CON_NAME", "PlanZ Demo");
 define("CON_URL", "http://samplecon.org");
+define("BASE_PATH", "/"); // Base path links will be relative to. Only change if hosting in a subdirectory.
 define("BRAINSTORM_EMAIL", "brain@somewhere.net");
 define("PROGRAM_EMAIL", "program@somewhere.net");
 define("CON_NUM_DAYS", 3); // code works for 1 - 8
@@ -31,7 +32,8 @@ define("DISPLAY_24_HOUR_TIME", FALSE); // TRUE: times in 24 hour clock. FALSE: t
 define("DURATION_IN_MINUTES", FALSE); // TRUE: in mmm; FALSE: in hh:mm
         // affects session edit/create page only, not reports
 define("DEFAULT_DURATION", "1:15"); // must correspond to DURATION_IN_MINUTES
-define("SMTP_QUEUEONLY", FALSE); // TRUE = add to DB queue, schedule processEmailQueue.php as a cron job do the send; FALSE send immediately, add to queue only on transport failure
+define("SMTP_QUEUEONLY", FALSE); // TRUE = add to DB queue, schedule /scripts/processEmailQueue.php as a cron job do the send; FALSE send immediately, add to queue only on transport failure
+define("SMTP_MAX_MESSAGES", "100"); // Maximum number of messages to send per cron run. Set to 0 for no limit.
 define("PREF_TTL_SESNS_LMT", 10); // Input data verification limit for preferred total number of sessions
 define("PREF_DLY_SESNS_LMT", 5); // Input data verification limit for preferred daily limit of sessions
 define("AVAILABILITY_ROWS", 8); // Number of rows of availability records to render
@@ -113,6 +115,7 @@ define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participa
 
 define("JSON_EXTRACT_DIRECTORY", "/var/data/guide/");  // Path to directory where Konopas/ConClár files to be written.
 define("JSON_EXTRACT_ASSIGN_VARS", FALSE); // If TRUE include variable names in JSON output files (required for KonOpas).
+define("OBS_EXTRACT_DIRECTORY", "obs"); // Path to directory for OBS files, relative to web root.
 
 define("PHOTO_EXTRACT_LINK_TYPE", ""); // Link type to use when exporting photos to KonOpas/ConClár.
         // Supported values: "img", "photo" or "img_256_url" (the last one comes from Grenadine, so not really recommended).
@@ -127,7 +130,7 @@ define("CON_THEME_FAVICON", "");
         // if you want a con-specific favicon , you can reference an image file here.
         // for example: define("CON_THEME_FAVICON", "themes/reallybigcon/myfavicon.png");
 define("CON_HEADER_IMG", "");
-        // to improve the con branding, you can define a con-specific header image that will take the place of the 
+        // to improve the con branding, you can define a con-specific header image that will take the place of the
         // PlanZ illustrated "Z" image, like so: define("CON_HEADER_IMG", "themes/reallybigcon/header.jpg");
 define("CON_HEADER_IMG_ALT", "");
         // to improve the con branding, you can specify the alt-text of the header image. For example:

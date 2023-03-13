@@ -1,8 +1,10 @@
 <?php
 
+use PlanZ\PlanZModule;
+
 /*
  * is_email_login_supported:
- *  If the installation has specified the options for login via email address in the installation's, 
+ *  If the installation has specified the options for login via email address in the installation's,
  *  db_name.php file then return true; else return false (which means that only login by badgeid
  *  is supported).
  */
@@ -82,7 +84,7 @@ SELECT DISTINCT
     WHERE
             (PH.phaseid IS NOT NULL OR P.phaseid IS NULL)
         AND (UHPR.badgeid IS NOT NULL OR P.badgeid='$badgeid')
-        AND (PA.module_id is null 
+        AND (PA.module_id is null
 			OR PA.module_id in (select id from module where is_enabled = 1));
 EOD;
     $resultSet = mysqli_query($db, $query);

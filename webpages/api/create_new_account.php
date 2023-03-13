@@ -2,8 +2,8 @@
 // Copyright (c) 2021 BC Holmes. All rights reserved. See copyright document for more details.
 // This function finds the panel list that we want to solicit participant feedback for.
 
-if (!include ('../config/db_name.php')) {
-    include ('../config/db_name.php');
+if (file_exists(__DIR__ . '/../config/db_name.php')) {
+    include __DIR__ . '/../config/db_name.php';
 }
 require_once('../external/swiftmailer-5.4.8/lib/swift_required.php');
 require_once('../db_exceptions.php');
@@ -19,7 +19,7 @@ function send_email_to_support($email, $badgeName, $badgeid) {
     <p>Hi $supportName</p>
     <p>
         A user has created a new account in the programming system. We just thought you should
-        know that because it could be legit, or it could be nasty hackers from Russia. 
+        know that because it could be legit, or it could be nasty hackers from Russia.
     </p>
     <p>
         <b>Name: </b> $badgeName<br />
@@ -65,7 +65,7 @@ EOD;
         }
         $result->free_result();
         $stmt->close();
-        
+
         return $email;
     } else {
         throw new DatabaseSqlException("The query could not be processed");
@@ -120,7 +120,7 @@ function split_first_and_last_names($name) {
             if ($i > 0) {
                 $first .= ' ';
             }
-            $first .= $words[$i]; 
+            $first .= $words[$i];
         }
         return array("first_name" => $first,
             "last_name" => $last);
@@ -149,7 +149,7 @@ function create_new_participant($db, $badgeid, $pubsname, $email_address, $passw
     $query = <<<EOD
     INSERT
         INTO `Participants` (badgeid, pubsname, password)
- VALUES 
+ VALUES
         (?, ?, ?);
 EOD;
 
@@ -167,7 +167,7 @@ EOD;
     $query = <<<EOD
     INSERT
         INTO `CongoDump` (badgeid, badgename, `email`, firstname, lastname)
-    VALUES 
+    VALUES
         (?, ?, ?, ?, ?);
 EOD;
 
@@ -180,7 +180,7 @@ EOD;
     }
 
     $query = <<<EOD
-    INSERT INTO `UserHasPermissionRole` 
+    INSERT INTO `UserHasPermissionRole`
         (badgeid, permroleid)
     SELECT ?, permroleid
       FROM PermissionRoles
@@ -203,7 +203,7 @@ try {
         $json_string = file_get_contents('php://input');
         $json = json_decode($json_string, true);
 
-        if (array_key_exists('control', $json) && array_key_exists('controliv', $json) 
+        if (array_key_exists('control', $json) && array_key_exists('controliv', $json)
             && array_key_exists('badgeName', $json) && array_key_exists('password', $json)) {
 
             $control = interpretControlString($json['control'], $json['controliv']);
