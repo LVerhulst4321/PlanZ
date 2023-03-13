@@ -1,7 +1,7 @@
 <?php
 
-if (!include ('../../config/db_name.php')) {
-    include ('../../config/db_name.php');
+if (file_exists(__DIR__ . '/../../config/db_name.php')) {
+    include __DIR__ . '/../../config/db_name.php';
 }
 
 require_once('../../db_exceptions.php');

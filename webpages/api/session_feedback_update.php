@@ -2,8 +2,8 @@
 // Copyright (c) 2021 BC Holmes. All rights reserved. See copyright document for more details.
 // This function finds the panel list that we want to solicit participant feedback for.
 
-if (!include ('../config/db_name.php')) {
-    include ('../config/db_name.php');
+if (file_exists(__DIR__ . '/../config/db_name.php')) {
+    include __DIR__ . '/../config/db_name.php';
 }
 require_once('../db_exceptions.php');
 require_once('./db_support_functions.php');
@@ -16,7 +16,7 @@ function choose_query_based_on_field($name) {
         $query = <<<EOD
         INSERT  INTO ParticipantSessionInterest
                 (badgeid, sessionid, rank)
-        VALUES (?, ?, ?) 
+        VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE rank = ?;
 EOD;
         return $query;
@@ -24,7 +24,7 @@ EOD;
         $query = <<<EOD
         INSERT  INTO ParticipantSessionInterest
                 (badgeid, sessionid, willmoderate)
-        VALUES (?, ?, ?) 
+        VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE willmoderate = ?;
 EOD;
         return $query;
@@ -32,7 +32,7 @@ EOD;
         $query = <<<EOD
         INSERT  INTO ParticipantSessionInterest
                 (badgeid, sessionid, attend)
-        VALUES (?, ?, ?) 
+        VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE attend = ?;
 EOD;
         return $query;
@@ -40,7 +40,7 @@ EOD;
         $query = <<<EOD
         INSERT  INTO ParticipantSessionInterest
                 (badgeid, sessionid, attend_type)
-        VALUES (?, ?, ?) 
+        VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE attend_type = ?;
 EOD;
         return $query;
@@ -48,7 +48,7 @@ EOD;
         $query = <<<EOD
         INSERT  INTO ParticipantSessionInterest
                 (badgeid, sessionid, comments)
-        VALUES (?, ?, ?) 
+        VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE comments = ?;
 EOD;
         return $query;

@@ -17,7 +17,9 @@ $prevErrorLevel = error_reporting();
 $tempErrorLevel = $prevErrorLevel & ~ E_WARNING;
 error_reporting($tempErrorLevel);
 $includeFile = REPORT_INCLUDE_DIRECTORY . 'staffReportsInCategoryInclude.php';
-if (!include $includeFile) {
+if (file_exists($includeFile)) {
+    include $includeFile;
+} else {
     $message_error = "Report menus not built.  File $includeFile not found.";
     RenderError($message_error);
     exit();
@@ -37,7 +39,7 @@ staff_header($title, true);
     <div class="row mt-2">
         <div class=" col-md-9">
             <div class="list-group">
-<?php 
+<?php
 $reportList = array();
 foreach ($reportItem as $reportFileName => $item) {
     if ($reportcategoryid === "" || in_array($reportcategoryid, $item['categories'])) {
@@ -62,6 +64,6 @@ foreach ($reportList as $r => $record) {
         </div>
     </div>
 </div>
-<?php 
+<?php
 staff_footer();
 ?>
