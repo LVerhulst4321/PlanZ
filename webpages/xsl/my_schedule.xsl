@@ -7,6 +7,7 @@
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:param name="badgeid" select="''"/>
     <xsl:param name="allowConfirmation" select="'true'"/>
+	<xsl:param name="showComments" select="'true'" />
 	<xsl:output encoding="UTF-8" indent="yes" method="html" />
 	<xsl:template match="/">
 		<xsl:choose>
@@ -18,7 +19,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="doc/query[@queryName='sessions']/row">
 		<div class="mb-5">
 			<h5 class="mb-0"><xsl:value-of select="@title" disable-output-escaping="yes"/></h5>
@@ -143,19 +144,21 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
-			<div>
-				<xsl:attribute name="class">
-					<xsl:choose>
-						<xsl:when test="$allowConfirmation = 'true'">
-							<xsl:text>col-lg-3</xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>col-lg-6</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				<xsl:value-of select="@comments" />
-			</div>
+			<xsl:if test="$showComments = 'true'">
+				<div>
+					<xsl:attribute name="class">
+						<xsl:choose>
+							<xsl:when test="$allowConfirmation = 'true'">
+								<xsl:text>col-lg-3</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>col-lg-6</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+					<xsl:value-of select="@comments" />
+				</div>
+			</xsl:if>
 		</div>
 		<xsl:if test="@badgeid = $badgeid and $allowConfirmation = 'true'">
 			<div class="row mb-2 align-items-baseline">

@@ -96,6 +96,9 @@ define('LABEL_SEXUAL_ORIENTATION', "Sexual Orientation:"); // Label for sexual o
 define("USE_PRONOUNS", TRUE); // Let participants specify their pronouns on Personal Details page.
 define("LABEL_PRONOUNS_ARE", "My pronouns are:"); // Label for pronouns drop-down.
 define("LABEL_PRONOUNS_OTHER", "If you selected \"other\" for your pronouns, provide your pronouns here:"); // Label for "other" pronouns.
+
+define('MY_SCHEDULE_SHOW_COMMENTS', TRUE); // Should participant comments be shown on My Schedule?
+
 define("REG_PART_PREFIX", ""); // only needed for USE_REG_SYSTEM = FALSE; prefix portion of userid/badgeid before counter; can be empty string for no prefix
 define("REG_PART_DIGITS", 4); // only needed for USE_REG_SYSTEM = FALSE; number of digits to pad counter; if number has fewer than specified digits, will left pad with zeros
 define("HTML_BIO", TRUE); // Allow editing BIO as HTML and saving it both as plain text and HTML
