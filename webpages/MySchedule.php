@@ -46,7 +46,7 @@ SELECT
 EOD;
 $queryArr["participants"] = <<<EOD
 SELECT
-        POS.participantonsessionid, P.badgeid, POS.sessionid, CD.badgename, P.pubsname, 
+        POS.participantonsessionid, P.badgeid, POS.sessionid, CD.badgename, P.pubsname,
         IF (P.share_email=1, CD.email, NULL) AS email,
         POS.moderator, PSI.comments, POS.confirmed, POS.notes
     FROM
@@ -117,14 +117,21 @@ if (defined('CONFIRM_SESSION_ASSIGNMENT') && CONFIRM_SESSION_ASSIGNMENT === TRUE
     $allowConfirmation = 'true';
 ?>
     <div class="alert alert-primary">Please take a moment to confirm your panel assignments.</div>
-<?php 
+<?php
 }
 ?>
 <div class="card">
     <div class="card-body">
 <?php
 
-RenderXSLT('my_schedule.xsl', array( "badgeid" => $badgeid, "allowConfirmation" => $allowConfirmation ), $resultXML);
+RenderXSLT(
+    'my_schedule.xsl', [
+        "badgeid" => $badgeid,
+        "allowConfirmation" => $allowConfirmation,
+        "showComments" => MY_SCHEDULE_SHOW_COMMENTS ? 'true' : 'false',
+    ],
+    $resultXML
+);
 ?>
     </div>
 </div>
