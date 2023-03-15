@@ -34,15 +34,15 @@
                     <h2>
                         <xsl:choose>
                             <xsl:when test="$photoPath != '' and /doc/query[@queryName='participant_info']/row/@approvedphotofilename">
-                                <img class="rounded-circle participant-avatar" style="width: 2rem;" alt="Participant Photo/Avatar">
-                                    <xsl:attribute name="src"> 
+                                <img class="img-thumbnail rounded-circle participant-avatar participant-avatar-xs" alt="Participant Photo/Avatar">
+                                    <xsl:attribute name="src">
                                         <xsl:value-of select="concat($photoPath, '/', /doc/query[@queryName='participant_info']/row/@approvedphotofilename)" />
                                     </xsl:attribute>
                                 </img>
                             </xsl:when>
                             <xsl:when test="$photoPath != '' and $defaultPhoto != ''" alt="Default Photo/Avatar">
-                                <img class="rounded-circle participant-avatar" style="width: 2rem;">
-                                    <xsl:attribute name="src"> 
+                                <img class="img-thumbnail rounded-circle participant-avatar participant-avatar-xs">
+                                    <xsl:attribute name="src">
                                         <xsl:value-of select="concat($photoPath, '/', $defaultPhoto)" />
                                     </xsl:attribute>
                                 </img>
@@ -299,7 +299,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <textarea rows="5" cols="72" name="htmlbio" id="htmlbioTXTA"          
+                                        <textarea rows="5" cols="72" name="htmlbio" id="htmlbioTXTA"
                                             onchange="myProfile.bioChange()" onkeyup="myProfile.bioChange()"
                                             data-max-length="{$maxBioLen}">
                                             <xsl:choose>
