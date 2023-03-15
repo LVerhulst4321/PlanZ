@@ -26,6 +26,20 @@ define("RECAPTCHA_SERVER_KEY", ""); // ... and server key
 
 define("ROOT_URL", 'https://' . getenv("HOSTNAME") . '/'); // URL to reach this server. Required to generate an email password reset link.
 
+// The shared secrets to use for webhook clients.
+// This should be an associative array mapping client id to an array of keys.
+// The keys should be a random string. I suggest finding a random password generator and putting in a 64 character password
+// Example:
+// define("WEBHOOK_KEYS", array(
+//     "ConReg" => array(
+//         "QqGS&U$r1?9^@/rf$5q+t(I#"7t'TS%B}Om4^=Q/xjjE4X[x]x>_|Qi7}DjNa(8s"
+//     )
+// )
+// Normally each client should only have one secret configured, but while rotating them you may want to have the old and the new one at
+// the same time to avoid any downtime.
+define("WEBHOOK_KEYS", array(
+));
+
 define("ENCRYPT_KEY", ""); // used for encrypting hidden inputs; I suggest finding a random password generator and putting in a 64 character alphanumeric only password
 
 define("CUSTOM_LOGIN_PHP", ""); // Custom login function connected to reg system
