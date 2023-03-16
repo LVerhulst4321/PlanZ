@@ -176,7 +176,7 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                 <textarea class="form-control" rows="4" cols="70" name="progguiddesc" id="progguiddesc"
                     readonly="readonly"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
 <?php
-        if (BILINGUAL === TRUE) {
+        if (BILINGUAL === TRUE || SECOND_SESSION_SECTION === TRUE) {
 ?>
                 <label class="control-label vert-sep vert-sep-above" for="pocketprogtext">
                     <?php echo SECOND_DESCRIPTION_CAPTION;?>:
@@ -204,12 +204,12 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     rows="5" cols="70" name="progguiddesc"><?php echo htmlspecialchars($session["progguiddesc"],ENT_NOQUOTES);?></textarea>
             </div>
 <?php
-        if (BILINGUAL === TRUE) {
+        if (BILINGUAL === TRUE || SECOND_SESSION_SECTION === TRUE) {
 ?>
             <div class="form-group col-md-6">
                 <label for="pocketprogtext"><?php echo SECOND_DESCRIPTION_CAPTION;?>: </label>
                 <textarea class="form-control"
-                    rows="4" cols="70" name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
+                    rows="5" cols="70" name="pocketprogtext"><?php echo htmlspecialchars($session["pocketprogtext"],ENT_NOQUOTES);?></textarea>
             </div>
 <?php
         } else {
