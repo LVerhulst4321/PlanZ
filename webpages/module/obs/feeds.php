@@ -84,7 +84,7 @@ function showObsFeedOptions(): void
     // If we get here, directory should be good, so let's create some files...
     echo <<<EOD
         <h2>Writing OBS files...</h2>
-        <p>Writing files per room.</p>
+        <h3>Writing files per room.</h3>
     EOD;
     // Get participants.
     $participants = getParticipants();
@@ -96,22 +96,46 @@ function showObsFeedOptions(): void
     $result = mysqli_query_with_error_handling($query);
     echo "<ul>";
     while ($row = mysqli_fetch_object($result)) {
-        $filename = makeRoomFileName($row->roomname);
+        $filename = makeFileName('room', $row->roomname);
         $filepath = OBS_EXTRACT_DIRECTORY . '/' . $filename;
-        writeObsRoomFile($row->roomid, $rootDir . '/' . $filepath, $participants);
+        writeObsRoomFile(
+            $row->roomid,
+            $rootDir . '/' . $filepath,
+            ['room' => $row->roomname],
+            $participants
+        );
         echo "<li><a href=\"/$filepath\">$baseUrl/$filepath</a></li>";
     }
     echo "</ul>";
+
+    if (defined('OBS_EXTRACT_TAGS') && strlen(OBS_EXTRACT_TAGS)) {
+        echo "<h3>Writing tag files</h3>";
+        echo "<ul>";
+        foreach (explode(',', OBS_EXTRACT_TAGS) as $tag) {
+            $filename = makeFileName('tag', $tag);
+            $filepath = OBS_EXTRACT_DIRECTORY . '/' . $filename;
+            writeObsTagFile(
+                $tag,
+                $rootDir . '/' . $filepath,
+                ['tag' => $tag],
+                $participants
+            );
+            echo "<li><a href=\"/$filepath\">$baseUrl/$filepath</a></li>";
+        }
+        echo "</ul>";
+    }
+
 }
 
 /**
  * Take out non-alphanumberic chars.
  *
- * @param string $name The room name to make into a filename.
+ * @param string $type The type of item in the file.
+ * @param string $name The item name to make into a filename.
  *
  * @return string
  */
-function makeRoomFileName(string $name): string
+function makeFileName(string $type, string $name): string
 {
-    return 'obs_' . preg_replace('/[^a-zA-Z0-9]/', '', $name) . '.json';
+    return 'obs_' . $type . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $name) . '.json';
 }

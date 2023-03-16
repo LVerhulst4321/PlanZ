@@ -19,13 +19,43 @@ require_once __DIR__ . '/../../db_functions.php';
  *
  * @param int    $roomId       The room identifier.
  * @param string $filepath     The file to write to.
+ * @param array  $fileTags     Array of top level file tags such as room name.
  * @param array  $participants Array of participants per session.
  *
  * @return void
  */
-function writeObsRoomFile(int $roomId, string $filepath, array $participants): void
+function writeObsRoomFile(int $roomId, string $filepath, array  $fileTags, array $participants): void
 {
-    $json = json_encode(getObsRoomData($roomId, $participants));
+    $json = json_encode(getObsData("R.roomid = $roomId", $participants, $fileTags));
+    writeJsonFile($filepath, $json);
+}
+
+/**
+ * Write file for room.
+ *
+ * @param string $tag          The room identifier.
+ * @param string $filepath     The file to write to.
+ * @param array  $fileTags     Array of top level file tags such as room name.
+ * @param array  $participants Array of participants per session.
+ *
+ * @return void
+ */
+function writeObsTagFile(string $tag, string $filepath, array $fileTags, array $participants): void
+{
+    $json = json_encode(getObsData("TA.tagname = '$tag'", $participants, $fileTags));
+    writeJsonFile($filepath, $json);
+}
+
+/**
+ * Write the JSON encoded file data to the specified file path.
+ *
+ * @param string $filepath The path to the file to be written.
+ * @param string $json     The JSON data to write.
+ *
+ * @return void
+ */
+function writeJsonFile(string $filepath, string $json): void
+{
     $file = fopen($filepath, "w");
     if ($file === false) {
         echo "<p>Unable to write to $filepath.</p>";
@@ -38,15 +68,17 @@ function writeObsRoomFile(int $roomId, string $filepath, array $participants): v
 /**
  * Get data for a room and return as an array.
  *
- * @param int    $roomId        The room identifier.
+ * @param string $where         SQL criteria to determine sessions to return.
  * @param array  $participants  Array of participants per session.
+ * @param array  $fileTags      Array of top level file tags such as room name.
  * @param string $showpubstatus Comma separated list of pub status to include.
  *
  * @return array
  */
-function getObsRoomData(
-    int $roomId,
+function getObsData(
+    string $where,
     array $participants,
+    array $fileTags = [],
     string $showpubstatus = '2'
 ): array {
     $ConStartDatim = CON_START_DATIM;
@@ -62,7 +94,6 @@ function getObsRoomData(
             D.divisionname,
             DATE_FORMAT(duration, '%k') * 60 + DATE_FORMAT(duration, '%i') AS mins,
             S.progguiddesc AS `desc`,
-            S.progguidhtml AS `deschtml`,
             DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%W') as day,
             DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
             DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time,
@@ -78,7 +109,7 @@ function getObsRoomData(
             LEFT JOIN Tags TA USING (tagid)
         WHERE
             S.pubstatusid IN ($showpubstatus) /* Public */
-            AND R.roomid = $roomId
+            AND $where
         GROUP BY
             S.sessionid
         ORDER BY
@@ -88,7 +119,6 @@ function getObsRoomData(
     $result = mysqli_query_with_error_handling($query);
     $program = [];
     while ($row = mysqli_fetch_object($result)) {
-        $roomName = $row->loc;
         // Build array of tags (including track and dicision).
         $tagsArray = ["Track:".$row->trackname, "Division:".$row->divisionname];
         if (!empty($row->typename)) {
@@ -110,7 +140,7 @@ function getObsRoomData(
             "loc"    => empty($row->floor)
                 ? [$row->loc]
                 : [$row->loc . ' - ' . $row->floor],
-            "desc"   => $row->deschtml ?: $row->desc,
+            "desc"   => $row->desc,
             "links"  => [],
         ];
         if (array_key_exists($row->id, $participants)) {
@@ -122,10 +152,10 @@ function getObsRoomData(
         $program[] = $programRow;
     }
 
-    return [
-        'room' => $roomName,
-        'program' => $program,
-    ];
+    return array_merge(
+        $fileTags,
+        ['program' => $program],
+    );
 }
 
 /**
