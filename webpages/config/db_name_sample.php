@@ -49,6 +49,7 @@ define("SECOND_LANG", "FRENCH");
 define("SECOND_TITLE_CAPTION", "Titre en fran&ccedil;ais");
 define("SECOND_DESCRIPTION_CAPTION", "Description en fran&ccedil;ais");
 define("SECOND_BIOGRAPHY_CAPTION", "Biographie en fran&ccedil;ais");
+define("SECOND_SESSION_SECTION", FALSE); // Show and allow editing of the second session description (assuming bilingual is off)
 define("SHOW_BRAINSTORM_LOGIN_HINT", FALSE);
 define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID / Email
 define("LOGIN_PAGE_USER_ID_PROMPT", ""); // What to label User ID / Badge ID specifically on the login page (blank defaults to the value of USER_ID_PROMPT)
