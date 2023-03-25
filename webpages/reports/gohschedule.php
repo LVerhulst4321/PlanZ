@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'GoH Schedule';
+$report['multi'] = 'true';
+$report['output_filename'] = 'goh_schedule.csv';
 $report['description'] = 'The GoH schedules';
 $report['categories'] = array(
     'Programming Reports' => 590,
@@ -29,7 +31,7 @@ SELECT
              Sessions S
         JOIN Schedule SCH USING (sessionid)
         JOIN Rooms R USING (roomid)
-        JOIN ParticipantOnSession POS USING (sessionid) 
+        JOIN ParticipantOnSession POS USING (sessionid)
         JOIN Participants P USING (badgeid)
         JOIN CongoDump CD USING (badgeid)
         JOIN Tracks T USING (trackid)
