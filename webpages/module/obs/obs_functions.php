@@ -33,6 +33,7 @@ function writeObsRoomFile(int $roomId, string $filepath, array  $fileTags, array
 /**
  * Write file for room.
  *
+ * @param string $operator     The comparison operator to use.
  * @param string $tag          The room identifier.
  * @param string $filepath     The file to write to.
  * @param array  $fileTags     Array of top level file tags such as room name.
@@ -40,9 +41,9 @@ function writeObsRoomFile(int $roomId, string $filepath, array  $fileTags, array
  *
  * @return void
  */
-function writeObsTagFile(string $tag, string $filepath, array $fileTags, array $participants): void
+function writeObsTagFile(string $operator, string $tag, string $filepath, array $fileTags, array $participants): void
 {
-    $json = json_encode(getObsData("TA.tagname = '$tag'", $participants, $fileTags));
+    $json = json_encode(getObsData("TA.tagname $operator '$tag'", $participants, $fileTags));
     writeJsonFile($filepath, $json);
 }
 

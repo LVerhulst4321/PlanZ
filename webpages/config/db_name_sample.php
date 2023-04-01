@@ -120,6 +120,7 @@ define("JSON_EXTRACT_DIRECTORY", "/var/data/guide/");  // Path to directory wher
 define("JSON_EXTRACT_ASSIGN_VARS", FALSE); // If TRUE include variable names in JSON output files (required for KonOpas).
 define("OBS_EXTRACT_DIRECTORY", "obs"); // Path to directory for OBS files, relative to web root.
 define('OBS_EXTRACT_TAGS', ''); // Comma separated list of Tags to generate OBS extracts for.
+        // Prefix Tag with ~ in list to extract all items without tag.
 
 define("PHOTO_EXTRACT_LINK_TYPE", ""); // Link type to use when exporting photos to KonOpas/ConClár.
         // Supported values: "img", "photo" or "img_256_url" (the last one comes from Grenadine, so not really recommended).

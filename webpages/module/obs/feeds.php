@@ -112,9 +112,17 @@ function showObsFeedOptions(): void
         echo "<h3>Writing tag files</h3>";
         echo "<ul>";
         foreach (explode(',', OBS_EXTRACT_TAGS) as $tag) {
-            $filename = makeFileName('tag', $tag);
+            if (substr($tag, 0, 1) == '~') {
+                $operator = '<>';
+                $tag = substr($tag, 1);
+                $filename = makeFileName('untag', $tag);
+            } else {
+                $operator = '=';
+                $filename = makeFileName('tag', $tag);
+            }
             $filepath = OBS_EXTRACT_DIRECTORY . '/' . $filename;
             writeObsTagFile(
+                $operator,
                 $tag,
                 $rootDir . '/' . $filepath,
                 ['tag' => $tag],
