@@ -16,7 +16,7 @@ SELECT
     WHERE
         EXISTS (
             SELECT SCH.sessionid
-                FROM 
+                FROM
                          Schedule SCH
                     JOIN ParticipantOnSession POS USING (sessionid)
                     JOIN Sessions S USING (sessionid)
@@ -41,7 +41,7 @@ SELECT
     WHERE
         S.pubstatusid = 2 /* Published */
     ORDER BY
-        POS.badgeid, POS.sessionid;
+        POS.badgeid, SCH.starttime, POS.sessionid;
 EOD;
 
 $report['xsl'] =<<<'EOD'
@@ -50,7 +50,7 @@ $report['xsl'] =<<<'EOD'
     <xsl:output encoding="UTF-8" indent="yes" method="html" />
     <xsl:include href="xsl/reportInclude.xsl" />
     <xsl:template match="/">
-        <link rel="stylesheet" href="css/zambia_report_print.css" type="text/css" />        
+        <link rel="stylesheet" href="css/zambia_report_print.css" type="text/css" />
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
                 <div class="form">
@@ -105,7 +105,7 @@ $report['xsl'] =<<<'EOD'
             </xsl:when>
             <xsl:otherwise>
                 <div class="alert alert-danger">No results found.</div>
-            </xsl:otherwise>                    
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
@@ -140,7 +140,7 @@ $report['xsl'] =<<<'EOD'
                     <xsl:text> MOD</xsl:text>
                 </xsl:if>
             </span>
-        </p>        
+        </p>
     </xsl:template>
 </xsl:stylesheet>
 EOD;
