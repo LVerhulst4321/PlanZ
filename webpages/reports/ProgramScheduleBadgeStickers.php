@@ -115,12 +115,7 @@ $report['xsl'] =<<<'EOD'
             <div class="participant">
                 <span><xsl:value-of select="@badgeid" /></span>
                 <xsl:text> </xsl:text>
-                <span>
-                    <xsl:call-template name="showPubsname">
-                        <xsl:with-param name="badgeid" select = "@badgeid" />
-                        <xsl:with-param name="pubsname" select = "@pubsname" />
-                    </xsl:call-template>
-                </span>
+                <span><xsl:value-of select="@pubsname" /></span>
             </div>
             <div>
                 <xsl:apply-templates select="/doc/query[@queryName='sessions']/row[@badgeid=$badgeid]" />
