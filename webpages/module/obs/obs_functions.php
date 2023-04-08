@@ -79,10 +79,11 @@ function getObsRoomData(
         WHERE
             S.pubstatusid IN ($showpubstatus) /* Public */
             AND R.roomid = $roomId
+            AND (ADDTIME('$ConStartDatim', SCH.starttime) > NOW())
         GROUP BY
             S.sessionid
         ORDER BY
-            S.sessionid;
+            SCH.starttime, S.sessionid;
     EOD;
 
     $result = mysqli_query_with_error_handling($query);
@@ -123,7 +124,7 @@ function getObsRoomData(
     }
 
     return [
-        'room' => $roomName,
+        'room' => $roomName ?? '',
         'program' => $program,
     ];
 }
