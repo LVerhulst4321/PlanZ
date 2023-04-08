@@ -134,7 +134,7 @@
                 </ul>
                 <form method="post" action="ShowSessions.php" class="form-inline my-0 my-lg-0 mr-4">
                     <input type="text" id="searchtitle" name="searchtitle" size="28"
-                           class="form-control mr-sm-2 h-100 bg-secondary text-white"
+                           class="form-control form-control-sm mr-sm-2 h-100 bg-secondary text-white"
                            placeholder="Search for sessions by title" aria-label="Search"/>
                     <input type="hidden" value="ANY" name="track"/>
                     <input type="hidden" value="ANY" name="status"/>
