@@ -13,9 +13,6 @@
   <xsl:param name="SessionInterests" select="'true'" />
   <xsl:template match="/">
     <nav id="participantNav" class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
-      <span class="navbar-brand py-1">
-        <xsl:value-of select="$title"/>
-      </span>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
         aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon" />

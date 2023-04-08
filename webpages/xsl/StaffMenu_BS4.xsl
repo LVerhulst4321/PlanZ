@@ -44,9 +44,6 @@
                     </xsl:attribute>
                 </xsl:otherwise>
             </xsl:choose>
-            <a class="navbar-brand py-1" href="#">
-                <xsl:value-of select="$title"/>
-            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">

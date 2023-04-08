@@ -35,9 +35,6 @@
             <span class="icon-bar"/>
             <span class="icon-bar"/>
           </a>
-          <span class="brand inactive">
-            <xsl:value-of select="$title"/>
-          </span>
           <div class="nav-collapse">
             <ul class="nav">
               <li class="dropdown">

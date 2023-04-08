@@ -62,7 +62,6 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="<?php if (isset($_SERVER['PATH_INFO'])) echo $_SERVER['PATH_INFO'] ?>"><?php echo $title ?></a>
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li><a href="welcome.php">Overview</a></li>
