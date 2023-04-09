@@ -132,7 +132,7 @@ EOD;
         $message_error .= "Failed adding Program Participant Role - get help.<br />\n";
         return false;
     }
-    
+
     // TODO: Add code to support other roles if user has permission and data set.
 
     $message = "User {$paramArray["badgeid"]}: {$paramArray["firstname"]} {$paramArray["lastname"]}, " .
@@ -196,7 +196,7 @@ $queryArr = array();
 if ($mayIEditAllRoles) {
     $queryArr['roles'] = <<<EOD
 SELECT
-        PR.permrolename, PR.permroleid
+        PR.permrolename, PR.permroleid, PR.display_order
     FROM
         PermissionRoles PR
     ORDER BY
@@ -206,7 +206,7 @@ EOD;
 } else {
     $queryArr['roles'] = <<<EOD
 SELECT DISTINCT
-        PR.permrolename, PR.permroleid
+        PR.permrolename, PR.permroleid, PR.display_order
     FROM
              UserHasPermissionRole UHPR
         JOIN Permissions P USING (permroleid)
