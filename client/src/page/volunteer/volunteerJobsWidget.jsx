@@ -3,15 +3,8 @@ import { Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import store from '../../state/store';
 import { showCreateJobModal } from '../../state/volunteerActions';
-import { fetchJobs } from '../../state/volunteerFunctions';
 
 class VolunteerJobsWidget extends React.Component {
-
-    componentDidMount() {
-        if (this.props.jobs.loading) {
-            fetchJobs();
-        }
-    }
 
     render() {
         return (
@@ -36,28 +29,28 @@ class VolunteerJobsWidget extends React.Component {
             return (<p>No jobs have been created.</p>)
         } else {
             let jobs = this.props.jobs.list.map(j => {
-                let type = j.isOnline ? (<small className="text-nowrap">(Online)</small>) : (<small className="text-nowrap">(In-Person)</small>);
-                return (<div className="col mb-4" key={'job-' + j.id}>
-                    <div className="card visible-on-hover">
-                        <div className="card-header">
-                            <div className="d-flex align-items-start justify-content-between">
-                                <div className="mb-1">
-                                    <b>{j.name}</b> {type}
-                                </div>
-                                <button className="btn p-0" onClick={() => this.openModal(j)}><i className="bi bi-pencil text-primary"></i></button>
-                            </div>
-                        </div>
-                        <div className="card-body small">
-                            {j.description}
-                        </div>
-                    </div>
-                </div>);
+                let type = j.isOnline ? (<small className="text-nowrap">Online</small>) : (<small className="text-nowrap">In-Person</small>);
+                return (<tr key={'job-' + j.id} className="visible-on-hover">
+                        <td><b>{j.name}</b></td>
+                        <td>{type}</td>
+                        <td>{j.description}</td>
+                        <td><button className="btn p-0" onClick={() => this.openModal(j)}><i className="bi bi-pencil text-primary"></i></button></td>
+                    </tr>);
             });
 
             return (
-                <div className="row row-cols-1 row-cols-lg-2 mt-3">
-                    {jobs}
-                </div>
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th colSpan={2}>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {jobs}
+                    </tbody>
+                </table>
             );
         }
     }

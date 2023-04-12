@@ -35,7 +35,7 @@ class CompositePage extends React.Component {
             return (<SessionEnumerationConfigPage />);
         } else if (url.pathname === '/printRoomScheduleConfig.php') {
             return (<PrintRoomScheduleConfigPage />);
-        } else if (url.pathname === "/devLogin.php") {
+        } else if (url.pathname === "/index.php" || (url.pathname === "/")) {
             return <DevLoginPage />;
         } else {
             return (<h4>Unknown Page</h4>);
