@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
-
+import React from 'react';
 import Alert from 'react-bootstrap/Alert';
 
-class SimpleAlert extends Component {
+const SimpleAlert = ({message}) => {
 
-    render() {
-        if (this.props.message) {
-            return (<Alert variant={this.props.message.severity}>{this.props.message.text}</Alert>);
+    if (message) {
+        if ((typeof message === 'string' || message instanceof String)) {
+            return (<Alert variant="danger">{message}</Alert>);
         } else {
-            return null;
+            return (<Alert variant={message.severity}>{message.text}</Alert>);
         }
+    } else {
+        return null;
     }
 }
 

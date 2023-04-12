@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import { connect } from 'react-redux';
-import { fetchJobs, fetchShifts } from '../../state/volunteerFunctions';
+import { fetchAllShiftAssignments, fetchJobs, fetchShifts } from '../../state/volunteerFunctions';
 import CreateVolunteerJobModal from './createVolunteerJobModal';
 import CreateVolunteerShiftModal from './createVolunteerShiftModal';
 import VolunteerJobsWidget from './volunteerJobsWidget';
 import VolunteerShiftWidget from './volunteerShiftWidget';
 import SimpleAlert from '../../common/simpleAlert';
+import VolunteerAssignmentView from './volunteerAssignmentView';
 
 const JOBS = "Jobs";
 const SHIFTS = "Shift";
 const SIGNUPS = "SignUp";
 
-const StaffVolunteerPage = ({ jobsLoading, shiftsLoading, hasJobs}) => {
+const StaffVolunteerPage = ({ jobsLoading, shiftsLoading, signUpsLoading, hasJobs, hasShifts }) => {
 
     const showBody = (activeTab) => {
         if (activeTab === JOBS) {
             return (<VolunteerJobsWidget />);
         } else if (activeTab === SHIFTS) {
             return (<VolunteerShiftWidget />)
+        } else if (activeTab === SIGNUPS) {
+            return (<VolunteerAssignmentView />)
         } else {
             return undefined;
         }
@@ -31,7 +34,10 @@ const StaffVolunteerPage = ({ jobsLoading, shiftsLoading, hasJobs}) => {
         if (shiftsLoading) {
             fetchShifts();
         }
-    }, [jobsLoading, shiftsLoading])
+        if (signUpsLoading) {
+            fetchAllShiftAssignments();
+        }
+    }, [jobsLoading, shiftsLoading, signUpsLoading])
 
     let [ activeTab, setActiveTab ] = useState(JOBS)
     let [ isTabManuallyChanged, setTabManuallyChanged ] = useState(false)
@@ -62,16 +68,15 @@ const StaffVolunteerPage = ({ jobsLoading, shiftsLoading, hasJobs}) => {
                                 disabled={!hasJobs}>Shifts</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link eventKey={SIGNUPS} disabled>
+                            <Nav.Link eventKey={SIGNUPS} onSelect={() => { setActiveTab(SIGNUPS); setTabManuallyChanged(true); }}
+                                disabled={!hasShifts}>
                             Sign-ups
                             </Nav.Link>
                         </Nav.Item>
                     </Nav>
                 </div>
                 <div className="card-body">
-
                     {showBody(activeTab)}
-
                 </div>
             </div>
             <CreateVolunteerJobModal />
@@ -86,7 +91,9 @@ function mapStateToProps(state) {
     return {
         jobsLoading: state.volunteering.jobs.loading,
         shiftsLoading: state.volunteering.shifts.loading,
-        hasJobs: state.volunteering.jobs?.list?.length
+        signUpsLoading: state.volunteering.allAssignments.loading,
+        hasJobs: state.volunteering.jobs?.list?.length,
+        hasShifts: state.volunteering.shifts?.list?.length
     };
 }
 

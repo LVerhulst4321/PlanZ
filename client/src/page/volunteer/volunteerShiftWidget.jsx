@@ -3,7 +3,7 @@ import { Form, Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import store from '../../state/store';
 import { showCreateShiftModal } from '../../state/volunteerActions';
-import VolunteerShiftCard from './volunteerShiftCard';
+import VolunteerShiftRow from './volunteerShiftRow';
 
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
@@ -74,9 +74,20 @@ class VolunteerShiftWidget extends React.Component {
                         </div>
                     </fieldset>
 
-                    <div className="row row-cols-1 row-cols-lg-3 mt-3">
-                        {shifts}
-                    </div>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Job</th>
+                                <th>When</th>
+                                <th>Needs</th>
+                                <th>Where</th>
+                                <th colSpan={2}>Sign-ups</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {shifts}
+                        </tbody>
+                    </table>
                 </div>
             );
         }
@@ -84,10 +95,11 @@ class VolunteerShiftWidget extends React.Component {
 
     getFilteredShifts() {
         return this.props.shifts.list.filter(s => this.matchesFilter(s)).map(s => {
-            return (<VolunteerShiftCard shift={s} key={'shift-' + s.id} />);
+            return (<VolunteerShiftRow shift={s} key={'shift-' + s.id} />);
         });
     }
 
+    // NOTE: the comparisons in this function don't support '==='
     matchesFilter(shift) {
         let matches = true;
         let filterDay = this.getFilterDay();
@@ -95,15 +107,15 @@ class VolunteerShiftWidget extends React.Component {
 
         if (filterDay === "") {
             // skip it
-        } else if (!(dayjs(shift.fromTime).format('YYYY-MM-DD') === filterDay) &&
-            !(dayjs(shift.toTime).format('YYYY-MM-DD') === filterDay)) {
+        } else if (!(dayjs(shift.fromTime).format('YYYY-MM-DD') == filterDay) &&
+            !(dayjs(shift.toTime).format('YYYY-MM-DD') == filterDay)) {
 
             matches = false;
         }
 
         if (filterJob === "" || !matches) {
             // skip it
-        } else if (filterJob !== shift.job.id) {
+        } else if (filterJob != shift.job.id) {
             matches = false;
         }
 

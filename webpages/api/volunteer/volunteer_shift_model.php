@@ -1,5 +1,17 @@
 <?php
 
+require_once(__DIR__ . '/../../name.php');
+
+class Volunteer {
+    public $badgeId;
+    public $name;
+
+    function __construct($badgeId, $name) {
+        $this->badgeId = $badgeId;
+        $this->name = $name;
+    }
+}
+
 class VolunteerShift {
 
     public $id;
@@ -10,6 +22,7 @@ class VolunteerShift {
     public $fromTime;
     public $toTime;
     public $currentSignupCount;
+    public $volunteers;
 
     function __construct($id, $job, $minPeople, $maxPeople, $fromTime, $toTime, $location) {
         $this->id = $id;
@@ -19,6 +32,7 @@ class VolunteerShift {
         $this->location = $location;
         $this->fromTime = $fromTime;
         $this->toTime = $toTime;
+        $this->volunteers = array();
     }
 
     public static function findAll($db, $conInfo) {
@@ -93,6 +107,7 @@ EOD;
 
     static function convertResultSetToShifts($stmt) {
         $records = [];
+        $recordsById = array();
         $jobs = array();
         $result = mysqli_stmt_get_result($stmt);
         while ($row = mysqli_fetch_object($result)) {
@@ -103,15 +118,29 @@ EOD;
             } else {
                 $jobs[$job_id] = $job;
             }
-            $record = new VolunteerShift($row->id, $job, $row->min_volunteer_count, $row->max_volunteer_count,
-                convert_database_date_to_date($row->from_time), convert_database_date_to_date($row->to_time),
-                $row->location);
-            if (isset($row->signup_count)) {
-                $record->currentSignupCount = $row->signup_count;
+            if (array_key_exists($row->id, $recordsById)) {
+                $record = $recordsById[$row->id];
+                VolunteerShift::convertVolunteers($record, $row);
+            } else {
+                $record = new VolunteerShift($row->id, $job, $row->min_volunteer_count, $row->max_volunteer_count,
+                    convert_database_date_to_date($row->from_time), convert_database_date_to_date($row->to_time),
+                    $row->location);
+                if (isset($row->signup_count)) {
+                    $record->currentSignupCount = $row->signup_count;
+                }
+                VolunteerShift::convertVolunteers($record, $row);
+                $records[] = $record;
+                $recordsById[$record->id] = $record;
             }
-            $records[] = $record;
         }
         return $records;
+    }
+
+    static function convertVolunteers($shift, $row) {
+        if (isset($row->badgeid) && $row->badgeid != null) {
+            $name = PersonName::from($row);
+            $shift->volunteers[] = new Volunteer($row->badgeid, $name);
+        }
     }
 
     public static function fromJson($json) {
@@ -231,16 +260,69 @@ EOD;
         }
     }
 
+    public static function findAllAssignments($db, $badgeid, $conInfo) {
+        $query = <<<EOD
+        SELECT
+                S.id as id,
+                S.min_volunteer_count,
+                S.max_volunteer_count,
+                S.from_time,
+                S.to_time,
+                S.location,
+                J.id as job_id,
+                J.job_name,
+                J.is_online,
+                J.job_description,
+                P.pubsname,
+                CD.firstname,
+                CD.lastname,
+                CD.badgename,
+                CD.badgeid
+            FROM
+                volunteer_shift S
+            JOIN volunteer_job J ON (J.id = S.volunteer_job_id)
+        LEFT JOIN participant_has_volunteer_shift PHVS ON (PHVS.volunteer_shift_id = S.id)
+        LEFT JOIN Participants P ON (PHVS.badgeid = P.badgeid)
+        LEFT JOIN CongoDump CD ON (PHVS.badgeid = CD.badgeid)
+        WHERE S.con_id = ?
+           ORDER BY S.from_time, J.job_name, S.id;
+EOD;
+
+        $stmt = mysqli_prepare($db, $query);
+        mysqli_stmt_bind_param($stmt, "i", $conInfo->id);
+        if (mysqli_stmt_execute($stmt)) {
+            $records = VolunteerShift::convertResultSetToShifts($stmt);
+            mysqli_stmt_close($stmt);
+            return $records;
+        } else {
+            throw new DatabaseSqlException("Query could not be executed: $query");
+        }
+    }
+
     function asArray() {
-        return array("id" => $this->id,
+        $result = array("id" => $this->id,
             "job" => $this->job ? $this->job->asArray() : null,
             "minPeople" => $this->minPeople,
             "maxPeople" => $this->maxPeople,
             "fromTime" => ($this->fromTime ? $this->fromTime->format('c') : null),
             "toTime" => ($this->toTime ? $this->toTime->format('c') : null),
-            "location" => $this->location,
-            "currentSignupCount" => $this->currentSignupCount
+            "location" => $this->location
         );
+
+        if ($this->currentSignupCount != null) {
+            $result["currentSignupCount"] = $this->currentSignupCount;
+        }
+
+        if (count($this->volunteers) > 0) {
+
+            $volunteers = array();
+            foreach ($this->volunteers as $v) {
+                $volunteers[] = array("badgeId" => $v->badgeId, "name" => $v->name->asArray());
+            }
+            $result["volunteers"] = $volunteers;
+        }
+
+        return $result;
     }
 }
 ?>

@@ -1,6 +1,6 @@
 import store from './store';
 import axios from 'axios';
-import { setShiftAssignements, setVolunteerJobs, setVolunteerShifts } from './volunteerActions';
+import { setAllShiftAssignements, setShiftAssignements, setVolunteerJobs, setVolunteerShifts } from './volunteerActions';
 import { redirectToLogin } from '../common/redirectToLogin';
 
 export function fetchJobs() {
@@ -28,13 +28,28 @@ export function fetchMyShiftAssignments() {
             if (error.response && error.response.status === 401) {
                 redirectToLogin();
             } else {
-                let message = "The list of jobs could not be downloaded."
+                let message = "The list of assignments could not be downloaded."
                 store.dispatch(setShiftAssignements({}, message));
             }
         }
     );
 }
 
+export function fetchAllShiftAssignments() {
+    axios.get('/api/volunteer/get_all_volunteer_signups.php')
+        .then(res => {
+            store.dispatch(setAllShiftAssignements(res.data));
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = "The list of assignments could not be downloaded."
+                store.dispatch(setAllShiftAssignements({}, message));
+            }
+        }
+    );
+}
 export function fetchShifts() {
     axios.get('/api/volunteer/get_volunteer_shifts.php')
         .then(res => {
