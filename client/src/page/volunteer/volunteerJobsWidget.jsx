@@ -34,7 +34,7 @@ class VolunteerJobsWidget extends React.Component {
                         <td><b>{j.name}</b></td>
                         <td>{type}</td>
                         <td>{j.description}</td>
-                        <td><button className="btn p-0" onClick={() => this.openModal(j)}><i className="bi bi-pencil text-primary"></i></button></td>
+                        <td><button className="btn p-0 border-0" onClick={() => this.openModal(j)}><i className="bi bi-pencil text-primary"></i></button></td>
                     </tr>);
             });
 

@@ -14,7 +14,7 @@ class VolunteerShiftRow extends React.Component {
                     <td>{this.renderNeeds(this.props.shift)}</td>
                     <td>{this.props.shift.location}</td>
                     <td className="text-primary text-center">{this.props.shift.currentSignupCount}</td>
-                    <td className="text-right"><button className="btn p-0" onClick={() => { this.openModal()}}><i className="bi bi-pencil text-primary"></i></button></td>
+                    <td className="text-right"><button className="btn p-0 border-0" onClick={() => { this.openModal()}}><i className="bi bi-pencil text-primary"></i></button></td>
                 </tr>)
     }
 

@@ -37,8 +37,8 @@ const MemberCard = ({candidate, shiftId, closeModal}) => {
                 </div>
                 <div className="d-flex flex-column justify-content-between" style={{ flexGrow: "1" }}>
                     <div>
-                        <b><NameDisplay name={candidate?.name} /></b>
-                        <span className="text-muted small">({candidate?.badgeId})</span> {' '}
+                        <NameDisplay name={candidate?.name} /> {' '}
+                        <span className="text-muted small">({candidate?.badgeId})</span>
                     </div>
                 </div>
                 <div style={{ flexGrow: "0" }}>
