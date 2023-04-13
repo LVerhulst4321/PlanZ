@@ -154,9 +154,9 @@ class VolunteerAssignmentView extends React.Component {
                             onChange={(e) => this.executeQuery(e.target.value)} />
                     </div>
                 </div>
-                {this.state.cadidates?.map(c => (<MemberCard candidate={c} shiftId={this.state.selectedShift}
+                {this.state.candidates?.map(c => (<MemberCard candidate={c} shiftId={this.state.selectedShift}
                     closeModal={() => this.closeAddModal()} key={'other-' + c.badgeId} />))}
-                {this.state.cadidates?.length ? null : (<p className="my-3 text-info">This list is empty.</p>)}
+                {this.state.candidates?.length ? null : (<p className="my-3 text-info">This list is empty.</p>)}
             </Modal.Body>
         </Modal>);
     }
@@ -182,14 +182,14 @@ class VolunteerAssignmentView extends React.Component {
     fetchPotentialVolunteers(shiftId, queryString) {
         axios.get('/api/volunteer/find_potential_volunteers.php?shiftId=' + encodeURIComponent(shiftId) + "&q=" + encodeURIComponent(queryString))
             .then(res => {
-                this.setState(state => ({...state, cadidates: res.data?.candidates, modalMessage: null }))
+                this.setState(state => ({...state, candidates: res.data?.candidates, modalMessage: null }))
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
                     redirectToLogin();
                 } else {
                     let message = "The list of candidates could not be downloaded."
-                    this.setState(state => ({...state, cadidates: [], modalMessage: message }))
+                    this.setState(state => ({...state, candidates: [], modalMessage: message }))
                 }
             }
         );
