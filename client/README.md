@@ -23,9 +23,15 @@ React client locally:
 3. Run `npm install`
 4. Run `npm run start`
 
-Your browser should automatically open http://localhost:8080. At the moment, '/' is mapped to an
-unknown page. But if, for example, you manually open http://localhost:8080/brainstorm.php, you should see
-the brainstorm page. Note that these things are true:
+Your browser should automatically open http://localhost:8080. At the moment, '/' is mapped to a login page.
+This log in page will allow you to log in locally, but it's a different login page than is used on the main app,
+and isn't used in production. Nonetheless, if you log in, you'll set up the correct PHP session id cookie,
+which means you can invoke any API endpoint.
+
+The React app can be mostly developed locally, but the following limitations apply:
 
 - the header and footer are static placeholders; normally, the header and footer are rendered by the server.
-- server requests currently fail because there's no way to log in.
+- you can log in, but there's to automatic navigation. You need to know the url of the page you're trying
+  to go to, and manually add that in the navigation bar.
+- we don't currently import the zambia*.css files into the dev version of the app; some styles that only
+  exist in those files will not appear in your browser.
