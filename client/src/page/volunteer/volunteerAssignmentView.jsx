@@ -9,7 +9,7 @@ import { formatDay, renderDateRange } from '../../util/dateUtil';
 import MemberCard from './memberCard';
 import axios from 'axios';
 import { redirectToLogin } from '../../common/redirectToLogin';
-import { fetchAllShiftAssignments, fetchShifts } from '../../state/volunteerFunctions';
+import { fetchAllShiftAssignments } from '../../state/volunteerFunctions';
 
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
@@ -88,7 +88,7 @@ class VolunteerAssignmentView extends React.Component {
 
                 let volunteers = a.volunteers?.length ? a.volunteers?.map((v,i) => {
                     return (<tr className="visible-on-hover" key={'assign-' + a.id + "-" + i}>
-                        <td><NameDisplay name={v.name} /></td>
+                        <td colSpan={2}><NameDisplay name={v.name} /></td>
                         <td className="text-right"><button className="btn p-0 border-0" onClick={() => this.deleteVolunteerAssignment(a.id, v.badgeId)}><i className="bi bi-trash text-danger"></i></button></td>
                     </tr>)
                 })
@@ -98,6 +98,7 @@ class VolunteerAssignmentView extends React.Component {
                 return (<tbody key={'assignment-' + a.id}>
                     <tr>
                         <th><b>{a.job.name}:</b> {renderDateRange(a.fromTime, null, this.props.timezone)}</th>
+                        <th>Needs {'' + a.minPeople + ((a.maxPeople !== a.minPeople) ? '-' + a.maxPeople : '')} {a.minPeople > 1 || a.maxPeople > 1 ? 'Volunteers' : 'Volunteer'}</th>
                         <th className="text-right"><button className="btn btn-outline-primary btn-sm" onClick={() => this.showAddModal(a.id)}>Add</button></th>
                     </tr>
                     {volunteers}
@@ -108,7 +109,7 @@ class VolunteerAssignmentView extends React.Component {
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th colSpan={2}>Name</th>
+                            <th colSpan={3}>Name</th>
                         </tr>
                     </thead>
                     {rows}
@@ -125,7 +126,6 @@ class VolunteerAssignmentView extends React.Component {
         })
         .then(res => {
             fetchAllShiftAssignments();
-            fetchShifts();
         })
         .catch(error => {
             if (error.response && error.response.status === 401) {

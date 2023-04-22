@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
 import { showCreateJobModal } from '../../state/volunteerActions';
-import { fetchJobs, fetchShifts } from '../../state/volunteerFunctions';
+import { fetchAllShiftAssignments, fetchJobs } from '../../state/volunteerFunctions';
 import FormComponent from '../../common/formComponent';
 
 class CreateVolunteerJobModal extends FormComponent {
@@ -133,6 +133,7 @@ class CreateVolunteerJobModal extends FormComponent {
                 });
                 store.dispatch(showCreateJobModal(false));
                 fetchJobs();
+                fetchAllShiftAssignments();
             })
             .catch(error => {
                 this.setState({
@@ -172,7 +173,7 @@ class CreateVolunteerJobModal extends FormComponent {
                 });
                 store.dispatch(showCreateJobModal(false));
                 fetchJobs();
-                fetchShifts();
+                fetchAllShiftAssignments();
             })
             .catch(error => {
                 console.log(error);

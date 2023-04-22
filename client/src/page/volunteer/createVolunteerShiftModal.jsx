@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
 import { rememberRecentShiftData, showCreateShiftModal } from '../../state/volunteerActions';
-import { fetchShifts } from '../../state/volunteerFunctions';
+import { fetchAllShiftAssignments } from '../../state/volunteerFunctions';
 import FormComponent from '../../common/formComponent';
 
 import dayjs from "dayjs";
@@ -250,7 +250,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                     message: null
                 });
                 store.dispatch(showCreateShiftModal(false));
-                fetchShifts();
+                fetchAllShiftAssignments();
             })
             .catch(error => {
                 this.setState({
@@ -289,7 +289,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                     confirmDelete: false
                 });
                 store.dispatch(showCreateShiftModal(false));
-                fetchShifts();
+                fetchAllShiftAssignments();
             })
             .catch(error => {
                 console.log(error);
