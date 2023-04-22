@@ -34,6 +34,6 @@ class VolunteerShiftRow extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return { timezone: state.volunteering.allAssignments?.context ? state.volunteering.shifts.allAssignments?.context?.timezone : null };
+    return { timezone: state.volunteering.allAssignments?.context?.timezone };
 }
 export default connect(mapStateToProps)(VolunteerShiftRow);
