@@ -145,8 +145,8 @@ class VolunteerShiftWidget extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        shifts: state.volunteering.shifts,
-        days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
+        shifts: state.volunteering.allAssignments,
+        days: state.volunteering.allAssignments?.context?.days,
         jobs: state.volunteering.jobs ? state.volunteering.jobs.list : []
     };
 }

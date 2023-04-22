@@ -13,7 +13,7 @@ const JOBS = "Jobs";
 const SHIFTS = "Shift";
 const SIGNUPS = "SignUp";
 
-const StaffVolunteerPage = ({ jobsLoading, shiftsLoading, signUpsLoading, hasJobs, hasShifts }) => {
+const StaffVolunteerPage = ({ jobsLoading, signUpsLoading, hasJobs, hasShifts }) => {
 
     const showBody = (activeTab) => {
         if (activeTab === JOBS) {
@@ -31,13 +31,10 @@ const StaffVolunteerPage = ({ jobsLoading, shiftsLoading, signUpsLoading, hasJob
         if (jobsLoading) {
             fetchJobs();
         }
-        if (shiftsLoading) {
-            fetchShifts();
-        }
         if (signUpsLoading) {
             fetchAllShiftAssignments();
         }
-    }, [jobsLoading, shiftsLoading, signUpsLoading])
+    }, [jobsLoading, signUpsLoading])
 
     let [ activeTab, setActiveTab ] = useState(JOBS)
     let [ isTabManuallyChanged, setTabManuallyChanged ] = useState(false)
@@ -90,10 +87,9 @@ const StaffVolunteerPage = ({ jobsLoading, shiftsLoading, signUpsLoading, hasJob
 function mapStateToProps(state) {
     return {
         jobsLoading: state.volunteering.jobs.loading,
-        shiftsLoading: state.volunteering.shifts.loading,
         signUpsLoading: state.volunteering.allAssignments.loading,
         hasJobs: state.volunteering.jobs?.list?.length,
-        hasShifts: state.volunteering.shifts?.list?.length
+        hasShifts: state.volunteering.allAssignments?.list?.length
     };
 }
 

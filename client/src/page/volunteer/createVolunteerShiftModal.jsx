@@ -385,8 +385,8 @@ class CreateVolunteerShiftModal extends FormComponent {
 function mapStateToProps(state) {
     return {
         showModal: state.volunteering.shifts.showModal,
-        days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
-        timezone: state.volunteering.shifts.context ? state.volunteering.shifts.context.timezone : null,
+        days: state.volunteering.allAssignments?.context?.days ?? [],
+        timezone: state.volunteering.allAssignments?.context?.timezone ?? null,
         jobs: state.volunteering.jobs ? state.volunteering.jobs.list : [],
         selectedShift: state.volunteering.shifts.selectedShift,
         recentData: { ...state.volunteering.recentData }

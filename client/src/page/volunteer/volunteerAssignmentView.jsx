@@ -243,9 +243,9 @@ function mapStateToProps(state) {
     return {
         message: state.volunteering.message,
         assignments: state.volunteering.allAssignments,
-        timezone: state.volunteering.shifts?.context?.timezone,
+        timezone: state.volunteering.allAssignments?.context?.timezone,
         jobs: state.volunteering.jobs?.list,
-        days: state.volunteering.shifts?.context?.days,
+        days: state.volunteering.allAssignments?.context?.days,
     };
 }
 export default connect(mapStateToProps)(VolunteerAssignmentView);

@@ -13,7 +13,7 @@ class VolunteerShiftRow extends React.Component {
                     <td>{renderDateRange(this.props.shift.fromTime, this.props.shift.toTime, this.props.timezone)}</td>
                     <td>{this.renderNeeds(this.props.shift)}</td>
                     <td>{this.props.shift.location}</td>
-                    <td className="text-primary text-center">{this.props.shift.currentSignupCount}</td>
+                    <td className="text-primary text-center">{this.props.shift.volunteers?.length ?? 0}</td>
                     <td className="text-right"><button className="btn p-0 border-0" onClick={() => { this.openModal()}}><i className="bi bi-pencil text-primary"></i></button></td>
                 </tr>)
     }
@@ -34,6 +34,6 @@ class VolunteerShiftRow extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return { timezone: state.volunteering.shifts.context ? state.volunteering.shifts.context.timezone : null };
+    return { timezone: state.volunteering.allAssignments?.context ? state.volunteering.shifts.allAssignments?.context?.timezone : null };
 }
 export default connect(mapStateToProps)(VolunteerShiftRow);
