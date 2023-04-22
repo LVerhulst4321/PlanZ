@@ -44,9 +44,6 @@
                     </xsl:attribute>
                 </xsl:otherwise>
             </xsl:choose>
-            <a class="navbar-brand py-1" href="#">
-                <xsl:value-of select="$title"/>
-            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -137,7 +134,7 @@
                 </ul>
                 <form method="post" action="ShowSessions.php" class="form-inline my-0 my-lg-0 mr-4">
                     <input type="text" id="searchtitle" name="searchtitle" size="28"
-                           class="form-control mr-sm-2 h-100 bg-secondary text-white"
+                           class="form-control form-control-sm mr-sm-2 h-100 bg-secondary text-white"
                            placeholder="Search for sessions by title" aria-label="Search"/>
                     <input type="hidden" value="ANY" name="track"/>
                     <input type="hidden" value="ANY" name="status"/>
