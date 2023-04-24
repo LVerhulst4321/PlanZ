@@ -40,6 +40,7 @@ function is_input_data_valid($db, $json) {
 
 start_session_if_necessary();
 $db = connect_to_db(true);
+date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
 $authentication = new Authentication();
 try {
 

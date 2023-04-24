@@ -1,6 +1,7 @@
 import store from './store';
 import axios from 'axios';
-import { setShiftAssignements, setVolunteerJobs, setVolunteerShifts } from './volunteerActions';
+import { setAllShiftAssignements, setShiftAssignements, setVolunteerJobs, setVolunteerShifts } from './volunteerActions';
+import { redirectToLogin } from '../common/redirectToLogin';
 
 export function fetchJobs() {
     axios.get('/api/volunteer/get_volunteer_jobs.php')
@@ -8,8 +9,12 @@ export function fetchJobs() {
             store.dispatch(setVolunteerJobs(res.data));
         })
         .catch(error => {
-            let message = "The list of jobs could not be downloaded."
-            store.dispatch(setVolunteerJobs({}, message));
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = "The list of jobs could not be downloaded."
+                store.dispatch(setVolunteerJobs({}, message));
+            }
         }
     );
 }
@@ -20,20 +25,43 @@ export function fetchMyShiftAssignments() {
             store.dispatch(setShiftAssignements(res.data));
         })
         .catch(error => {
-            let message = "The list of jobs could not be downloaded."
-            store.dispatch(setShiftAssignements({}, message));
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = "The list of assignments could not be downloaded."
+                store.dispatch(setShiftAssignements({}, message));
+            }
         }
     );
 }
 
+export function fetchAllShiftAssignments() {
+    axios.get('/api/volunteer/get_all_volunteer_signups.php')
+        .then(res => {
+            store.dispatch(setAllShiftAssignements(res.data));
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = "The list of assignments could not be downloaded."
+                store.dispatch(setAllShiftAssignements({}, message));
+            }
+        }
+    );
+}
 export function fetchShifts() {
     axios.get('/api/volunteer/get_volunteer_shifts.php')
         .then(res => {
             store.dispatch(setVolunteerShifts(res.data));
         })
         .catch(error => {
-            let message = "The list of shifts could not be downloaded."
-            store.dispatch(setVolunteerShifts({}, message));
+            if (error.response && error.response.status === 401) {
+                redirectToLogin();
+            } else {
+                let message = "The list of shifts could not be downloaded."
+                store.dispatch(setVolunteerShifts({}, message));
+            }
         }
     );
 }

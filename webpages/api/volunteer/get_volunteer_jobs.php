@@ -15,6 +15,7 @@ require_once('../authentication.php');
 
 start_session_if_necessary();
 $db = connect_to_db(true);
+date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
 $authentication = new Authentication();
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isLoggedIn()) {

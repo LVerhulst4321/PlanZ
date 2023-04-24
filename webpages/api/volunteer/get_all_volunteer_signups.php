@@ -5,16 +5,16 @@
 if (file_exists(__DIR__ . '/../../config/db_name.php')) {
     include __DIR__ . '/../../config/db_name.php';
 }
-require_once('../con_info.php');
-require_once('../http_session_functions.php');
-require_once('../../db_exceptions.php');
-require_once('../db_support_functions.php');
-require_once('../format_functions.php');
-require_once('../../data_functions.php');
-require_once('./volunteer_job_model.php');
-require_once('./volunteer_shift_model.php');
-require_once('../../con_data.php');
-require_once('../authentication.php');
+require_once(__DIR__ . '/../con_info.php');
+require_once(__DIR__ . '/../http_session_functions.php');
+require_once(__DIR__ . '/../../db_exceptions.php');
+require_once(__DIR__ . '/../db_support_functions.php');
+require_once(__DIR__ . '/../format_functions.php');
+require_once(__DIR__ . '/../../data_functions.php');
+require_once(__DIR__ . '/volunteer_job_model.php');
+require_once(__DIR__ . '/volunteer_shift_model.php');
+require_once(__DIR__ . '/../../con_data.php');
+require_once(__DIR__ . '/../authentication.php');
 
 // include one day before the con and one day after
 // because set-up and tear down sometimes happens on
@@ -43,8 +43,8 @@ try {
 
     if ($conInfo == null) {
         http_response_code(409);
-    } else if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isLoggedIn()) {
-        $shifts = VolunteerShift::findAll($db, $conInfo);
+    } else if ($_SERVER['REQUEST_METHOD'] === 'GET' && $authentication->isVolunteerSetUpAllowed()) {
+        $shifts = VolunteerShift::findAllAssignments($db, $conInfo, $conInfo);
         $result = [];
         foreach ($shifts as $s) {
             $result[] = $s->asArray();

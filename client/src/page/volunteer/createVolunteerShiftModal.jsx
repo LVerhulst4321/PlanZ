@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import LoadingButton from '../../common/loadingButton';
 import store from '../../state/store';
 import { rememberRecentShiftData, showCreateShiftModal } from '../../state/volunteerActions';
-import { fetchShifts } from '../../state/volunteerFunctions';
+import { fetchAllShiftAssignments } from '../../state/volunteerFunctions';
 import FormComponent from '../../common/formComponent';
 
 import dayjs from "dayjs";
@@ -250,7 +250,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                     message: null
                 });
                 store.dispatch(showCreateShiftModal(false));
-                fetchShifts();
+                fetchAllShiftAssignments();
             })
             .catch(error => {
                 this.setState({
@@ -289,7 +289,7 @@ class CreateVolunteerShiftModal extends FormComponent {
                     confirmDelete: false
                 });
                 store.dispatch(showCreateShiftModal(false));
-                fetchShifts();
+                fetchAllShiftAssignments();
             })
             .catch(error => {
                 console.log(error);
@@ -385,8 +385,8 @@ class CreateVolunteerShiftModal extends FormComponent {
 function mapStateToProps(state) {
     return {
         showModal: state.volunteering.shifts.showModal,
-        days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
-        timezone: state.volunteering.shifts.context ? state.volunteering.shifts.context.timezone : null,
+        days: state.volunteering.allAssignments?.context?.days ?? [],
+        timezone: state.volunteering.allAssignments?.context?.timezone ?? null,
         jobs: state.volunteering.jobs ? state.volunteering.jobs.list : [],
         selectedShift: state.volunteering.shifts.selectedShift,
         recentData: { ...state.volunteering.recentData }

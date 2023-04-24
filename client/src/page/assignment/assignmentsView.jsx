@@ -30,7 +30,6 @@ const AssignmentsView = (props) => {
         setTerm(queryString);
         if (queryString) {
             timeout = setTimeout(() => {
-                console.log("fire");
                 fetchOtherAssignmentCandidates(session.sessionId, queryString);
                 timeout = undefined;
             }, 1000);

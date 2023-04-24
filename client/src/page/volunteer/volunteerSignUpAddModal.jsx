@@ -108,15 +108,15 @@ class VolunteerSignUpAddModal extends React.Component {
 
         if (filterDay === "") {
             // skip it
-        } else if (!(dayjs(shift.fromTime).format('YYYY-MM-DD') === filterDay) &&
-            !(dayjs(shift.toTime).format('YYYY-MM-DD') === filterDay)) {
+        } else if (!(dayjs(shift.fromTime).format('YYYY-MM-DD')?.toString() === filterDay?.toString()) &&
+            !(dayjs(shift.toTime).format('YYYY-MM-DD')?.toString() === filterDay?.toString())) {
 
             matches = false;
         }
 
         if (filterJob === "" || !matches) {
             // skip it
-        } else if (filterJob !== shift.job.id) {
+        } else if (filterJob?.toString() !== shift.job.id?.toString()) {
             matches = false;
         }
 

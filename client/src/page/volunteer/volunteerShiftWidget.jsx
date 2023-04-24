@@ -3,8 +3,7 @@ import { Form, Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import store from '../../state/store';
 import { showCreateShiftModal } from '../../state/volunteerActions';
-import { fetchShifts } from '../../state/volunteerFunctions';
-import VolunteerShiftCard from './volunteerShiftCard';
+import VolunteerShiftRow from './volunteerShiftRow';
 
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
@@ -29,16 +28,11 @@ class VolunteerShiftWidget extends React.Component {
         }
     }
 
-    componentDidMount() {
-        if (this.props.shifts.loading) {
-            fetchShifts();
-        }
-    }
     render() {
         return (<div>
             <div className="d-flex mb-2 align-items-baseline justify-content-between">
                     <h4 className="mr-3 mb-0">Schedule Volunteer Shifts</h4>
-                    <button className="btn btn-primary" onClick={(e) => {this.openCreateModal()}} 
+                    <button className="btn btn-primary" onClick={(e) => {this.openCreateModal()}}
                         disabled={!(this.props.jobs && this.props.jobs.length > 0)}>Create Shift</button>
                 </div>
             {this.renderMain()}
@@ -80,9 +74,20 @@ class VolunteerShiftWidget extends React.Component {
                         </div>
                     </fieldset>
 
-                    <div className="row row-cols-1 row-cols-lg-3 mt-3">
-                        {shifts}
-                    </div>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Job</th>
+                                <th>When</th>
+                                <th>Needs</th>
+                                <th>Where</th>
+                                <th colSpan={2}>Sign-ups</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {shifts}
+                        </tbody>
+                    </table>
                 </div>
             );
         }
@@ -90,10 +95,11 @@ class VolunteerShiftWidget extends React.Component {
 
     getFilteredShifts() {
         return this.props.shifts.list.filter(s => this.matchesFilter(s)).map(s => {
-            return (<VolunteerShiftCard shift={s} key={'shift-' + s.id} />);
+            return (<VolunteerShiftRow shift={s} key={'shift-' + s.id} />);
         });
     }
 
+    // NOTE: the comparisons in this function don't support '==='
     matchesFilter(shift) {
         let matches = true;
         let filterDay = this.getFilterDay();
@@ -101,15 +107,15 @@ class VolunteerShiftWidget extends React.Component {
 
         if (filterDay === "") {
             // skip it
-        } else if (!(dayjs(shift.fromTime).format('YYYY-MM-DD') === filterDay) &&
-            !(dayjs(shift.toTime).format('YYYY-MM-DD') === filterDay)) {
+        } else if (!(dayjs(shift.fromTime).format('YYYY-MM-DD')?.toString() === filterDay?.toString()) &&
+            !(dayjs(shift.toTime).format('YYYY-MM-DD')?.toString() === filterDay?.toString())) {
 
             matches = false;
-        } 
+        }
 
         if (filterJob === "" || !matches) {
             // skip it
-        } else if (filterJob != shift.job.id) {
+        } else if (filterJob.toString() !== shift.job?.id?.toString()) {
             matches = false;
         }
 
@@ -138,10 +144,10 @@ class VolunteerShiftWidget extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return { 
-        shifts: state.volunteering.shifts,
-        days: state.volunteering.shifts.context ? state.volunteering.shifts.context.days : [],
-        jobs: state.volunteering.jobs ? state.volunteering.jobs.list : [] 
+    return {
+        shifts: state.volunteering.allAssignments,
+        days: state.volunteering.allAssignments?.context?.days,
+        jobs: state.volunteering.jobs ? state.volunteering.jobs.list : []
     };
 }
 
