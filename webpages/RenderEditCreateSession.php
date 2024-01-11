@@ -243,6 +243,12 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
                     <?php populate_multiselect_from_table("Services", $session["servdest"]); ?>
                 </select>
             </div> <!-- Services -->
+            <div class="form-group col-lg-4" > <!-- Tech level; -->
+                <div><label>Tech level:</label></div>
+                <select class="form-control" id="techlevelid" name="techlevelid">
+                <?php populate_select_from_table("TechLevel", $session["techlevelid"], "", FALSE); ?>
+                </select>
+            </div> <!-- Tech level -->
 <?php
     if (TRACK_TAG_USAGE !== "TRACK_ONLY") {
 ?>
