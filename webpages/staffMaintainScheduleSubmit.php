@@ -709,6 +709,15 @@ function editSchedule() {
     // details of conflicts stored in $message
     $warnMsg = $message; // save for use later
 
+    if ($deleteScheduleIdList != "") {
+        $deleteQuery = "DELETE FROM Schedule WHERE scheduleid in ($deleteScheduleIdList);";
+        $result = mysqli_query_with_error_handling($deleteQuery, true, true);
+    }
+    if ($deleteSessionIdList != "") {
+        //  status 2 is "vetted"
+        $SessStatVettedQu = "UPDATE Sessions SET statusid = 2 WHERE sessionid IN ($deleteSessionIdList);";
+        $result = mysqli_query_with_error_handling($SessStatVettedQu, true, true);
+    }
     if (count($SchedInsQueryArray) > 0) {
         foreach ($SchedInsQueryArray as $thisSessionId => $thisQuery) {
             $result = mysqli_query_with_error_handling($thisQuery, true, true);
@@ -720,15 +729,6 @@ function editSchedule() {
     if ($SEHInsQu2) {
         $SEHInsQu = $SEHInsQu . $SEHInsQu2 . ";";
         $result = mysqli_query_with_error_handling($SEHInsQu, true, true);
-    }
-    if ($deleteScheduleIdList) {
-        $deleteQuery = "DELETE FROM Schedule WHERE scheduleid in ($deleteScheduleIdList);";
-        $result = mysqli_query_with_error_handling($deleteQuery, true, true);
-    }
-    if ($deleteSessionIdList) {
-        //  status 2 is "vetted"
-        $SessStatVettedQu = "UPDATE Sessions SET statusid = 2 WHERE sessionid IN ($deleteSessionIdList);";
-        $result = mysqli_query_with_error_handling($SessStatVettedQu, true, true);
     }
     if ($returnTable == "true") {
         retrieveRoomsTable();
