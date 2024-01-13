@@ -204,6 +204,7 @@ function get_session_from_post() {
     $session["tagdest"] = getArrayOfStrings("tagdest");
     $session["featdest"] = getArrayOfStrings("featdest");
     $session["servdest"] = getArrayOfStrings("servdest");
+    $session["techlevelid"] = getString('techlevelid');
     $session["duration"] = getString('duration');
     $session["atten"] = getString('atten');
     $session["kids"] = getInt('kids');
@@ -216,6 +217,7 @@ function get_session_from_post() {
     $session["notesforprog"] = getString('notesforprog');
     $session["hashtag"] = getString('hashtag');
     $session["participantlabel"] = getString('participantlabel');
+    $session["techlevelid"] = getString('techlevelid');
     if (MEETING_LINK === TRUE)
         $session["mlink"] = getString('mlink');
     else
@@ -253,6 +255,7 @@ function set_session_defaults() {
     $session["progguiddesc"] = "";
     $session["featdest"] = "";
     $session["servdest"] = "";
+    $session["techlevelid"] = "99"; // default to Unspecified
     $session["tagdest"] = "";
     $session["duration"] = DEFAULT_DURATION; //should be specified corresponding to DURATION_IN_MINUTES preference
     $session["atten"] = "";

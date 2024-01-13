@@ -36,6 +36,7 @@ $editAnyTable =
     || may_I('ce_Services')
     || may_I('ce_ServiceTypes')
     || may_I('ce_SessionStatuses')
+    || may_I('ce_TechLevels')
     || may_I('ce_Tags')
     || may_I('ce_Times')
     || may_I('ce_Tracks')

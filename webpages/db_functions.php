@@ -546,7 +546,8 @@ UPDATE Sessions
         notesforprog="{$sessionf["notesforprog"]}",
         meetinglink="{$sessionf["mlink"]}",
         streaminglink="{$sessionf["streamlink"]}",
-        signuplink="{$sessionf["signlink"]}"
+        signuplink="{$sessionf["signlink"]}",
+        techlevelid="{$sessionf["techlevelid"]}"
     WHERE
         sessionid = $id;
 EOD;
@@ -654,7 +655,8 @@ INSERT INTO Sessions
         servicenotes="{$sessionf["servnotes"]}",
         statusid="{$sessionf["status"]}",
         hashtag="{$sessionf["hashtag"]}",
-        notesforprog="{$sessionf["notesforprog"]}"
+        notesforprog="{$sessionf["notesforprog"]}",
+        techlevelid="{$sessionf["techlevelid"]}"
 EOD;
     if (!mysqli_query_with_error_handling($query)) {
         return false;
@@ -741,6 +743,7 @@ function filter_session() {
     $session2["notesforprog"] = mysqli_real_escape_string($linki, $session["notesforprog"]);
     $session2["hashtag"] = mysqli_real_escape_string($linki, $session["hashtag"]);
     $session2["id"] = filter_var($session["sessionid"], FILTER_SANITIZE_NUMBER_INT);
+    $session2["techlevelid"] = filter_var($session["techlevelid"], FILTER_SANITIZE_NUMBER_INT);
 
     if (!empty($session["featdest"])) {
         $session2["features"] = array();
@@ -803,7 +806,8 @@ SELECT
         participantlabel,
         meetinglink,
         streaminglink,
-        signuplink
+        signuplink,
+        techlevelid
     FROM
         Sessions
     WHERE
@@ -852,6 +856,7 @@ EOD;
     $session["streamlink"] = $sessionarray["streaminglink"];
     $session["signlink"] = $sessionarray["signuplink"];
     $session["hashtag"] = $sessionarray["hashtag"];
+    $session["techlevelid"] = $sessionarray["techlevelid"];
     mysqli_free_result($result);
     $query = "SELECT featureid FROM SessionHasFeature WHERE sessionid = $sessionid;";
     if (!$result = mysqli_query_with_error_handling($query)) {

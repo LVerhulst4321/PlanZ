@@ -52,9 +52,11 @@
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_PubStatuses' or @permatomtag='ce_All']" />
         <xsl:variable name="editSessionStatuses"
             select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_SessionStatuses' or @permatomtag='ce_All']" />
+        <xsl:variable name="editTechLevel"
+            select="/doc/query[@queryname='permission_set']/row[@permatomtag='ce_TechLevel' or @permatomtag='ce_All']" />
 
         <xsl:variable name="editAnySession"
-            select="$editTracks or $editTags or $editTypes or $editKidsCategories or $editLanguageStatuses or $editPubStatuses or $editSessionStatuses" />
+            select="$editTracks or $editTags or $editTypes or $editKidsCategories or $editLanguageStatuses or $editPubStatuses or $editSessionStatuses or $editTechLevel" />
 
 
         <xsl:variable name="editRooms"
@@ -404,6 +406,14 @@
                                         </a>
                                     </li>
                                 </xsl:if>
+                                <xsl:if test="$editTechLevel">
+                                    <li class="nav-item">
+                                        <a href="#techlevel" class="nav-link" data-toggle="tab"
+                                            data-top="session-top"
+                                            id="t-TechLevel">TechLevel
+                                        </a>
+                                    </li>
+                                </xsl:if>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane mt-4 fade show active" id="sessiondesc">
@@ -447,6 +457,10 @@
                                                 delete)
                                             </p>
                                         </xsl:if>
+                                        <xsl:if test="$editTechLevel">
+                                            <li>TechLevel</li>
+                                            <p>How difficult/risky the item is to tech</p>
+                                        </xsl:if>
                                     </ul>
                                 </div>
                                 <xsl:if test="$editTracks">
@@ -469,6 +483,9 @@
                                 </xsl:if>
                                 <xsl:if test="$editSessionStatuses">
                                     <div class="tab-pane mt-4 fade" id="sessionstatuses"/>
+                                </xsl:if>
+                                <xsl:if test="$editTechLevel">
+                                    <div class="tab-pane mt-4 fade" id="techlevel"/>
                                 </xsl:if>
                             </div>
                         </div>
