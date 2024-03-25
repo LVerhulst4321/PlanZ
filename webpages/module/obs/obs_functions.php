@@ -111,10 +111,11 @@ function getObsData(
         WHERE
             S.pubstatusid IN ($showpubstatus) /* Public */
             AND $where
+            AND (ADDTIME('$ConStartDatim', SCH.starttime) > NOW())
         GROUP BY
             S.sessionid
         ORDER BY
-            S.sessionid;
+            SCH.starttime, S.sessionid;
     EOD;
 
     $result = mysqli_query_with_error_handling($query);
