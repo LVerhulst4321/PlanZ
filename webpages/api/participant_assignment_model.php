@@ -6,6 +6,11 @@ class ParticipantSessionInterestResponse {
     public $rank;
 }
 
+class ParticipantAssignmentConflict {
+    public $sessionId;
+    public $title;
+}
+
 class ParticipantAssignment {
 
     public $badgeId;
@@ -18,6 +23,7 @@ class ParticipantAssignment {
     public $textBio;
     public $sessionId;
     public $willingnessToBeParticipant;
+    public $conflicts = array();
 
     public static function findAssignmentForSessionByBadgeId($db, $sessionId, $badgeId) {
         $assignments = ParticipantAssignment::findAssignmentsForSession($db, $sessionId);
@@ -29,7 +35,7 @@ class ParticipantAssignment {
         return null;
     }
 
-    public static function findAssignmentsForSession($db, $sessionId) {
+    public static function findAssignmentsForSession($db, $sessionId, $sessionSchedule = null) {
         $query = <<<EOD
         SELECT
             POS.badgeid,
@@ -65,10 +71,68 @@ EOD;
                 $assignments[] = ParticipantAssignment::toModel($row, $sessionId);
             }
             mysqli_stmt_close($stmt);
-            return $assignments;
+            return ParticipantAssignment::appendSessionConflicts($db, $assignments, $sessionId, $sessionSchedule);
         } else {
             throw new DatabaseSqlException("Query could not be executed: $query");
         }
+    }
+
+    private static function appendSessionConflicts($db, $assignments, $sessionId, $sessionSchedule) {
+        if ($assignments != null && count($assignments) > 0 && $sessionSchedule != null) {
+
+            $temp = [];
+            $badgeIdList = "";
+            foreach ($assignments as $a) {
+                if (strlen($badgeIdList) > 0) {
+                    $badgeIdList .= ", ";
+                }
+                $badgeIdList .= ("'" . $db->real_escape_string($a->badgeId) . "'");
+                $temp[$a->badgeId] = $a;
+            }
+
+
+            $query = <<<EOD
+            SELECT
+                POS.badgeid,
+                POS.sessionid,
+                  S.title
+            FROM
+                        ParticipantOnSession POS
+                    JOIN Sessions S ON S.sessionid = POS.sessionid
+                    JOIN Schedule SCH ON POS.sessionid = SCH.sessionid
+            WHERE
+                POS.sessionid != ?
+            AND (
+                    ( CAST(? as time) <= SCH.starttime AND CAST(? as time) > SCH.starttime) OR
+                    ( CAST(? as time) <= ADDTIME(SCH.starttime, S.duration) AND CAST(? as time) > ADDTIME(SCH.starttime, S.duration)) OR
+                    ( CAST(? as time) >= SCH.starttime AND CAST(? as time) <= ADDTIME(SCH.starttime, S.duration))
+                )
+            AND POS.badgeid in ($badgeIdList);
+EOD;
+
+            $stmt = mysqli_prepare($db, $query);
+            mysqli_stmt_bind_param($stmt, "issssss", $sessionId, $sessionSchedule->startTimeAsTime, $sessionSchedule->endTimeAsTime,
+                $sessionSchedule->startTimeAsTime, $sessionSchedule->endTimeAsTime, $sessionSchedule->startTimeAsTime, $sessionSchedule->endTimeAsTime);
+
+            if (mysqli_stmt_execute($stmt)) {
+                $result = mysqli_stmt_get_result($stmt);
+                while ($row = mysqli_fetch_object($result)) {
+                    $badgeId = $row->badgeid;
+
+                    $conflict = new ParticipantAssignmentConflict();
+                    $conflict->sessionId = $sessionId;
+                    $conflict->title = $row->title;
+                    $a = $temp[$badgeId];
+                    $a->conflicts[] = $conflict;
+                }
+
+                mysqli_stmt_close($stmt);
+            } else {
+                throw new DatabaseSqlException("Query could not be executed: $query");
+            }
+        }
+
+        return $assignments;
     }
 
     public static function findCandidateAssigneesForSession($db, $sessionId) {
@@ -210,6 +274,14 @@ EOD;
                 "comments" => $this->interestResponse->comments,
                 "willModerate" => $this->interestResponse->willmoderate
             );
+        }
+        if (count($this->conflicts) > 0) {
+            $temp = array();
+            foreach ($this->conflicts as $c) {
+                $temp[] = array("sessionId" => $c->sessionId,
+                    "title" => $c->title);
+            }
+            $result["conflicts"] = $temp;
         }
         return $result;
     }
