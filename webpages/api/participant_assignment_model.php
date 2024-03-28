@@ -272,7 +272,7 @@ EOD;
         if ($this->interestResponse != null) {
             $result["interestResponse"] = array("rank" => $this->interestResponse->rank,
                 "comments" => $this->interestResponse->comments,
-                "willModerate" => $this->interestResponse->willmoderate
+                "willModerate" => $this->interestResponse->willModerate
             );
         }
         if (count($this->conflicts) > 0) {
