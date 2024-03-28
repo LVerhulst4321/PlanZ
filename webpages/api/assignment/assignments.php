@@ -25,7 +25,7 @@ try {
         $sessionId = $_REQUEST['sessionId'];
         $session = Session::findById($db, $sessionId);
         if ($session != null) {
-            $assignments = ParticipantAssignment::findAssignmentsForSession($db, $sessionId);
+            $assignments = ParticipantAssignment::findAssignmentsForSession($db, $sessionId, $session->sessionSchedule);
             $candidates = ParticipantAssignment::findCandidateAssigneesForSession($db, $sessionId);
 
             header('Content-type: application/json; charset=utf-8');

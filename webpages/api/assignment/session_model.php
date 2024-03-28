@@ -3,7 +3,9 @@
 class SessionSchedule {
     public $roomName;
     public $startTime;
+    public $startTimeAsTime;
     public $endTime;
+    public $endTimeAsTime;
     public $isOnline;
 }
 
@@ -29,7 +31,9 @@ class Session {
         SELECT
             S.title, S.progguiddesc, S.notesforprog, S.participantlabel, T.trackname, R.roomname, R.is_online,
             DATE_FORMAT(ADDTIME('$CON_START_DATIM', SCH.starttime),'%a $timeFormat') AS starttime,
+            SCH.starttime AS starttimeastime,
             DATE_FORMAT(ADDTIME('$CON_START_DATIM', ADDTIME(SCH.starttime, S.duration)),'$timeFormat') AS endtime,
+            ADDTIME(SCH.starttime, S.duration) AS endtimeastime,
             left(S.duration, 5) AS duration
         FROM
             Sessions S
@@ -61,7 +65,9 @@ EOD;
                     $schedule->roomName = $row->roomname;
                     $schedule->isOnline = $row->is_online == 'Y' ? true : false;
                     $schedule->startTime = $row->starttime;
+                    $schedule->startTimeAsTime = $row->starttimeastime;
                     $schedule->endTime = $row->endtime;
+                    $schedule->endTimeAsTime = $row->endtimeastime;
                     $session->sessionSchedule = $schedule;
                 }
             }
