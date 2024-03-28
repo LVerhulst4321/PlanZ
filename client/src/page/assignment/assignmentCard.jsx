@@ -7,7 +7,15 @@ import { createAssignment, removeAssignment, updateModeratorStatus } from "../..
 const AssignmentCard = ({assignee, assigned, session}) => {
     let [showBio, setShowBio] = useState(false);
 
-    return (<Card className={assignee.moderator ? 'border-success' : ''}>
+    let className = "";
+    if (assignee.moderator) {
+        className = "border-success";
+    }
+    if (assignee.conflicts?.length) {
+        className += " bg-warning bg-opacity-25";
+    }
+
+    return (<Card className={className}>
         <Card.Body className="p-3">
 
             <div className="d-flex" style={{ gap: "1rem" }}>
@@ -27,6 +35,7 @@ const AssignmentCard = ({assignee, assigned, session}) => {
                                     </div>)
                                 : null }
                             {assignee.registered ? undefined : (<div className="text-muted small">{assignee.name} is not registered.</div>)}
+                            {assignee.conflicts?.length ? (<div className="text-muted small">{assignee.name} has conflicts for this time slot.</div>) : undefined}
                             {assignee.willingnessToBeParticipant === 'Unknown'
                                 ? (<div className="text-muted small">{assignee.name} has not specified their willingness to be a participant.</div>)
                                 : (assignee.willingnessToBeParticipant === 'No'

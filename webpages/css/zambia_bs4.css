@@ -296,3 +296,7 @@ table.table.table-striped tr.highlight:nth-child(odd) td {
 .participant-avatar-xs {
   width: 2rem;
 }
+/* this class naming standard for opacity is consistent with Bootstap 5.1 */
+.bg-warning.bg-opacity-25 {
+  background-color: rgba(255, 193, 7, 0.25) !important;
+}
