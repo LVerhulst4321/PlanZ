@@ -33,7 +33,7 @@ for ($i = 0; $i < $rolerows; $i++) {
 $rolearray['count'] = $rolerows;
 
 $interestarray = array();
-for ($i = 1; $i < $interestrows; $i++) {
+for ($i = 0; $i < $interestrows; $i++) {
     $interestarray[$i] = array();
     if (isset($_POST["willdointerest" . $i])) {
         $interestarray[$i]["badgeid"] = $badgeid;
@@ -90,7 +90,7 @@ for ($i = 0; $i < $rolerows; $i++) {
     }
 }
 
-for ($i = 1; $i < $interestrows; $i++) {
+for ($i = 0; $i < $interestrows; $i++) {
     if (isset($interestarray[$i]["badgeid"]) && ($interestarray[$i]["diddointerest"] == 0)) {
         $query = "INSERT INTO ParticipantHasInterest set badgeid=\"" . $badgeid . "\", interestid=" . $interestarray[$i]["interestid"] . "";
         if (!mysqli_query($linki, $query)) {

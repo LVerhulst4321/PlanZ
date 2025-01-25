@@ -111,7 +111,7 @@ function renderMyInterests($title, $error, $message, $rolearray, $interestarray)
     echo "<p class=\"mt-3\">From which of the following areas would you consider being a panelist? (Check all that apply):</p>\n";
     echo "<div class=\"row mt-3\">\n";
     echo "    <div class=\"col-12 interests-list-container\">\n";
-    for ($i = 1; $i < $interestrows; $i++) {
+    for ($i = 0; $i < $interestrows; $i++) {
         echo "        <div class=\"interest-entry-container\">\n";
         echo "            <label for=\"willdointerest" . $i . "\">\n";
         echo "                <input type=\"checkbox\" name=\"willdointerest" . $i . "\" id=\"willdointerest" . $i . "\"";
