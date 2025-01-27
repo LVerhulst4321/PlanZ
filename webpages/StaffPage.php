@@ -4,6 +4,7 @@ global $participant, $message_error, $message2, $congoinfo, $title;
 $title = "Staff Overview";
 require_once('StaffCommonCode.php');
 require_once('con_data.php');
+require_once('SiteHealth.php');
 staff_header($title,  true);
 ?>
 
@@ -13,7 +14,7 @@ staff_header($title,  true);
     <div class="card-header">
         <h2><?php echo CON_NAME; ?></h2>
         <p>
-<?php 
+<?php
         $conData = ConData::fromEnvironmentDefinition();
         echo $conData->startDate->format('D, j M Y');
         echo ' - ';
@@ -79,6 +80,24 @@ echo "    </div><!-- close card body -->\n";
 
 ?>
 </p>
+</div><!-- close card top level -->
+
+</div>
+</div>
+
+<div class="row">
+<div class="col-lg-8">
+<div class="card mt-2">
+    <div class="card-header">
+        <h5><?php echo CON_NAME; ?> Status</h5>
+    </div>
+    <div class="card-body">
+<?php
+    $healthCheck = new SiteHealth;
+    $healthCheck->findSiteProblems();
+    echo $healthCheck->renderSiteStatus();
+?>
+    </div><!-- close card body -->
 </div><!-- close card top level -->
 
 </div>
