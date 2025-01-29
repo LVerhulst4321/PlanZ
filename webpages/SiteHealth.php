@@ -10,6 +10,9 @@ class SiteHealth
     private const REPORTS_INCLUDE = 'ReportMenuInclude.php';
     private const STAFF_REPORTS_INCLUDE = 'staffReportsInCategoryInclude.php';
     private const REPORTS_PATH = './reports';
+    private const REACT_DIST_DIR = '/dist';
+    private const REACT_DIST_FILE = 'planzReactApp.js';
+    private const REACT_CLIENT_PATH = '/../client/src/';
 
     protected array $problems = [];
 
@@ -106,6 +109,80 @@ class SiteHealth
     }
 
     /**
+     * Recursively find the newest file with the specified extension in the
+     * target directory.
+     *
+     * @param string $path The directory to search.
+     * @param string $ext  The extension to check for.
+     *
+     * @return integer The timestamp of the newest file in the tree.
+     */
+    protected function findNewestFile(string $path, string $ext): int
+    {
+        $max_date = 0;
+        $directory = dir($path);
+        while (false !== ($file = $directory->read())) {
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
+            $file_path = $path . '/' . $file;
+            // If current file is a direcory, get date of latest file in it.
+            if (is_dir($file_path)) {
+                $sub_max_date = $this->findNewestFile($file_path, $ext);
+                if ($sub_max_date > $max_date) {
+                    $max_date = $sub_max_date;
+                }
+            }
+            // If file has correct extension, check if it's newer than current.
+            if (preg_match("/\.$ext\$/", $file)) {
+                $file_date = filemtime($file_path);
+                if ($file_date > $max_date) {
+                    $max_date = $file_date;
+                }
+            }
+        }
+        return $max_date;
+    }
+
+    /**
+     * Checks the react distribution is present.
+     * It then checks that no source files are newer than the distribution.
+     * If problems found, add to problems array.
+     *
+     * @return void
+     */
+    protected function checkReactClient(): void
+    {
+        // Check React distribution file exists.
+        $base_dir = dirname(__FILE__);
+        $dist_dir = $base_dir . self::REACT_DIST_DIR;
+        $dist_file = $dist_dir . '/' . self::REACT_DIST_FILE;
+        if (!(file_exists($dist_dir) && file_exists($dist_file))) {
+            $this->problems[] =
+                "React client not found in " .
+                $dist_file .
+                ". Application will not perform correctly without it. " .
+                "Please ask your site admin to check documentation " .
+                "client/README.md.";
+            return;
+        }
+        // Get date of distribution file.
+        $dist_date = filemtime($dist_file);
+        // Find the modify date of the newest source file.
+        $src_path = $base_dir . self::REACT_CLIENT_PATH;
+        $newest_src_date = $this->findNewestFile($src_path, 'jsx');
+        if ($newest_src_date > $dist_date) {
+            $this->problems[] =
+                "React client built on " .
+                date('Y-m-d', $dist_date) .
+                " but source files modified on " .
+                date('Y-m-d', $newest_src_date) .
+                ". Please inform site admin that a rebuild is needed. " .
+                "See documentation at client/README.md.";
+        }
+    }
+
+    /**
      * Check the site site for problems.
      *
      * @return void
@@ -114,6 +191,7 @@ class SiteHealth
     {
         $this->findAndCheckPatches();
         $this->checkReportMenus();
+        $this->checkReactClient();
     }
 
     /**
