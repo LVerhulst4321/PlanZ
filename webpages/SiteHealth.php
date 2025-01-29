@@ -108,6 +108,15 @@ class SiteHealth
 
     }
 
+    /**
+     * Recursively find the newest file with the specified extension in the
+     * target directory.
+     *
+     * @param string $path The directory to search.
+     * @param string $ext  The extension to check for.
+     *
+     * @return integer The timestamp of the newest file in the tree.
+     */
     protected function findNewestFile(string $path, string $ext): int
     {
         $max_date = 0;
@@ -135,6 +144,13 @@ class SiteHealth
         return $max_date;
     }
 
+    /**
+     * Checks the react distribution is present.
+     * It then checks that no source files are newer than the distribution.
+     * If problems found, add to problems array.
+     *
+     * @return void
+     */
     protected function checkReactClient(): void
     {
         // Check React distribution file exists.
