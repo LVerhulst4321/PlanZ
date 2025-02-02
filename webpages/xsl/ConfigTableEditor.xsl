@@ -817,6 +817,7 @@
                         </div>
                     </div>
                 </div>
+                <div id="table-required"></div>
                 <div class="row mt-4">
                     <div class="col col-auto">
                         <button class="btn btn-secondary" id="undo" name="undo" value="undo" type="button"
