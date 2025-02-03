@@ -32,7 +32,7 @@ function fetch_schema($tablename) {
         // json of schema and table contents
         $query=<<<EOD
     SELECT
-        COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY, EXTRA
+        COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMN_KEY, COLUMN_DEFAULT, IS_NULLABLE, EXTRA
     FROM
         INFORMATION_SCHEMA.COLUMNS
     WHERE
@@ -215,7 +215,7 @@ function update_table($tablename)
 }
 
 /*
- *  Return the name of the first column ending with "name" on the table. 
+ *  Return the name of the first column ending with "name" on the table.
  */
 function lookupNameColumn($tableName)
 {
@@ -239,7 +239,7 @@ EOD;
 }
 
 /*
- *  Return the name of the first column of type "varchar" on the table. 
+ *  Return the name of the first column of type "varchar" on the table.
  */
 function lookupVarcharColumn($tableName)
 {
@@ -361,7 +361,7 @@ EOD;
             else
                 $joinclause .= "$union SELECT '$reftable', $reffield, COUNT(*) AS occurs FROM $reftable GROUP BY $curfield\n";
             $union = "UNION ALL";
-        }        
+        }
         if (DBVER >= "8") {
             $withclause .= "), SUM$curfield AS (\nSELECT $curfield, SUM(occurs) AS occurs FROM Ref$curfield GROUP BY $curfield\n)\n";
             $joinclause .= "LEFT OUTER JOIN SUM$curfield ON ($tablename.$mycurname = SUM$curfield.$curfield)\n";

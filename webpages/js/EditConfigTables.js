@@ -133,7 +133,7 @@ function tceEditor(e, cell) {
     if (cell != curcell) {
         savetceEdit(false);
     }
-    cellname = cell.getField();        
+    cellname = cell.getField();
     // initialize the starting value from the current value of the cell
     curcell = cell;
     cellValue = cell.getValue();
@@ -168,7 +168,7 @@ function tceEditor(e, cell) {
     // });
     document.getElementById("add-row").disabled = true;
     document.getElementById("resetbtn").disabled = true;
-    document.getElementById("submitbtn").disabled = true; 
+    document.getElementById("submitbtn").disabled = true;
     document.getElementById("undo").disabled = true;
     document.getElementById("redo").disabled = true;
 };
@@ -195,9 +195,23 @@ function deleterow(e, row, questiontable) {
 
 function addnewrow(table) {
     newid = newid - 1;
-    var rowtxt = "row = { " + indexcol + ": " + newid + ", display_order: 99999, Usage_Count: 0 };";
-    //console.log(rowtxt);
-    eval(rowtxt);
+    const row = {
+        'display_order': 99999,
+        'Usage_Count': 0,
+    };
+    row[indexcol] = newid;
+    // Preopulate any columns with defaults specified.
+    tableschema.forEach((column) => {
+        if (
+            column.COLUMN_KEY !== 'PRI' &&
+            column.COLUMN_NAME !== 'display_order' &&
+            column.hasOwnProperty("COLUMN_DEFAULT") &&
+            column.COLUMN_DEFAULT !== null &&
+            column.COLUMN_DEFAULT !== 'NULL'
+        ) {
+            row[column.COLUMN_NAME] = column.COLUMN_DEFAULT.replace(/['"]+/g, '');
+        }
+    })
     table.addRow(row, false);
 }
 
@@ -223,7 +237,7 @@ function calculateColumnWidth(column) {
 
 function opentable(tabledata) {
     // get table information from tableschema
-    //console.log(tableschema);
+    // console.log(tableschema);
     columns = new Array();
     indexcol = 'display_order';
     displayorder_found = false;
@@ -243,7 +257,7 @@ function opentable(tabledata) {
         } else if (fetch_json.hasOwnProperty(column.COLUMN_NAME + "_select")) {
             selectlist = new Array();
             formatlist = new Array();
-            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) { 
+            fetch_json[column.COLUMN_NAME + "_select"].forEach(function (entry) {
                 selectlist.push({ label: entry.name, value: entry.id });
                 formatlist[entry.id] = entry.name;
             });
@@ -289,7 +303,7 @@ function opentable(tabledata) {
         }
     });
     //console.log(columns);
-    
+
     if (display_order) {
         initialsort = new Array();
         initialsort.push({ column: "display_order", dir: "asc" });
@@ -301,7 +315,7 @@ function opentable(tabledata) {
         tooltips: false,
         history: true,
         headerSort: false,
-        initialSort: initialsort,  
+        initialSort: initialsort,
         data: tabledata,
         index: indexcol,
         layout: "fitDataTable",
@@ -325,7 +339,7 @@ function opentable(tabledata) {
             }
         },
     });
-   
+
     //console.log("Setting up options in table");
     document.getElementById("submitbtn").innerHTML = "Save";
     table.clearHistory();
@@ -333,18 +347,18 @@ function opentable(tabledata) {
 
 function saveComplete(data, textStatus, jqXHR) {
     message = "";
-    //console.log(data);
+    // console.log(data);
     try {
         fetch_json = JSON.parse(data);
     } catch (error) {
         //console.log(error);
         fetch_json = {};
     }
-    //console.log(fetch_json);
+    // console.log(fetch_json);
     if (fetch_json.hasOwnProperty('message')) {
         message = fetch_json.message;
         //console.log(message);
-    }       
+    }
 
     if (fetch_json.hasOwnProperty('tableschema')) {
         tableschema = fetch_json.tableschema;
@@ -377,8 +391,20 @@ function saveComplete(data, textStatus, jqXHR) {
         else {
             opentable(fetch_json.tabledata);
         }
+
+        // If any required columns, display them.
+        const requiredCols = [];
+        tableschema.forEach((column) => {
+            // Display required columns except primary key and display order.
+            if (column.COLUMN_KEY !== 'PRI' && column.COLUMN_NAME !== 'display_order' && column.IS_NULLABLE === 'NO') {
+                requiredCols.push("<strong>" + column.COLUMN_NAME + "</strong>");
+            }
+        });
+        document.getElementById('table-required').innerHTML = requiredCols.length
+            ? "The following columns must be populated: " + requiredCols.join(", ")
+            : "";
     }
-   
+
     document.getElementById("saving_div").style.display = "none";
     el = document.getElementById("submitbtn");
     el.disabled = false;
@@ -405,7 +431,7 @@ function SaveTable() {
         data: postdata,
         success: saveComplete,
         type: "POST"
-    }); 
+    });
 };
 
 function FetchTable() {
