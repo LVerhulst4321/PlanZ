@@ -10,6 +10,10 @@ $report['columns'] = array(
     null,
     null,
     null,
+    null,
+    null,
+    null,
+    null,
     null
 );
 $report['queries'] = [];
@@ -19,7 +23,11 @@ SELECT
         CD.lastname,
         P.pubsname,
         P.badgeid,
-        P.interested
+        P.interested,
+        P.share_email,
+        P.use_photo,
+        P.allow_streaming,
+        P.allow_recording
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
@@ -42,8 +50,12 @@ $report['xsl'] =<<<'EOD'
                         <tr style="height:2.6rem">
                             <th class="report">Registration Name</th>
                             <th class="report">Pubs Name</th>
-                        <th class="report">Person ID</th>
+                            <th class="report">Person ID</th>
                             <th class="report"><xsl:text disable-output-escaping="yes">Interested &amp;amp; Attending</xsl:text></th>
+                            <th class="report">May share email</th>
+                            <th class="report">May use photo</th>
+                            <th class="report">Allow streaming</th>
+                            <th class="report">Allow recording</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="/doc/query[@queryName='participants']/row"/>
@@ -67,6 +79,34 @@ $report['xsl'] =<<<'EOD'
                     <xsl:when test="@interested='1'">Yes</xsl:when>
                     <xsl:when test="@interested='2'">No</xsl:when>
                     <xsl:otherwise>Didn't log in</xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@share_email='1'">Yes</xsl:when>
+                    <xsl:when test="@share_email='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@use_photo='1'">Yes</xsl:when>
+                    <xsl:when test="@use_photo='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@allow_streaming='1'">Yes</xsl:when>
+                    <xsl:when test="@allow_streaming='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@allow_recording='1'">Yes</xsl:when>
+                    <xsl:when test="@allow_recording='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
                 </xsl:choose>
             </td>
         </tr>

@@ -32,6 +32,18 @@
                           <input type="hidden" id="interestedHID_{@badgeid}">
                               <xsl:attribute name="value"><xsl:value-of select="@interested"/></xsl:attribute>
                           </input>
+                          <input type="hidden" id="shareEmailHID_{@badgeid}">
+                              <xsl:attribute name="value"><xsl:value-of select="@share_email"/></xsl:attribute>
+                          </input>
+                          <input type="hidden" id="usePhotoHID_{@badgeid}">
+                              <xsl:attribute name="value"><xsl:value-of select="@use_photo"/></xsl:attribute>
+                          </input>
+                          <input type="hidden" id="allowStreamingHID_{@badgeid}">
+                              <xsl:attribute name="value"><xsl:value-of select="@allow_streaming"/></xsl:attribute>
+                          </input>
+                          <input type="hidden" id="allowRecordingHID_{@badgeid}">
+                              <xsl:attribute name="value"><xsl:value-of select="@allow_recording"/></xsl:attribute>
+                          </input>
                           <input type="hidden" id="spnameHID_{@badgeid}">
                             <xsl:attribute name="value">
                               <xsl:value-of select="@sortedpubsname"/>

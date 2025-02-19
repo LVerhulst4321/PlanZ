@@ -21,7 +21,7 @@ SELECT
              Sessions S
         JOIN Schedule SCH USING (sessionid)
         JOIN Rooms R USING (roomid)
-        JOIN Tracks TR USING (trackid) 
+        JOIN Tracks TR USING (trackid)
     WHERE EXISTS (
         SELECT *
             FROM
@@ -191,7 +191,7 @@ $report['xsl'] =<<<'EOD'
     <xsl:template name="oktophoto">
         <xsl:param name="use_photo" />
         <xsl:choose>
-            <xsl:when test="$use_photo='0'">
+            <xsl:when test="$use_photo='2'">
                 <xsl:text>No</xsl:text>
             </xsl:when>
             <xsl:when test="$use_photo='1'">

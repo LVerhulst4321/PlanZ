@@ -43,7 +43,7 @@ $report['xsl'] =<<<'EOD'
             </xsl:when>
             <xsl:otherwise>
                 <div class="alert alert-danger">No results found.</div>
-            </xsl:otherwise>                    
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
@@ -61,7 +61,7 @@ $report['xsl'] =<<<'EOD'
                         <xsl:when test="@use_photo = '1'">
                             <xsl:text>Yes</xsl:text>
                         </xsl:when>
-                        <xsl:when test="@use_photo = '0'">
+                        <xsl:when test="@use_photo = '2'">
                             <xsl:text>No</xsl:text>
                         </xsl:when>
                         <xsl:otherwise>

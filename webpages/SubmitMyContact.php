@@ -30,7 +30,7 @@ function update_participant($badgeid) {
     }
     if (isset($_POST['share_email'])) {
         $x = $_POST['share_email'];
-        if ($x == 0 || $x == 1) {
+        if ($x == 1 || $x == 2) {
             $updateClause .= "share_email=$x, ";
         } else {
             $updateClause .= "share_email=null, ";
@@ -38,10 +38,26 @@ function update_participant($badgeid) {
     }
     if (isset($_POST['use_photo'])) {
         $x = $_POST['use_photo'];
-        if ($x == 0 || $x == 1) {
+        if ($x == 1 || $x == 2) {
             $updateClause .= "use_photo=$x, ";
         } else {
             $updateClause .= "use_photo=null, ";
+        }
+    }
+    if (isset($_POST['allow_streaming'])) {
+        $x = $_POST['allow_streaming'];
+        if ($x == 1 || $x == 2) {
+            $updateClause .= "allow_streaming=$x, ";
+        } else {
+            $updateClause .= "allow_streaming=null, ";
+        }
+    }
+    if (isset($_POST['allow_recording'])) {
+        $x = $_POST['allow_recording'];
+        if ($x == 1 || $x == 2) {
+            $updateClause .= "allow_recording=$x, ";
+        } else {
+            $updateClause .= "allow_recording=null, ";
         }
     }
     if (isset($_POST['bestway'])) {

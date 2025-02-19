@@ -5,6 +5,10 @@ var htmlbioused = false;
 var emailDirty = false;
 var firstnameDirty = false;
 var interestedDirty = false;
+var shareEmailDirty = false;
+var usePhotoDirty = false;
+var allowStreamingDirty = false;
+var allowRecordingDirty = false;
 var lastnameDirty = false;
 var passwordDirtyAndReady = false;
 var phoneDirty = false;
@@ -19,6 +23,10 @@ var sortedpubsnameDirty = false;
 var rolesDirty = false;
 var staffnotesDirty = false;
 var originalInterested = "0";
+var originalShareEmail = "0";
+var originalUsePhoto = "0";
+var originalAllowStreaming = "0";
+var originalAllowRecording = "0";
 var fbadgeid;
 var curbadgeid;
 var resultsHidden = true;
@@ -26,6 +34,10 @@ var max_bio_len = 500;
 var mce_running = false;
 var bio_updated = false;
 var $interested;
+var $shareEmail;
+var $usePhoto;
+var $allowStreaming;
+var $allowRecording;
 var $bio;
 var $htmlbio;
 var $password;
@@ -62,7 +74,8 @@ function isDirty(override) {
     if (override === undefined) {
         override = false;
     }
-    if (!override && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty || lastnameDirty ||
+    if (!override && (badgenameDirty || bioDirty || emailDirty || firstnameDirty || interestedDirty ||
+        usePhotoDirty || shareEmailDirty || allowStreamingDirty || allowRecordingDirty || lastnameDirty ||
         $password.val() || phoneDirty || postaddress1Dirty || postaddress2Dirty || postcityDirty || poststateDirty ||
         postzipDirty || postcountryDirty || pubsnameDirty || sortedpubsnameDirty || rolesDirty || staffnotesDirty)) {
         $("#unsavedWarningModal").modal('show');
@@ -110,6 +123,7 @@ function chooseParticipant(badgeid, override) {
         if ($nextBTN)
             $nextBTN.disabled = searchIndex == (badgeList.length - 1);
     }
+    const disableEditPermission = $("#allow-edit-permission").val() === "no";
     $("#badgeid").val($("#bidSPAN_" + badgeidJQSel).text());
     var lastname = $("#lastnameHID_" + badgeidJQSel).val();
     $lastname.val(lastname).prop("defaultValue", lastname).prop("readOnly", false);
@@ -148,12 +162,22 @@ function chooseParticipant(badgeid, override) {
     $('#regtype').html(regtype);
     $('#warnName').html(pubsname);
     $('#warnNewBadgeID').html(badgeid);
-    originalInterested = $("#interestedHID_" + badgeidJQSel).val();
-    if (!originalInterested) {
-        originalInterested = "0";
-    }
+    $("#permission-disabled").prop("hidden", !disableEditPermission);
+    originalInterested = $("#interestedHID_" + badgeidJQSel).val() ?? "0";
     $interested.val(originalInterested);
-    $interested.prop("disabled", false);
+    $interested.prop("disabled", disableEditPermission);
+    originalShareEmail = $("#shareEmailHID_" + badgeidJQSel).val() ?? "0";
+    $shareEmail.val(originalShareEmail);
+    $shareEmail.prop("disabled", disableEditPermission);
+    originalUsePhoto = $("#usePhotoHID_" + badgeidJQSel).val() ?? "0";
+    $usePhoto.val(originalUsePhoto);
+    $usePhoto.prop("disabled", disableEditPermission);
+    originalAllowStreaming = $("#allowStreamingHID_" + badgeidJQSel).val() ?? "0";
+    $allowStreaming.val(originalAllowStreaming);
+    $allowStreaming.prop("disabled", disableEditPermission);
+    originalAllowRecording = $("#allowRecordingHID_" + badgeidJQSel).val() ?? "0";
+    $allowRecording.val(originalAllowRecording);
+    $allowRecording.prop("disabled", disableEditPermission);
     var bio = $("#bioHID_" + badgeidJQSel).val();
     var htmlbio = $("#htmlbioHID_" + badgeidJQSel).val();
     if (htmlbioused)
@@ -170,6 +194,10 @@ function chooseParticipant(badgeid, override) {
     emailDirty = false;
     firstnameDirty = false;
     interestedDirty = false;
+    shareEmailDirty = false;
+    usePhotoDirty = false;
+    allowStreamingDirty = false;
+    allowRecordingDirty = false;
     lastnameDirty = false;
     passwordDirtyAndReady = false;
     phoneDirty = false;
@@ -300,11 +328,22 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     $sortedpubsname.val(node.getAttribute("sortedpubsname")).prop("defaultValue", node.getAttribute("sortedpubsname")).prop("readOnly", false);
     $answercount.val(node.getAttribute("answercount")).prop("defaultValue", node.getAttribute("answercount")).prop("readOnly", false);
     //console.log("hh" + answercount);
-    originalInterested = node.getAttribute("interested");
-    if (!originalInterested)
-        originalInterested = 0;
+    $("#permission-disabled").prop("hidden", !disableEditPermission);
+    originalInterested = node.getAttribute("interested") ?? 0;
     $interested.val(originalInterested);
-    $interested.prop("disabled", false);
+    $interested.prop("disabled", disableEditPermission);
+    originalShareEmail = node.getAttribute("share_email") ?? 0;
+    $shareEmail.val(originalShareEmail);
+    $shareEmail.prop("disabled", disableEditPermission);
+    originalUsePhoto = node.getAttribute("use_photo") ?? 0;
+    $usePhoto.val(originalUsePhoto);
+    $usePhoto.prop("disabled", disableEditPermission);
+    originalAllowStreaming = node.getAttribute("allow_streaming") ?? 0;
+    $allowStreaming.val(originalAllowStreaming);
+    $allowStreaming.prop("disabled", disableEditPermission);
+    originalAllowRecording = node.getAttribute("allow_recording") ?? 0;
+    $allowRecording.val(originalAllowRecording);
+    $allowRecording.prop("disabled", disableEditPermission);
     $bio.val(node.getAttribute("bio")).prop("defaultValue", node.getAttribute("bio"));
     if (htmlbioused) {
         $htmlbio.val(node.getAttribute("htmlbio")).prop("defaultValue", node.getAttribute("htmlbio"));
@@ -325,6 +364,10 @@ function fetchParticipantCallback(data, textStatus, jqXHR) {
     emailDirty = false;
     firstnameDirty = false;
     interestedDirty = false;
+    shareEmailDirty = false;
+    usePhotoDirty = false;
+    allowStreamingDirty = false;
+    allowRecordingDirty = false;
     lastnameDirty = false;
     passwordDirtyAndReady = false;
     phoneDirty = false;
@@ -394,7 +437,12 @@ function hideSearchResults() {
 function initializeAdminParticipants() {
     //called when JQuery says AdminParticipants page has loaded
     //debugger;
+    const disableEditPermission = $("#allow-edit-permission").val() === "no";
     $interested = $("#interested");
+    $shareEmail = $("#share_email")
+    $usePhoto = $("#use_photo");
+    $allowStreaming = $("#allow_streaming");
+    $allowRecording = $("#allow_recording");
     $bio = $("#bio");
     $avatar = $("#participantAvatar");
     $htmlbio = $("#htmlbio");
@@ -469,6 +517,18 @@ function processChange() {
         case 'interested':
             interestedDirty = ($interested.val() !== originalInterested);
             break;
+        case 'share_email':
+            shareEmailDirty = ($shareEmail.val() !== originalShareEmail);
+            break;
+        case 'use_photo':
+            usePhotoDirty = ($usePhoto.val() !== originalUsePhoto);
+            break;
+        case 'allow_streaming':
+            allowStreamingDirty = ($allowStreaming.val() !== originalAllowStreaming);
+            break;
+        case 'allow_recording':
+            allowRecordingDirty = ($allowRecording.val() !== originalAllowRecording);
+            break;
         case 'bio':
             bioDirty = ($bio.val() !== $bio.prop("defaultValue"));
             break;
@@ -533,7 +593,8 @@ function processChange() {
 }
 
 function checkDirty() {
-    if (passwordDirtyAndReady || interestedDirty || bioDirty || staffnotesDirty || pubsnameDirty || sortedpubsnameDirty || lastnameDirty ||
+    if (passwordDirtyAndReady || interestedDirty || shareEmailDirty || usePhotoDirty || allowStreamingDirty ||
+        allowRecordingDirty || bioDirty || staffnotesDirty || pubsnameDirty || sortedpubsnameDirty || lastnameDirty ||
         firstnameDirty || badgenameDirty || phoneDirty || emailDirty || postaddress1Dirty || postaddress2Dirty ||
         postcityDirty || poststateDirty || postzipDirty || postcountryDirty || rolesDirty) {
 
@@ -570,12 +631,17 @@ function showSearchResults() {
 }
 
 function showUpdateResults(data, textStatus, jqXHR) {
+
     //ajax success callback function
     badgenameDirty = false;
     bioDirty = false;
     emailDirty = false;
     firstnameDirty = false;
     interestedDirty = false;
+    shareEmailDirty = false;
+    usePhotoDirty = false;
+    allowStreamingDirty = false;
+    allowRecordingDirty = false;
     lastnameDirty = false;
     passwordDirtyAndReady = false;
     phoneDirty = false;
@@ -594,6 +660,10 @@ function showUpdateResults(data, textStatus, jqXHR) {
     $('#updateBUTN').button('reset');
     $updateButton.prop("disabled", true);
     originalInterested = $interested.val();
+    originalShareEmail = $shareEmail.val();
+    originalUsePhoto = $usePhoto.val();
+    originalAllowStreaming = $allowStreaming.val();
+    originalAllowRecording = $allowRecording.val();
     // update the selection list
     var node = data.firstChild.firstChild.firstChild;
     var retbadgeid = node.getAttribute("badgeid");
@@ -614,6 +684,11 @@ function showUpdateResults(data, textStatus, jqXHR) {
     $("#spnameHID_" + badgeidJQSel).val(node.getAttribute("sortedpubsname"));
     $("#bnameSPAN_" + badgeidJQSel).html(node.getAttribute("badgename"));
     $("#interestedHID_" + badgeidJQSel).originalInterested = node.getAttribute("interested");
+    $("#shareEmailHID_" + badgeidJQSel).originalShareEmail = node.getAttribute("share_email");
+    $("#usePhotoHID_" + badgeidJQSel).originalUsePhoto = node.getAttribute("use_photo");
+    $("#allowStreamingHID_" + badgeidJQSel).originalAllowStreaming = node.getAttribute("allow_streaming");
+    $("#allowRecordingHID_" + badgeidJQSel).originalAllowRecording = node.getAttribute("allow_recording");
+    disableEditPermission = node.getAttribute("allow_edit_permission") === 'yes' ? false : true;
     $("#bioHID_" + badgeidJQSel).val(node.getAttribute("bio"));
     if (htmlbioused) {
         $("#htmlbioHID_" + badgeidJQSel).val(node.getAttribute("htmlbio"));
@@ -661,6 +736,18 @@ function updateBUTTON() {
     }
     if (interestedDirty) {
         postdata.interested = $interested.val();
+    }
+    if (shareEmailDirty) {
+        postdata.share_email = $shareEmail.val();
+    }
+    if (usePhotoDirty) {
+        postdata.use_photo = $usePhoto.val();
+    }
+    if (allowStreamingDirty) {
+        postdata.allow_streaming = $allowStreaming.val();
+    }
+    if (allowRecordingDirty) {
+        postdata.allow_recording = $allowRecording.val();
     }
     if (lastnameDirty) {
         postdata.lastname = $lastname.val();

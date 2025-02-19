@@ -18,12 +18,18 @@ function fetch_participant() {
         exit();
     }
 
+    $allowEditPermission = may_I('EditUserPermissions') ? 'yes' : 'no';
+
     $query = <<<EOD
 SELECT
     P.badgeid,
     P.pubsname,
     P.sortedpubsname,
     P.interested,
+    P.share_email,
+    P.use_photo,
+    P.allow_streaming,
+    P.allow_recording,
     P.bio,
     P.htmlbio,
     P.staff_notes,
@@ -44,7 +50,8 @@ SELECT
     CASE WHEN ISNULL(P.photouploadstatus) THEN 0 ELSE P.photouploadstatus END AS photouploadstatus,
     R.statustext,
     D.reasontext,
-    IFNULL(A.answercount, 0) AS answercount
+    IFNULL(A.answercount, 0) AS answercount,
+    '$allowEditPermission' AS allow_edit_permission
 FROM
                     Participants P
                JOIN CongoDump CD ON P.badgeid = CD.badgeid
@@ -86,8 +93,23 @@ function update_participant() {
     $sortedpubsname = getString("sortedpubsname");
     $staffnotes = getString("staffnotes");
     $interested = getInt("interested", NULL);
+    $share_email = getInt("share_email", NULL);
+    $use_photo = getInt("use_photo", NULL);
+    $allow_streaming = getInt("allow_streaming", NULL);
+    $allow_recording = getInt("allow_recording", NULL);
 
-    if (!is_null($password) || !is_null($bio) || !is_null($pubsname) || !is_null($sortedpubsname) || !is_null($staffnotes) || !is_null($interested)) {
+    if (
+        !is_null($password) ||
+        !is_null($bio) ||
+        !is_null($pubsname) ||
+        !is_null($sortedpubsname) ||
+        !is_null($staffnotes) ||
+        !is_null($interested) ||
+        !is_null($share_email) ||
+        !is_null($use_photo) ||
+        !is_null($allow_streaming) ||
+        !is_null($allow_recording)
+    ) {
         $query_preable = "UPDATE Participants SET ";
         $query_portion_arr = array();
         $query_param_arr = array();
@@ -102,6 +124,10 @@ function update_participant() {
         push_query_arrays($sortedpubsname, 'sortedpubsname', 's', 50, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($staffnotes, 'staff_notes', 's', 65535, $query_portion_arr, $query_param_arr, $query_param_type_str);
         push_query_arrays($interested, 'interested', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($share_email, 'share_email', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($use_photo, 'use_photo', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($allow_streaming, 'allow_streaming', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
+        push_query_arrays($allow_recording, 'allow_recording', 'i', NULL, $query_portion_arr, $query_param_arr, $query_param_type_str);
         $query_param_arr[] = $participantBadgeId;
         $query_param_type_str .= 's';
         $query = $query_preable . implode(', ', $query_portion_arr) . " WHERE badgeid = ?";
@@ -318,7 +344,8 @@ WITH AnsweredSurvey(participantid, answercount) AS (
     WHERE participantid = ?
 )
 SELECT
-    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.share_email,
+    P.use_photo, P.allow_streaming, P.allow_recording,P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
@@ -340,7 +367,8 @@ EOD;
         } else {
             $query = <<<EOD
 SELECT
-    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.share_email,
+    P.use_photo, P.allow_streaming, P.allow_recording, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
@@ -375,7 +403,8 @@ WITH AnsweredSurvey(participantid, answercount) AS (
     FROM ParticipantSurveyAnswers
 )
 SELECT
-    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.share_email,
+    P.use_photo, P.allow_streaming, P.allow_recording, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
@@ -400,7 +429,8 @@ EOD;
         } else {
             $query = <<<EOD
 SELECT
-    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.bio, P.htmlbio,
+    P.badgeid, P.pubsname, P.sortedpubsname, P.interested, P.share_email,
+    P.use_photo, P.allow_streaming, P.allow_recording, P.bio, P.htmlbio,
     P.staff_notes, CD.firstname, CD.lastname, CD.badgename,
     CD.phone, CD.email, CD.postaddress1, CD.postaddress2, CD.postcity, CD.poststate, CD.postzip,
     CD.postcountry, $regTypeField, IFNULL(A.answercount, 0) AS answercount,
