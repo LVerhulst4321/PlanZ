@@ -12,8 +12,22 @@
     <xsl:param name="showTrack" />
     <xsl:param name="showTags" />
     <xsl:param name="collapse_list" />
-    <xsl:variable name="interested" select="/doc/query[@queryName='interested']/row/@interested='1'"/>
-    <xsl:variable name="mayISubmitPanelInterests" select="$interested and $may_I" />
+    <xsl:param name="ENABLE_SHARE_EMAIL_QUESTION" />
+    <xsl:param name="ENABLE_USE_PHOTO_QUESTION" />
+    <xsl:param name="ENABLE_ALLOW_STREAMING_QUESTION" />
+    <xsl:param name="ENABLE_ALLOW_RECORDING_QUESTION" />
+    <xsl:variable name="interested" select="/doc/query[@queryName='participant']/row/@interested = '1'"/>
+    <xsl:variable name="share_email" select="/doc/query[@queryName='participant']/row/@share_email"/>
+    <xsl:variable name="use_photo" select="/doc/query[@queryName='participant']/row/@use_photo"/>
+    <xsl:variable name="allow_streaming" select="/doc/query[@queryName='participant']/row/@allow_streaming"/>
+    <xsl:variable name="allow_recording" select="/doc/query[@queryName='participant']/row/@allow_recording"/>
+    <xsl:variable name="permissions_complete"
+                select="($share_email = 1 or $share_email = 2 or $ENABLE_SHARE_EMAIL_QUESTION) and
+                        ($use_photo = 1 or $use_photo = 2 or $ENABLE_USE_PHOTO_QUESTION) and
+                        ($allow_streaming = 1 or $allow_streaming = 2 or $ENABLE_ALLOW_STREAMING_QUESTION) and
+                        ($allow_recording = 1 or $allow_recording = 2 or $ENABLE_ALLOW_RECORDING_QUESTION)"/>
+    <xsl:variable name="mayISubmitPanelInterests"
+                select="$interested and $permissions_complete and $may_I" />
 
     <xsl:template match="/">
         <div class="row-fluid">
@@ -23,6 +37,17 @@
                     <h4>Warning!</h4>
                     <span>
                         You have not indicated in your profile that you will be attending <xsl:value-of select="$conName"/>.
+                        You will not be able to save your panel choices until you so do.
+                    </span>
+                </div>
+            </div>
+        </xsl:if>
+        <xsl:if test="not($permissions_complete)">
+            <div class="row">
+                <div class="col-auto offset-sm-2 alert alert-danger">
+                    <h4>Warning!</h4>
+                    <span>
+                        You have not answered all of the permissions questions in your profile.
                         You will not be able to save your panel choices until you so do.
                     </span>
                 </div>

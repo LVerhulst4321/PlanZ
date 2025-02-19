@@ -27,7 +27,7 @@ SELECT
                         JOIN Participants P2 USING (badgeid)
                     WHERE
                         S2.sessionid = S.sessionid
-                        AND IFNULL(P2.use_photo, 0) = 0
+                        AND IFNULL(P2.use_photo, 0) IN (0, 2)
                 );
 EOD;
 $report['queries']['participants'] =<<<'EOD'
@@ -50,7 +50,7 @@ SELECT
                         JOIN Participants P2 USING (badgeid)
                     WHERE
                         S2.sessionid = S.sessionid
-                        AND IFNULL(P2.use_photo, 0) = 0
+                        AND IFNULL(P2.use_photo, 0) IN (0, 2)
                 )
     ORDER BY
         IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),

@@ -14,9 +14,9 @@ if (!may_I('search_panels')) {
     }
 
 $queryArray = array();
-$queryArray['interested'] = <<<EOD
+$queryArray['participant'] = <<<EOD
 SELECT
-        P.interested
+        P.interested, share_email, use_photo, allow_streaming, allow_recording
     FROM
         Participants P
     WHERE
@@ -55,6 +55,10 @@ $paramArray["conName"] = CON_NAME;
 $paramArray["showTags"] = TRACK_TAG_USAGE !== "TRACK_ONLY";
 $paramArray["showTrack"] = TRACK_TAG_USAGE !== "TAG_ONLY";
 $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
+$paramArray["ENABLE_SHARE_EMAIL_QUESTION"] = ENABLE_SHARE_EMAIL_QUESTION ? 1 : 0;
+$paramArray["ENABLE_USE_PHOTO_QUESTION"] = ENABLE_USE_PHOTO_QUESTION ? 1 : 0;
+$paramArray["ENABLE_ALLOW_STREAMING_QUESTION"] = ENABLE_ALLOW_STREAMING_QUESTION ? 1 : 0;
+$paramArray["ENABLE_ALLOW_RECORDING_QUESTION"] = ENABLE_ALLOW_RECORDING_QUESTION ? 1 : 0;
 // echo(mb_ereg_replace("<(row|query)([^>]*/[ ]*)>", "<\\1\\2></\\1>", $resultXML->saveXML(), "i")); //for debugging only
 RenderXSLT('PartSearchSessions.xsl', $paramArray, $resultXML);
 

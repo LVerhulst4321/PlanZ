@@ -16,6 +16,8 @@ SELECT
         S.title,
         P.pubsname,
         P.badgeid,
+        P.allow_streaming,
+        P.allow_recording,
         PSI.rank,
         PSI.willmoderate,
         PSI.attend_type,
@@ -56,6 +58,8 @@ $report['xsl'] =<<<'EOD'
                             <th>Rank</th>
                             <th>Will Mod</th>
                             <th>How Attend</th>
+                            <th>Allow Streaming</th>
+                            <th>Allow Recording</th>
                             <th>Comments</th>
                         </tr>
                     </thead>
@@ -114,6 +118,20 @@ $report['xsl'] =<<<'EOD'
                     </xsl:when>
                     <xsl:otherwise>
                     </xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@allow_streaming='1'">Yes</xsl:when>
+                    <xsl:when test="@allow_streaming='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@allow_recording='1'">Yes</xsl:when>
+                    <xsl:when test="@allow_recording='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
                 </xsl:choose>
             </td>
             <td><xsl:value-of select="@comments" /></td>

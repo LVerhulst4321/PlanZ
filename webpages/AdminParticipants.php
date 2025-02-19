@@ -9,6 +9,7 @@ staff_header($title, $bootstrap4);
 if ($fbadgeid) {
     echo "<script type=\"text/javascript\">fbadgeid = $fbadgeid;</script>\n";
 }
+$allowEditPermission = may_I('EditUserPermissions') ? 'yes' : 'no';
 ?>
 <form id="adminParticipantsForm">
 <div class="card">
@@ -35,6 +36,7 @@ if ($fbadgeid) {
                 </div>
             </div>
         </div>
+        <input type="hidden" id="allow-edit-permission" value="<?= $allowEditPermission ?>" />
         <div style="margin-top: 1em; height:250px; overflow:auto; border: 1px solid grey" id="searchResultsDIV">&nbsp;
         </div>
     </div>
@@ -214,19 +216,68 @@ if (USE_REG_SYSTEM === FALSE) {
     </div>
 <?php
 };
-?>
 
-        <div class="container-sm py-2 px-3 my-3 border border-dark rounded">
+    function yesNoSelectBlock(string $id, string $label, string $help_text = '', bool $display = true) {
+        if ($display) {
+?>
             <div class="form-group">
-                <label for="interested" class="control-label">Participant is interested and available to participate
-                    in <?php echo CON_NAME; ?> programming:</label>
-                <select id="interested" class="yesno mycontrol form-control" disabled="disabled" style="width: auto;">
+                <label for="<?= $id ?>" class="control-label"><?= $label ?></label>
+                <select id="<?= $id ?>" class="yesno mycontrol form-control" disabled="disabled" style="width: auto;">
                     <option value="0" selected="selected">&nbsp</option>
                     <option value="1">Yes</option>
                     <option value="2">No</option>
                 </select>
-                <p class="help-block">Changing this to <i>No</i> will remove the participant from all sessions.</p>
-            </div>
+<?php
+            if ($help_text) {
+?>
+            <p class="help-block"><?= $help_text ?></p>
+<?php
+            }
+?>
+        </div>
+<?php
+        }
+        else {
+?>
+            <input type="hidden" id="<?= $id ?>" />
+<?php
+        }
+    }
+?>
+
+        <div class="container-sm py-2 px-3 my-3 border border-dark rounded">
+            <p id="permission-disabled"><strong>Note:</strong> You are not allowed to edit this section.</p>
+<?php
+    yesNoSelectBlock(
+        'interested',
+        'Participant is interested and available to participate in ' . CON_NAME . ' programming',
+        'Changing this to <em>No</em> will remove the participant from all sessions.',
+    );
+    yesNoSelectBlock(
+        'share_email',
+        'Participant gives permission to share email with other participants',
+        '',
+        ENABLE_SHARE_EMAIL_QUESTION,
+    );
+    yesNoSelectBlock(
+        'use_photo',
+        'Participant gives permission to use photos in promotion of the convention',
+        '',
+        ENABLE_USE_PHOTO_QUESTION,
+    );
+    yesNoSelectBlock(
+        'allow_streaming',
+        'Participant gives permission to live stream sessions',
+        '',
+        ENABLE_ALLOW_STREAMING_QUESTION,
+    );
+    yesNoSelectBlock(
+        'allow_recording',
+        'Participant gives permission to record sessions and make available for catchup',
+        '',
+        ENABLE_ALLOW_RECORDING_QUESTION,
+    );
+?>
         </div>
 
 <?php

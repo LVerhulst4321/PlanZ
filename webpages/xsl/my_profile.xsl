@@ -20,6 +20,8 @@
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
         <xsl:variable name="use_photo" select="/doc/query[@queryName='participant_info']/row/@use_photo" />
+        <xsl:variable name="allow_streaming" select="/doc/query[@queryName='participant_info']/row/@allow_streaming" />
+        <xsl:variable name="allow_recording" select="/doc/query[@queryName='participant_info']/row/@allow_recording" />
         <xsl:variable name="share_email" select="/doc/query[@queryName='participant_info']/row/@share_email" />
         <xsl:variable name="interested" select="/doc/query[@queryName='participant_info']/row/@interested" />
         <xsl:variable name="bestway" select="/doc/query[@queryName='participant_info']/row/@bestway" />
@@ -98,14 +100,15 @@
                                     </div>
                                     <div class="col-auto">
                                         <select id="share_email" name="share_email" class="mb-2 pl-2 pr-4 mycontrol">
-                                            <option value="null">
-                                                <xsl:if test="not($share_email) and $share_email !='0'"><!-- is there an explicit test for null? -->
+                                            <option value="0">
+                                                <xsl:if
+                                                test="not($share_email)"><!-- select for null or zero -->
                                                     <xsl:attribute name="selected">selected</xsl:attribute>
                                                 </xsl:if>
                                                 <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                                             </option>
-                                            <option value="0">
-                                                <xsl:if test="$share_email = '0'">
+                                            <option value="2">
+                                                <xsl:if test="$share_email = '2'">
                                                     <xsl:attribute name="selected">selected</xsl:attribute>
                                                 </xsl:if>
                                                 No
@@ -132,19 +135,19 @@
                                     <div class="col-auto">
                                         <label for="use_photo">
                                             I give permission for <xsl:value-of select="$conName"/> to photograph me while
-                                            I am on panels and to use those images in the promotion of the convention:
+                                            I am on panels and to use those images in<!-- is there an explicit test for null? --> the promotion of the convention:
                                         </label>
                                     </div>
                                     <div class="col-auto">
                                         <select id="use_photo" name="use_photo" class="mb-2 pl-2 pr-4 mycontrol">
-                                            <option value="null">
-                                                <xsl:if test="not($use_photo) and $use_photo != '0'"><!-- is there an explicit test for null? -->
+                                            <option value="0">
+                                                <xsl:if test="not($use_photo)">
                                                     <xsl:attribute name="selected">selected</xsl:attribute>
                                                 </xsl:if>
                                                 <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                                             </option>
-                                            <option value="0">
-                                                <xsl:if test="$use_photo = '0'">
+                                            <option value="2">
+                                                <xsl:if test="$use_photo = '2'">
                                                     <xsl:attribute name="selected">selected</xsl:attribute>
                                                 </xsl:if>
                                                 No
@@ -162,6 +165,84 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <input name="use_photo" type="hidden" value="{$use_photo}"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:choose>
+                        <xsl:when test="$enableStreamingQuestion = '1'">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <label for="allow_streaming">
+                                            I give permission for <xsl:value-of select="$conName"/>
+                                            to live stream sessions I participate in:
+                                        </label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <select id="allow_streaming" name="allow_streaming" class="mb-2 pl-2 pr-4 mycontrol">
+                                            <option value="null">
+                                                <xsl:if test="not($allow_streaming)">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                                            </option>
+                                            <option value="2">
+                                                <xsl:if test="$allow_streaming = '2'">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                No
+                                            </option>
+                                            <option value="1">
+                                                <xsl:if test="$allow_streaming = '1'">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                Yes
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <input name="allow_streaming" type="hidden" value="{$allow_streaming}"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:choose>
+                        <xsl:when test="$enableRecordingQuestion = '1'">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <label for="allow_recording">
+                                            I give permission for <xsl:value-of select="$conName"/>
+                                            to record sessions I participate in and make available for catchup:
+                                        </label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <select id="allow_recording" name="allow_recording" class="mb-2 pl-2 pr-4 mycontrol">
+                                            <option value="null">
+                                                <xsl:if test="not($allow_recording)">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                                            </option>
+                                            <option value="2">
+                                                <xsl:if test="$allow_recording = '2'">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                No
+                                            </option>
+                                            <option value="1">
+                                                <xsl:if test="$allow_recording = '1'">
+                                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                                </xsl:if>
+                                                Yes
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <input name="allow_recording" type="hidden" value="{$allow_recording}"/>
                         </xsl:otherwise>
                     </xsl:choose>
                     <xsl:choose>
