@@ -773,16 +773,16 @@ SELECT
             SELECT * FROM Schedule SCH WHERE S.sessionid = SCH.sessionid
         )
 EOD;
-    if ($trackId !== false) {
+    if ($trackId !== false && $trackId !== 0) {
         $query["sessions"] .= " AND S.trackid = $trackId";
     }
-    if ($typeId !== false) {
+    if ($typeId !== false && $typeId !== 0) {
         $query["sessions"] .= " AND S.typeid = $typeId";
     }
-    if ($divisionId !== false) {
+    if ($divisionId !== false && $divisionId !== 0) {
         $query["sessions"] .= " AND S.divisionid = $divisionId";
     }
-    if ($sessionId !== false) {
+    if ($sessionId !== false && $sessionId !== 0) {
         $query["sessions"] .= " AND S.sessionid = $sessionId";
     }
     if ($title !== "") {
