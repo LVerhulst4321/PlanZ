@@ -1,7 +1,7 @@
 <?php
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
-$report['name'] = 'Session Interest Report (all info, exclude unranked)';
+$report['name'] = 'Session Interest Report (all info, include unranked)';
 $report['multi'] = 'true';
 $report['output_filename'] = 'session_interests.csv';
 $report['description'] = 'Shows who has expressed interest in each session, how they ranked it, what they said, if they will moderate... Large Report. (All data included including for invited sessions.)';
@@ -32,9 +32,7 @@ SELECT
         JOIN Participants P USING (badgeid)
         JOIN CongoDump CD USING(badgeid)
     WHERE
-            P.interested = 1
-        AND ((PSI.rank is not NULL
-            AND PSI.rank != 0) OR PSI.willmoderate = 1)
+        P.interested = 1
         AND S.statusid IN (2, 3, 7) ## Vetted, Scheduled, Assigned
     ORDER BY
         T.trackname, S.title;

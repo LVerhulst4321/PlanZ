@@ -16,11 +16,14 @@ SELECT
         T.trackname,
         S.sessionid,
         S.title,
+        P.allow_streaming,
+        P.allow_recording,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime,
         DATE_FORMAT(S.duration,'%i') AS durationmin,
         DATE_FORMAT(S.duration,'%k') AS durationhrs,
         PSI.rank,
         PSI.willmoderate,
+        PSI.attend_type,
         PSI.comments
     FROM
                   Participants P
@@ -59,7 +62,10 @@ $report['xsl'] =<<<'EOD'
                     <col style="width:5%" />
                     <col style="width:5%" />
                     <col style="width:5%" />
-                    <col style="width:50%" />
+                    <col style="width:5%" />
+                    <col style="width:5%" />
+                    <col style="width:5%" />
+                    <col style="width:35%" />
                     <thead>
                         <tr>
                             <th>Person ID</th>
@@ -71,6 +77,9 @@ $report['xsl'] =<<<'EOD'
                             <th>Duration</th>
                             <th>Rank</th>
                             <th>Moderator</th>
+                            <th>How Attend</th>
+                            <th>Allow Streaming</th>
+                            <th>Allow Recording</th>
                             <th>Comments</th>
                         </tr>
                     </thead>
@@ -120,6 +129,35 @@ $report['xsl'] =<<<'EOD'
             <td><xsl:value-of select="@rank" /></td>
             <td>
                 <xsl:if test="@willmoderate='1'">Yes</xsl:if>
+            </td>
+            <td>
+                <xsl:choose>
+                    <xsl:when test="@attend_type = '1'">
+                        In Person
+                    </xsl:when>
+                    <xsl:when test="@attend_type = '2'">
+                        Online
+                    </xsl:when>
+                    <xsl:when test="@attend_type = '3'">
+                        Either
+                    </xsl:when>
+                    <xsl:otherwise>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@allow_streaming='1'">Yes</xsl:when>
+                    <xsl:when test="@allow_streaming='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td class="report">
+                <xsl:choose>
+                    <xsl:when test="@allow_recording='1'">Yes</xsl:when>
+                    <xsl:when test="@allow_recording='2'">No</xsl:when>
+                    <xsl:otherwise>Didn't respond</xsl:otherwise>
+                </xsl:choose>
             </td>
             <td><xsl:value-of select="@comments" /></td>
         </tr>
