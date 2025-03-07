@@ -23,6 +23,8 @@ class ParticipantAssignment {
     public $textBio;
     public $sessionId;
     public $willingnessToBeParticipant;
+    public $allowStreaming;
+    public $allowRecording;
     public $conflicts = array();
 
     public static function findAssignmentForSessionByBadgeId($db, $sessionId, $badgeId) {
@@ -51,7 +53,9 @@ class ParticipantAssignment {
             PSI.rank,
             PSI.comments,
             PSI.willmoderate,
-            P.interested
+            P.interested,
+            P.allow_streaming,
+            P.allow_recording
         FROM
                       ParticipantOnSession POS
                  JOIN Participants P ON P.badgeid = POS.badgeid
@@ -136,30 +140,37 @@ EOD;
     }
 
     public static function findCandidateAssigneesForSession($db, $sessionId) {
+        $rankClause = ALLOW_ASSIGN_UNRANKED_PARTICIPANTS ? "" : <<<EOD
+            AND ((PSI.rank IS NOT NULL AND PSI.rank < 6)
+                OR (PSI.willmoderate = 1))
+        EOD;
         $query = <<<EOD
-        SELECT
-            P.badgeid,
-            P.pubsname,
-            CD.badgename,
-            CD.firstname,
-            CD.lastname,
-            CD.regtype,
-            P.approvedphotofilename,
-            P.bio,
-            PSI.rank,
-            PSI.comments,
-            PSI.willmoderate,
-            P.interested
-        FROM ParticipantSessionInterest PSI
-        JOIN Participants P ON P.badgeid = PSI.badgeid
-        JOIN CongoDump CD ON CD.badgeid = PSI.badgeid
-        WHERE PSI.sessionid=?
-          AND ((PSI.rank IS NOT NULL
-          AND PSI.rank < 6) OR (PSI.willmoderate = 1))
-          AND P.badgeid NOT IN (
-                select badgeid from ParticipantOnSession POS WHERE POS.sessionid = ?)
-        ORDER BY badgename;
-EOD;
+            SELECT
+                P.badgeid,
+                P.pubsname,
+                CD.badgename,
+                CD.firstname,
+                CD.lastname,
+                CD.regtype,
+                P.approvedphotofilename,
+                P.bio,
+                PSI.rank,
+                PSI.comments,
+                PSI.willmoderate,
+                P.interested,
+                P.allow_streaming,
+                P.allow_recording
+            FROM ParticipantSessionInterest PSI
+            JOIN Participants P ON P.badgeid = PSI.badgeid
+            JOIN CongoDump CD ON CD.badgeid = PSI.badgeid
+            WHERE PSI.sessionid=?
+            $rankClause
+            AND P.badgeid NOT IN (
+                    select badgeid from ParticipantOnSession POS WHERE POS.sessionid = ?)
+            ORDER BY
+                CASE rank WHEN NULL THEN 2 ELSE 1 END,
+                badgename;
+        EOD;
 
         $stmt = mysqli_prepare($db, $query);
         mysqli_stmt_bind_param($stmt, "ii", $sessionId, $sessionId);
@@ -192,7 +203,9 @@ EOD;
             PSI.rank,
             PSI.comments,
             PSI.willmoderate,
-            P.interested
+            P.interested,
+            P.allow_streaming,
+            P.allow_recording
         FROM Participants P
         JOIN CongoDump CD USING(badgeid)
         LEFT OUTER JOIN ParticipantSessionInterest PSI ON (P.badgeid = PSI.badgeid AND PSI.sessionId = ?)
@@ -219,6 +232,16 @@ EOD;
         }
     }
 
+    private static function toYesNo(?int $value): string {
+        if ($value == 1) {
+            return "Yes";
+        }
+        if ($value == 2) {
+            return "No";
+        }
+        return "Unknown";
+    }
+
     private static function toModel($row, $sessionId) {
         $name = new PersonName();
         $name->firstName = $row->firstname;
@@ -229,19 +252,14 @@ EOD;
         $assignment = new ParticipantAssignment();
         $assignment->badgeId = $row->badgeid;
         $assignment->name = $name;
-        $assignment->moderator = $row->moderator ? true : false;
-        $assignment->confirmed = $row->confirmed == 'Y';
+        $assignment->moderator = ($row->moderator ?? false) ? true : false; // Prevent warning from being returned above JSON if null.
+        $assignment->confirmed = ($row->confirmed ?? false) == 'Y';
         $assignment->textBio = $row->bio;
         $assignment->sessionId = $sessionId;
 
-        $interested = "Unknown";
-        if ($row->interested == 1) {
-            $interested = "Yes";
-        } else if ($row->interested == 2) {
-            $interested = "No";
-        }
-
-        $assignment->willingnessToBeParticipant = $interested;
+        $assignment->willingnessToBeParticipant = self::toYesNo($row->interested);
+        $assignment->allowStreaming = self::toYesNo($row->allow_streaming);
+        $assignment->allowRecording = self::toYesNo($row->allow_recording);
 
         if ($row->approvedphotofilename) {
             $assignment->avatarSrc = PHOTO_PUBLIC_DIRECTORY . '/' . $row->approvedphotofilename;
@@ -267,6 +285,8 @@ EOD;
             "registered" => $this->registered,
             "confirmed" => $this->confirmed,
             "willingnessToBeParticipant" => $this->willingnessToBeParticipant,
+            "allowStreaming" => $this->allowStreaming,
+            "allowRecording" => $this->allowRecording,
             "links" => array("avatar" => $this->avatarSrc)
         );
         if ($this->interestResponse != null) {

@@ -13,7 +13,6 @@ import CandidateCard from "./candidateCard";
 var timeout = null;
 
 const AssignmentsView = (props) => {
-
     const [showModal, setShowModal] = useState(false);
     const [term, setTerm] = useState("");
     const [editNote, setEditNote] = useState(false);
@@ -78,24 +77,83 @@ const AssignmentsView = (props) => {
         );
     } else {
 
-        let sessionBlock = (props.session) ? (<div className="mb-3 visible-on-hover">
-                <h3>{props.session.title}</h3>
-                <SessionScheduleSummary session={props.session} />
-                <div>{props.session.programGuideDescription}</div>
+        let sessionBlock = (props.session)
+            ? (
+                <div className="mb-3 visible-on-hover">
+                    <h3>{props.session.title}</h3>
+                    <SessionScheduleSummary session={props.session} />
+                    <div>{props.session.programGuideDescription}</div>
+                    <div>
+                        {editNote
+                        ? (<div className="form-group py-3">
+                            <input type="text" className="form-control" autoFocus placeholder="Notes..." defaultValue={props.session.notesForProgramStaff ?? ""} onBlur={(e) => {
+                                updateNotes(props.session.sessionId, e.target.value);
+                                setEditNote(false);
+                            }} />
+                        </div>)
+                        : (<>
+                            <span className="d-inline-block py-3"><i>Notes:</i> {props.session.notesForProgramStaff || "None"}</span>
+                            <button className="btn" onClick={() => setEditNote(true)}><i className="bi bi-pencil"></i></button>
+                        </>)}
+                    </div>
+                </div>)
+            : undefined;
+
+        const moderatorCandidates = props.candidates.filter(c => c.interestResponse && c.interestResponse.willModerate);
+        const moderators = moderatorCandidates?.length
+            ? (<>
+                    <div className="d-flex justify-content-between mt-5">
+                        <h4>Potential Moderators</h4>
+                    </div>
+
+                    <p>These people have expressed interest in moderating this session.</p>
+
+                    <div>
+                        {moderatorCandidates.map(c => { return (<div className="my-3" key={c.badgeId}><AssignmentCard assignee={c}  assigned={false}/></div>); })}
+                    </div>
+                </>)
+            : (<></>);
+
+        const rankedCandidates = props.candidates.filter(c => c.interestResponse && c.interestResponse.rank && !c.interestResponse.willModerate);
+        const ranked = rankedCandidates?.length
+            ? (<>
+                    <div className="d-flex justify-content-between mt-5">
+                        <h4>Potential Participants</h4>
+                    </div>
+
+                    <p>These people have expressed interest in the session.</p>
+
+                    <div>
+                        {rankedCandidates.map(c => { return (<div className="my-3" key={c.badgeId}><AssignmentCard assignee={c}  assigned={false}/></div>); })}
+                    </div>
+                </>)
+            : (<></>);
+
+        const unrankedCandidates = props.candidates.filter(c => !c.interestResponse || !c.interestResponse.rank && !c.interestResponse.willModerate);
+        const unranked = unrankedCandidates?.length
+            ? (<>
+                    <div className="d-flex justify-content-between mt-5">
+                        <h4>Unranked Candidates</h4>
+                    </div>
+
+                    <p>These people have expressed interest, but have not ranked this session.</p>
+
+                    <div>
+                        {unrankedCandidates.map(c => { return (<div className="my-3" key={c.badgeId}><AssignmentCard assignee={c}  assigned={false}/></div>); })}
+                    </div>
+                </>)
+            : (<></>);
+
+        const noCandidates = props.candidates?.length
+            ? <></>
+            : (
                 <div>
-                    {editNote
-                    ? (<div className="form-group py-3">
-                        <input type="text" className="form-control" autoFocus placeholder="Notes..." defaultValue={props.session.notesForProgramStaff ?? ""} onBlur={(e) => {
-                            updateNotes(props.session.sessionId, e.target.value);
-                            setEditNote(false);
-                        }} />
-                    </div>)
-                    : (<>
-                        <span className="d-inline-block py-3"><i>Notes:</i> {props.session.notesForProgramStaff || "None"}</span>
-                        <button className="btn" onClick={() => setEditNote(true)}><i className="bi bi-pencil"></i></button>
-                    </>)}
+                    <div className="d-flex justify-content-between mt-5">
+                        <h4>No Candidates</h4>
+                    </div>
+                    <p className="text-info">There are currently no candidates for this session.</p>
                 </div>
-            </div>) : undefined;
+            );
 
         let assignmentBlock = (props.assignments)
             ? (<div>
@@ -109,20 +167,14 @@ const AssignmentsView = (props) => {
                         {props.assignments?.length ? null : (<p className="text-info">This list is empty.</p>)}
                     </div>
 
-
-                    <div className="d-flex justify-content-between mt-5">
-                        <h4>Potential Participants</h4>
-                    </div>
-
-                    <p>These people have expressed interest in the session.</p>
-
-                    <div>
-                        {props.candidates.map(c => { return (<div className="my-3" key={c.badgeId}><AssignmentCard assignee={c}  assigned={false}/></div>); })}
-                        {props.candidates?.length ? null : (<p className="text-info">This list is empty.</p>)}
-                    </div>
+                    {moderators}
+                    {ranked}
+                    {unranked}
+                    {noCandidates}
 
                 </div>)
             : undefined;
+
         return (<>
                 <div>
                 <SimpleAlert message={props.message} />

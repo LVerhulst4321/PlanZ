@@ -41,9 +41,16 @@ const AssignmentCard = ({assignee, assigned, session}) => {
                                 : (assignee.willingnessToBeParticipant === 'No'
                                     ? (<div className="text-danger small">{assignee.name} does not want to be on panels.</div>)
                                     : null)}
+                            <div className="text-muted small">
+                                Willing to be streamed: <span className={assignee.allowStreaming === "Yes" ? "" : "text-danger"}>{assignee.allowStreaming}</span>
+                            </div>
+                            <div className="text-muted small">
+                                Willing to be recorded: <span className={assignee.allowRecording === "Yes" ? "" : "text-danger"}>{assignee.allowRecording}</span>
+                            </div>
                         </div>
                         <div className="col-md-6">
-                            {assignee.interestResponse ? (<div><i>Rank: </i> {assignee.interestResponse.rank}</div>) : undefined}
+                            {assignee.interestResponse && assignee.interestResponse.willModerate ? (<div>Willing to moderate</div>) : (<></>)}
+                            {assignee.interestResponse && assignee.interestResponse.rank ? (<div><i>Rank: </i> {assignee.interestResponse.rank}</div>) : <div className="text-danger"><i>Has not ranked</i></div>}
                             {assignee.interestResponse ? (<div className="small">{assignee.interestResponse.comments}</div>) : undefined}
                         </div>
                     </div>
