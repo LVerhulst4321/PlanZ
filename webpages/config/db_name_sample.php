@@ -44,6 +44,7 @@ define("ENABLE_USE_PHOTO_QUESTION", TRUE); // Enables question regarding using p
 define("ENABLE_ALLOW_STREAMING_QUESTION", TRUE); // Enables question asking if participant is willing to be streamed on sessions.
 define("ENABLE_ALLOW_RECORDING_QUESTION", TRUE); // Enables question asking if participant is willing to be recorded for playback sessions.
 define("ENABLE_BESTWAY_QUESTION", FALSE); // Enables question regarding best way to contact participant
+define("ALLOW_ASSIGN_UNRANKED_PARTICIPANTS", FALSE); // If true, show participants on Assign Participants page if they have not ranked sessions.
 define("TITLE_MIN_LENGTH", 10); // Title must be at least this long.
 define("TITLE_MAX_LENGTH", 50); // Title must not be longer than this. Note that the current limit of the DB field is 100 characters.
 define("BILINGUAL", TRUE); // Triggers extra fields in Session and "My General Interests"
