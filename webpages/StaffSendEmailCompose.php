@@ -90,8 +90,8 @@ for ($i=0; $i<$recipient_count; $i++) {
     $name->lastName = $recipientinfo[$i]['lastname'];
     $name->badgeName = $recipientinfo[$i]['badgename'];
     $name->pubsName = $recipientinfo[$i]['pubsname'];
-    $repl_list = array($recipientinfo[$i]['badgeid'], 
-        $name->firstName, 
+    $repl_list = array($recipientinfo[$i]['badgeid'],
+        $name->firstName,
         $name->lastName,
         $recipientinfo[$i]['email'],
         $name->getPubsName(),
@@ -159,11 +159,11 @@ for ($i=0; $i<$recipient_count; $i++) {
         if ($ok == TRUE) {
             echo "Sent<br>";
         }
+        $sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailcc, emailsubject, status) VALUES(?, ?, ?, ?, ?);";
+        $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $code);
+        $types = "ssssi";
+        $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
     }
-    $sql = "INSERT INTO EmailHistory(emailto, emailfrom, emailcc, emailsubject, status) VALUES(?, ?, ?, ?, ?);";
-    $param_arr = array($recipientinfo[$i]['email'] , $emailfrom, $emailcc, $email['subject'], $code);
-    $types = "ssssi";
-    $rows = mysql_cmd_with_prepare($sql, $types, $param_arr);
 }
 //$log =& Swift_LogContainer::getLog();
 //echo $log->dump(true);
