@@ -26,8 +26,12 @@ window.onload = function() {
   document.getElementById("fontsize").oninput = resizeStickers;
   document.getElementById("badgenumbers").oninput = filterBadges;
   document.getElementById("skip").oninput = insertBlankLabels;
+  document.getElementById("showname").oninput = showName;
+  document.getElementById("showbadgeid").oninput = showBadgeID;
   document.getElementById("borders").oninput = showBorders;
   resizeStickers();
+  showName();
+  showBadgeID();
 }
 
 // Set label size and spacing.
@@ -62,7 +66,7 @@ function resizeStickers() {
   localStorage.setItem("fontsize", fontsize);
 }
 
-// Apply filtering to badges if specified in 
+// Apply filtering to badges if specified in
 function filterBadges() {
   // Get the badge numbers field.
   var badgenumbers = document.getElementById("badgenumbers").value;
@@ -103,6 +107,24 @@ function filterBadges() {
       element.style.display = "inline-block";
     });
   }
+}
+
+// Show or hide badge ID depending on checkbox.
+function showBadgeID() {
+  const showBadgeID = document.getElementById("showbadgeid").checked;
+  const display = showBadgeID ? 'inline' : 'none';
+  Array.from(document.getElementsByClassName('badge-sticker-badgeid')).forEach((element) => element.style.display = display);
+}
+
+// Show or hide names based on drop-down.
+function showName() {
+  const showName = document.getElementById("showname").value;
+  const displayPubs = showName === 'pubsname' ? 'inline' : 'none';
+  const displaySort = showName === 'sortname' ? 'inline' : 'none';
+  const displayBadge = showName === 'badgename' ? 'inline' : 'none';
+  Array.from(document.getElementsByClassName('badge-sticker-pubsname')).forEach((element) => element.style.display = displayPubs);
+  Array.from(document.getElementsByClassName('badge-sticker-sortedname')).forEach((element) => element.style.display = displaySort);
+  Array.from(document.getElementsByClassName('badge-sticker-badgename')).forEach((element) => element.style.display = displayBadge);
 }
 
 // Check if borders checkbox checked and apply borders to labels if required.

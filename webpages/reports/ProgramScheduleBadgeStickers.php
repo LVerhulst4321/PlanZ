@@ -9,7 +9,10 @@ $report['categories'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, P.pubsname
+        P.badgeid,
+        P.pubsname,
+        P.sortedpubsname,
+        CD.badgename
     FROM
              Participants P
         JOIN CongoDump CD USING (badgeid)
@@ -94,6 +97,18 @@ $report['xsl'] =<<<'EOD'
                         <input type="number" name="skip" id="skip" value="0" min="0" max="30" step="1"></input>
                     </div>
                     <div class="form-element">
+                        <label for="showname">Show Name</label>
+                        <select name="showname" id="showname">
+                            <option value="pubsname">Publichation name</option>
+                            <option value="sortname">Sorted name</option>
+                            <option value="badgename">Badge name</option>
+                        </select>
+                    </div>
+                    <div class="form-element">
+                        <label for="showbadgeid">Show badge ID</label>
+                        <input type="checkbox" name="showbadgeid" id="showbadgeid"></input>
+                    </div>
+                    <div class="form-element">
                         <label for="borders">Show label borders</label>
                         <input type="checkbox" name="borders" id="borders"></input>
                     </div>
@@ -113,9 +128,10 @@ $report['xsl'] =<<<'EOD'
         <xsl:variable name="badgeid" select="@badgeid" />
         <div class="badge-sticker" id="{@badgeid}">
             <div class="participant">
-                <span><xsl:value-of select="@badgeid" /></span>
-                <xsl:text> </xsl:text>
-                <span><xsl:value-of select="@pubsname" /></span>
+                <span class="badge-sticker-badgeid"><xsl:value-of select="@badgeid" /><xsl:text> </xsl:text></span>
+                <span class="badge-sticker-pubsname"><xsl:value-of select="@pubsname" /><xsl:text> </xsl:text></span>
+                <span class="badge-sticker-sortedname"><xsl:value-of select="@sortedpubsname" /><xsl:text> </xsl:text></span>
+                <span class="badge-sticker-badgename"><xsl:value-of select="@badgename" /><xsl:text> </xsl:text></span>
             </div>
             <div>
                 <xsl:apply-templates select="/doc/query[@queryName='sessions']/row[@badgeid=$badgeid]" />
