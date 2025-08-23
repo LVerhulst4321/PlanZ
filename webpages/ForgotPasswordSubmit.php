@@ -92,12 +92,12 @@ function send_email_not_found_message($email, $subjectLine, $url) {
         If you did not make this request, you can ignore this email.
     </p>
     <p>
-        It looks like we do not have an account that corresponds with that email address. But &mdash; good 
+        It looks like we do not have an account that corresponds with that email address. But &mdash; good
         news &mdash; you can use the following URL to create a new account:
     </p>
     <p>$urlLink</p>
     <p>
-        The link is good for $link_lifetime from when you originally requested it. If it has expired just 
+        The link is good for $link_lifetime from when you originally requested it. If it has expired just
         request another link.
     </p>
     <p>
@@ -112,12 +112,12 @@ EOD;
         We received a request to reset your password for the programming/scheduling system for $conName.
         If you did not make this request, you can ignore this email.
 
-        It looks like we do not have an account that corresponds with that email address. But -- good 
+        It looks like we do not have an account that corresponds with that email address. But -- good
         news -- you can use the following URL to create a new account:
 
         $url
 
-        The link is good for $link_lifetime from when you originally requested it. If it has expired just 
+        The link is good for $link_lifetime from when you originally requested it. If it has expired just
         request another link.
 
         Thanks!
@@ -139,7 +139,7 @@ function send_no_new_user_email($email, $subjectLine) {
         If you did not make this request, you can ignore this email.
     </p>
     <p>
-        It looks like we do not have an account that corresponds with that email address. Please contact 
+        It looks like we do not have an account that corresponds with that email address. Please contact
         $conName to set up an account.
     </p>
     <p>
@@ -154,7 +154,7 @@ EOD;
         We received a request to reset your password for the programming/scheduling system for $conName.
         If you did not make this request, you can ignore this email.
 
-        It looks like we do not have an account that corresponds with that email address. Please contact 
+        It looks like we do not have an account that corresponds with that email address. Please contact
         $conName to set up an account.
 
         Thanks!
@@ -209,16 +209,16 @@ EOD;
     $text_body = <<<EOD
     Hello $username,
 
-    We received a request to reset your password for the 
-    programming/scheduling system for $conName. If you did 
+    We received a request to reset your password for the
+    programming/scheduling system for $conName. If you did
     not make this request, you can ignore this email.
 
     Here is your password reset link:
 
     $url
 
-    The link is good for $link_lifetime from when you originally 
-    requested it and can be used to change your password only once.  
+    The link is good for $link_lifetime from when you originally
+    requested it and can be used to change your password only once.
     If it has expired just request another link.
 
     Thanks!
@@ -235,7 +235,7 @@ function validate_input_params($secret_key, $token, $remote_ip, $title, $badgeid
         participant_footer();
         exit;
     }
-    
+
     $validation = validateTurnstile($token, $secret_key, $remoteip);
     if (!$validation['success']) {
         participant_header($title, true, 'Login', true);
@@ -243,10 +243,10 @@ function validate_input_params($secret_key, $token, $remote_ip, $title, $badgeid
         participant_footer();
         exit;
     }
-    
+
     if ((empty($badgeid) || empty($email)) && !is_email_login_supported()) {
-        $params = array("USER_ID_PROMPT" => get_user_id_prompt(), 
-            "TURNSTILE_SITE_KEY" => TURNSTILE_SITE_KEY, 
+        $params = array("USER_ID_PROMPT" => get_user_id_prompt(),
+            "TURNSTILE_SITE_KEY" => TURNSTILE_SITE_KEY,
             "EMAIL_LOGIN_SUPPORT" => is_email_login_supported(),
             "PUBLIC_NEW_USER" => PUBLIC_NEW_USER);
         $params["error_message"] = "Both ${params['USER_ID_PROMPT']} and email address are required.";
@@ -255,8 +255,8 @@ function validate_input_params($secret_key, $token, $remote_ip, $title, $badgeid
         participant_footer();
         exit;
     } else if (empty($email) && is_email_login_supported()) {
-        $params = array("USER_ID_PROMPT" => get_user_id_prompt(), 
-            "TURNSTILE_SITE_KEY" => TURNSTILE_SITE_KEY, 
+        $params = array("USER_ID_PROMPT" => get_user_id_prompt(),
+            "TURNSTILE_SITE_KEY" => TURNSTILE_SITE_KEY,
             "EMAIL_LOGIN_SUPPORT" => is_email_login_supported(),
             "PUBLIC_NEW_USER" => PUBLIC_NEW_USER);
         $params["error_message"] = "Email address is required.";
@@ -310,11 +310,10 @@ EOD;
 
 $secret_key = TURNSTILE_SECRET_KEY;
 $token = $_POST['cf-turnstile-response'] ?? '';
-$remoteip = $\_SERVER['HTTP_CF_CONNECTING_IP'] ??
-    $\_SERVER['HTTP_X_FORWARDED_FOR'] ??
-    $\_SERVER['REMOTE_ADDR'];
+$remoteip = $_SERVER['HTTP_CF_CONNECTING_IP'] ??
+    $_SERVER['HTTP_X_FORWARDED_FOR'] ??
+    $_SERVER['REMOTE_ADDR'];
 
-$recaptchaResponse = getString('g-recaptcha-response');
 $badgeid = getString('badgeid');
 $email = getString('emailAddress');
 
@@ -366,7 +365,7 @@ if (is_email_login_supported() && $record_count === 0 && PUBLIC_NEW_USER) {
         'selector' => $selector,
         'validator' => bin2hex($token)
     ]));
-    
+
     insert_create_item($emailSQL, $ipaddressSQL, $token, $selector);
     send_email_not_found_message($email, $subjectLine, $url);
 

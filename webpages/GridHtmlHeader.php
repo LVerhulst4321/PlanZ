@@ -68,9 +68,9 @@ function grid_html_header($title, $bootstrap4 = false, $isDataTables = false, $r
         var STANDARD_BLOCK_LENGTH = "<?php echo STANDARD_BLOCK_LENGTH; ?>";
     </script>
 <?php
-    $isRecaptcha = $title == 'Forgot Password';
+    $isTurnstile = $title == 'Forgot Password';
     /* "external" means 3rd party library */
-    load_external_javascript($isDataTables, $isRecaptcha, $bootstrap4);
+    load_external_javascript($isDataTables, $isTurnstile, $bootstrap4);
     load_internal_javascript($title, $isDataTables);
 ?>
 </head>

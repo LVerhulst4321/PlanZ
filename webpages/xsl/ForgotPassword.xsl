@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-6">
-				<div class="cf-turnstile" data-sitekey="{$TURNSTILE_SITE_KEY}"></div>
+				                <div class="cf-turnstile" data-sitekey="{$TURNSTILE_SITE_KEY}"></div>
                             </div>
                         </div>
                         <div class="control-group">
