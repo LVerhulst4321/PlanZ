@@ -20,9 +20,10 @@ define("SMTP_PROTOCOL", "TLS"); // Options are "", "SSL", or "TLS".  Blank/Defau
 define("SMTP_USER", getenv("SMTP_USER_NAME")); // Use "" to skip authentication. See documentation for your mail relay service.
 define("SMTP_PASSWORD", getenv("SMTP_PASSWORD")); // Use "" to skip authentication. See documentation for your mail relay service.
 
-        // Self service reset of password via email link requires use of reCAPTCHA to prevent bad actors from using page to send email
-define("RECAPTCHA_SITE_KEY", ""); // Register the domain you use for PlanZ with Google reCAPTCHA to acquire site key ...
-define("RECAPTCHA_SERVER_KEY", ""); // ... and server key
+// Self service reset of password via email link requires use of Cloudflare
+// Turnstile to prevent bad actors from using page to send email.
+define("TURNSTILE_SITE_KEY", ""); // Register the domain you use for PlanZ with Cloudflare Turnstile to acquire site key ...
+define("TURNSTILE_SECRET_KEY", ""); // ... and secret key
 
 define("ROOT_URL", 'https://' . getenv("HOSTNAME") . '/'); // URL to reach this server. Required to generate an email password reset link.
 
