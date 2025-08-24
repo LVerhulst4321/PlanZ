@@ -5,7 +5,7 @@
     <xsl:param name="USER_ID_PROMPT" select="'Badge ID'" />
     <xsl:param name="EMAIL_LOGIN_SUPPORT" select="0" />
     <xsl:param name="error_message" select="''" />
-    <xsl:param name="RECAPTCHA_SITE_KEY" select="''" />
+    <xsl:param name="TURNSTILE_SITE_KEY" select="''" />
     <xsl:param name="PUBLIC_NEW_USER" select="false()" /><!-- TRUE/FALSE -->
     <xsl:template match="/">
         <div class="container mt-3">
@@ -53,8 +53,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <div class="g-recaptcha" data-sitekey="{$RECAPTCHA_SITE_KEY}" data-callback="recaptchaCheckedCallback"></div>
-                                <div id="recaptcha-error-message" class="alert alert-error hidden">This page requires access to www.google.com in order to load reCAPTCHA tool to prevent robots.  There is a problem accessing that domain.</div>
+				                <div class="cf-turnstile" data-sitekey="{$TURNSTILE_SITE_KEY}"></div>
                             </div>
                         </div>
                         <div class="control-group">

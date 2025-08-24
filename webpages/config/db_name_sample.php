@@ -58,12 +58,12 @@ define("USER_ID_PROMPT", "User ID"); // What to label User ID / Badge ID / Email
 define("LOGIN_PAGE_USER_ID_PROMPT", ""); // What to label User ID / Badge ID specifically on the login page (blank defaults to the value of USER_ID_PROMPT)
 define("EMAIL_LOGIN_SUPPORTED", TRUE); // Can users use their email address as a userid?
 define("RESET_PASSWORD", TRUE); // Staff can reset a user's password.
-define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and reCAPTCHA integration.
+define("RESET_PASSWORD_SELF", TRUE); // User can reset own password.  Requires email and Turnstile integration.
 define("GRID_START_DATIM","2009-08-06 12:00:00"); // Used by special grid report
 define("GRID_END_DATIM","2009-08-08 20:00:00"); // Used by special grid report
 define("PASSWORD_RESET_LINK_TIMEOUT", "PT01H"); // How long until password reset link expires See https://www.php.net/manual/en/dateinterval.construct.php for format.
 define("PASSWORD_RESET_LINK_TIMEOUT_DISPLAY", "1 hour"); // Text description of PASSWORD_RESET_LINK_TIMEOUT
-        // Self service reset of password via email link requires use of reCAPTCHA to prevent bad actors from using page to send email
+        // Self service reset of password via email link requires use of Turnstile to prevent bad actors from using page to send email
 define("PASSWORD_RESET_FROM_EMAIL", "admin@somewhere.net"); // From address to be used for password reset emails
 define("PASSWORD_RESET_FROM_EMAIL_NAME", "PlanZ Admin"); // The name accompanying the from address to be used for password reset emails
 define("DEFAULT_USER_PASSWORD", "changeme"); // Note, PlanZ will never directly set a user's password to this default nor will it

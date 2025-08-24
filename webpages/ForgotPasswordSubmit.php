@@ -6,26 +6,39 @@ $title = "Send Reset Password Link";
 require ('PartCommonCode.php');
 require_once('email_functions.php');
 require_once('external/swiftmailer-5.4.8/lib/swift_required.php');
-require_once('external/guzzlehttp-guzzle-6.5.3/vendor/autoload.php');
 require_once('login_functions.php');
 
 use GuzzleHttp\Client;
 
-function validate_recaptcha($recaptchaResponse) {
-    $userIP = $_SERVER['REMOTE_ADDR'];
-    $client = new Client([
-        'base_uri' => 'https://www.google.com',
-        'timeout'  => 7.5,
-    ]);
-    $guzzleRepsonse = $client->request('PUT', '/recaptcha/api/siteverify', [
-        'form_params' => [
-            'secret' => RECAPTCHA_SERVER_KEY,
-            'response' => $recaptchaResponse,
-            'remoteip' => $userIP
+function validateTurnstile($token, $secret, $remoteip = null) {
+    $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+
+    $data = [
+        'secret' => $secret,
+        'response' => $token
+    ];
+
+    if ($remoteip) {
+        $data['remoteip'] = $remoteip;
+    }
+
+    $options = [
+        'http' => [
+            'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method' => 'POST',
+            'content' => http_build_query($data)
         ]
-    ]);
-    $recaptchaConf = json_decode($guzzleRepsonse->getBody()->getContents(), true);
-    return $recaptchaConf["success"];
+    ];
+
+    $context = stream_context_create($options);
+    $response = file_get_contents($url, false, $context);
+
+    if ($response === FALSE) {
+        return ['success' => false, 'error-codes' => ['internal-error']];
+    }
+
+    return json_decode($response, true);
+
 }
 
 function send_multiple_records_with_same_email($email, $subjectLine) {
@@ -79,12 +92,12 @@ function send_email_not_found_message($email, $subjectLine, $url) {
         If you did not make this request, you can ignore this email.
     </p>
     <p>
-        It looks like we do not have an account that corresponds with that email address. But &mdash; good 
+        It looks like we do not have an account that corresponds with that email address. But &mdash; good
         news &mdash; you can use the following URL to create a new account:
     </p>
     <p>$urlLink</p>
     <p>
-        The link is good for $link_lifetime from when you originally requested it. If it has expired just 
+        The link is good for $link_lifetime from when you originally requested it. If it has expired just
         request another link.
     </p>
     <p>
@@ -99,12 +112,12 @@ EOD;
         We received a request to reset your password for the programming/scheduling system for $conName.
         If you did not make this request, you can ignore this email.
 
-        It looks like we do not have an account that corresponds with that email address. But -- good 
+        It looks like we do not have an account that corresponds with that email address. But -- good
         news -- you can use the following URL to create a new account:
 
         $url
 
-        The link is good for $link_lifetime from when you originally requested it. If it has expired just 
+        The link is good for $link_lifetime from when you originally requested it. If it has expired just
         request another link.
 
         Thanks!
@@ -126,7 +139,7 @@ function send_no_new_user_email($email, $subjectLine) {
         If you did not make this request, you can ignore this email.
     </p>
     <p>
-        It looks like we do not have an account that corresponds with that email address. Please contact 
+        It looks like we do not have an account that corresponds with that email address. Please contact
         $conName to set up an account.
     </p>
     <p>
@@ -141,7 +154,7 @@ EOD;
         We received a request to reset your password for the programming/scheduling system for $conName.
         If you did not make this request, you can ignore this email.
 
-        It looks like we do not have an account that corresponds with that email address. Please contact 
+        It looks like we do not have an account that corresponds with that email address. Please contact
         $conName to set up an account.
 
         Thanks!
@@ -196,16 +209,16 @@ EOD;
     $text_body = <<<EOD
     Hello $username,
 
-    We received a request to reset your password for the 
-    programming/scheduling system for $conName. If you did 
+    We received a request to reset your password for the
+    programming/scheduling system for $conName. If you did
     not make this request, you can ignore this email.
 
     Here is your password reset link:
 
     $url
 
-    The link is good for $link_lifetime from when you originally 
-    requested it and can be used to change your password only once.  
+    The link is good for $link_lifetime from when you originally
+    requested it and can be used to change your password only once.
     If it has expired just request another link.
 
     Thanks!
@@ -214,7 +227,7 @@ EOD;
     send_email_with_plain_text($text_body, $emailBody, $subjectLine, [ $email => $username ]);
 }
 
-function validate_input_params($title, $badgeid, $email, $recaptchaResponse) {
+function validate_input_params($secret_key, $token, $remote_ip, $title, $badgeid, $email) {
     if (RESET_PASSWORD_SELF !== true) {
         http_response_code(403); // forbidden
         participant_header($title, true, 'Login', true);
@@ -222,23 +235,18 @@ function validate_input_params($title, $badgeid, $email, $recaptchaResponse) {
         participant_footer();
         exit;
     }
-    if (empty($recaptchaResponse)) {
+
+    $validation = validateTurnstile($token, $secret_key, $remoteip);
+    if (!$validation['success']) {
         participant_header($title, true, 'Login', true);
-        echo "<p class='alert alert-danger mt-2'>Error with reCAPTCHA.</p>";
+        echo "<p class='alert alert-danger mt-2'>Error with Cloudflare Turnstile.</p>";
         participant_footer();
         exit;
     }
-    
-    if (!validate_recaptcha($recaptchaResponse)) {
-        participant_header($title, true, 'Login', true);
-        echo "<p class='alert alert-danger mt-2'>Error with reCAPTCHA.</p>";
-        participant_footer();
-        exit;
-    }
-    
+
     if ((empty($badgeid) || empty($email)) && !is_email_login_supported()) {
-        $params = array("USER_ID_PROMPT" => get_user_id_prompt(), 
-            "RECAPTCHA_SITE_KEY" => RECAPTCHA_SITE_KEY, 
+        $params = array("USER_ID_PROMPT" => get_user_id_prompt(),
+            "TURNSTILE_SITE_KEY" => TURNSTILE_SITE_KEY,
             "EMAIL_LOGIN_SUPPORT" => is_email_login_supported(),
             "PUBLIC_NEW_USER" => PUBLIC_NEW_USER);
         $params["error_message"] = "Both ${params['USER_ID_PROMPT']} and email address are required.";
@@ -247,8 +255,8 @@ function validate_input_params($title, $badgeid, $email, $recaptchaResponse) {
         participant_footer();
         exit;
     } else if (empty($email) && is_email_login_supported()) {
-        $params = array("USER_ID_PROMPT" => get_user_id_prompt(), 
-            "RECAPTCHA_SITE_KEY" => RECAPTCHA_SITE_KEY, 
+        $params = array("USER_ID_PROMPT" => get_user_id_prompt(),
+            "TURNSTILE_SITE_KEY" => TURNSTILE_SITE_KEY,
             "EMAIL_LOGIN_SUPPORT" => is_email_login_supported(),
             "PUBLIC_NEW_USER" => PUBLIC_NEW_USER);
         $params["error_message"] = "Email address is required.";
@@ -300,12 +308,16 @@ EOD;
 }
 
 
+$secret_key = TURNSTILE_SECRET_KEY;
+$token = $_POST['cf-turnstile-response'] ?? '';
+$remoteip = $_SERVER['HTTP_CF_CONNECTING_IP'] ??
+    $_SERVER['HTTP_X_FORWARDED_FOR'] ??
+    $_SERVER['REMOTE_ADDR'];
 
-$recaptchaResponse = getString('g-recaptcha-response');
 $badgeid = getString('badgeid');
 $email = getString('emailAddress');
 
-validate_input_params($title, $badgeid, $email, $recaptchaResponse);
+validate_input_params($secret_key, $token, $remoteip, $title, $badgeid, $email);
 participant_header($title, true, 'Login', true);
 
 $conName = CON_NAME;
@@ -353,7 +365,7 @@ if (is_email_login_supported() && $record_count === 0 && PUBLIC_NEW_USER) {
         'selector' => $selector,
         'validator' => bin2hex($token)
     ]));
-    
+
     insert_create_item($emailSQL, $ipaddressSQL, $token, $selector);
     send_email_not_found_message($email, $subjectLine, $url);
 

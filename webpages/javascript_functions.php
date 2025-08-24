@@ -1,6 +1,6 @@
 <?php
 //	Copyright (c) 2011-2021 Peter Olszowka. All rights reserved. See copyright document for more details.
-function load_external_javascript($isDataTables = false, $isRecaptcha = false, $bootstrap4 = false) {
+function load_external_javascript($isDataTables = false, $isTurnstile = false, $bootstrap4 = false) {
     if ($bootstrap4) { ?>
     <script src="<?php echo BASE_PATH; ?>external/jquery3.5.1/jquery-3.5.1.min.js"></script>
     <script src="<?php echo BASE_PATH; ?>external/bootstrap4.5.0/bootstrap.bundle.min.js" type="text/javascript"></script>
@@ -15,8 +15,8 @@ function load_external_javascript($isDataTables = false, $isRecaptcha = false, $
 <?php } else if ($isDataTables) { ?>
     <script src="<?php echo BASE_PATH; ?>external/dataTables1.10.16/jquery.dataTables.js"></script>
 <?php }
-    if ($isRecaptcha) { ?>
-    <script async defer id="recaptcha-script" src="https://www.google.com/recaptcha/api.js"></script>
+    if ($isTurnstile) { ?>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <?php }
 }
 
@@ -28,7 +28,6 @@ function load_internal_javascript($title, $isDataTables = false) {
      * These js files initialize themselves and therefore should be included only on the relevant pages.
      * See main.js
      *
-     * Forgot Password -- ForgotPassword.js
      * Invite Participants -- InviteParticipants.js
      * Maintain Room Schedule -- MaintainRoomSched.js
      * Reset Password -- ForgotPasswordResetForm.js
@@ -37,9 +36,6 @@ function load_internal_javascript($title, $isDataTables = false) {
      * Other js files may be included in this switch statement, but aren't required
      */
     switch ($title) {
-        case "Forgot Password":
-            echo "<script src=\"".BASE_PATH."js/ForgotPassword.js\"></script>\n";
-            break;
         case "Invite Participants":
             echo "<script src=\"".BASE_PATH."js/InviteParticipants.js\"></script>\n";
             break;
