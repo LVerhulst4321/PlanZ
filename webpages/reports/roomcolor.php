@@ -1,6 +1,8 @@
 <?php
 $report = [];
 $report['name'] = 'Room Colors for Grid';
+$report['multi'] = 'true';
+$report['output_filename'] = 'roomcolor.csv';
 $report['description'] = 'List all the colors that can be used on the room grid.';
 $report['categories'] = array(
     'Administration Reports' => 880,
@@ -24,11 +26,11 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='roomcolors']/row">
-                <table class="report">
+                <table id="reportTable" class="table table-sm table-bordered">
                     <tr>
-                        <th class="report">Room Color Id</th>
-                        <th class="report">Room Color Name</th>
-                        <th class="report">Room Color Code</th>
+                        <th>Room Color Id</th>
+                        <th>Room Color Name</th>
+                        <th>Room Color Code</th>
                     </tr>
                     <xsl:apply-templates select="doc/query[@queryName='roomcolors']/row" />
                 </table>
@@ -42,9 +44,9 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='roomcolors']/row">
         <xsl:variable name="roomcolorcode" select="@roomcolorcode" />
         <tr>
-            <td class="report"><xsl:value-of select="@roomcolorid"/></td>
-            <td class="report"><xsl:value-of select="@roomcolorname"/></td>
-            <td class="report" bgcolor="{roomcolorcode}"><xsl:value-of select="@roomcolorcode"/></td>
+            <td><xsl:value-of select="@roomcolorid"/></td>
+            <td><xsl:value-of select="@roomcolorname"/></td>
+            <td bgcolor="{roomcolorcode}"><xsl:value-of select="@roomcolorcode"/></td>
         </tr>
     </xsl:template>
 
