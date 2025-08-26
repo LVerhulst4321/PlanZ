@@ -24,27 +24,10 @@ function render_session_interests($session_interest_count,$message,$message_erro
     if ($pageIsDirty) {
         echo "<input type=\"hidden\" id=\"pageIsDirty\" value=\"true\" />\n";
     }
-    // "Add" Section
-    echo "<form class=\"form-inline\" id=\"addFRM\" name=\"addform\" method=\"POST\" action=\"PartPanelInterests_POST.php\">\n";
-    echo "  <div class=\"row-fluid\">";
-    echo "    <div class=\"controls padded\">\n";
-    echo "        <div class=\"control-group\">\n";
-    echo "            <label class=\"control-label\">Add Session ID to my List: \n";
-    echo "                <input type=\"text\" class=\"span4\" name=\"addsessionid\" size=\"10\" $disabled/>\n";
-    echo "            </label>\n";
-    echo "            <input type=\"hidden\" name=\"add\" />\n";
-    echo "            <button class=\"btn btn-primary\" type=\"button\" onclick=\"panelInterests.onClickAdd();\" $disabled>Add</button>\n";
-    echo "        </div>\n";
-    echo "      </div>\n";
-    echo "  </div>\n";
-    echo "</form>\n";
-    echo "<hr />\n";
     // "Update Ranks" Section
-    echo "<form id=\"sessionFRM\" class=\"form-inline\" name=\"sessionform\" method=\"POST\" action=\"PartPanelInterests_POST2.php\">\n";
+    echo "<form id=\"sessionFRM\" class=\"form\" name=\"sessionform\" method=\"POST\" action=\"PartPanelInterests_POST2.php\">\n";
     echo "<input type=\"hidden\" name=\"submitranks\" value=\"1\" />\n";
     echo "<div class=\"submit\"><button class=\"btn btn-primary pull-right\" type=\"submit\" $disabled>Save</button></div>\n";
-    echo "<p>Please use the following scale when ranking your interest in the sessions you have chosen:  </p>\n";
-    echo "<strong>1 &mdash;<em> Oooh! Oh! Pick Me!</em>&nbsp;&nbsp;&nbsp;2-3 &mdash; <em>I'd like to if I can</em>&nbsp;&nbsp;&nbsp;4-5 &ndash; <em>I am qualified but this is not one of my primary interests</em></strong>\n";
     echo "<p>You are limited to 4 sessions each of preferences 1-4.  There is no limit to the number of sessions for which you can express preference 5.</p>\n";
     echo "<h4>List of Sessions in Which I'm Interested in Participating:</h4>\n";
     echo "<div class=\"row-fluid\">\n";
@@ -63,15 +46,21 @@ function render_session_interests($session_interest_count,$message,$message_erro
         echo "    <div class=\"controls controls-row\">\n";
         echo "        <span class=\"span1\"></span>\n";
         echo "        <label class=\"control-label span2\">Rank: \n";
-        echo "            <input type=\"text\" id=\"rankINP_$j\" size=\"2\" class=\"rankINP\" name=\"rank$j\" value=\"{$session_interests[$i]['rank']}\" $disabled/>\n";
+        echo "            <select id=\"rankINP_$j\" name=\"rank$j\" $disabled>\n";
+        echo "                <option value=\"1\" " . (($session_interests[$i]['rank'] == 1) ? "selected=\"selected\"" : "") . ">1 - Ooh! Ooh! Pick me!</option>\n";
+        echo "                <option value=\"2\" " . (($session_interests[$i]['rank'] == 2) ? "selected=\"selected\"" : "") . ">2 - I'd like to if I can</option>\n";
+        echo "                <option value=\"3\" " . (($session_interests[$i]['rank'] == 3) ? "selected=\"selected\"" : "") . ">3 - It would be nice</option>\n";
+        echo "                <option value=\"4\" " . (($session_interests[$i]['rank'] == 4) ? "selected=\"selected\"" : "") . ">4 - I'm kind of interested</option>\n";
+        echo "                <option value=\"5\" " . (($session_interests[$i]['rank'] == 5) ? "selected=\"selected\"" : "") . ">5 - Not one of my primary interests</option>\n";
+        echo "            </select>\n";
         echo "        </label>\n";
         echo "        <span class=\"span5\">\n";
         echo "            <input type=\"checkbox\" id=\"modCHK_$j\" class=\"checkbox\" value=\"1\" name=\"mod$j\" ".(($session_interests[$i]['willmoderate'])?"checked":"")." $disabled/>\n";
-        echo "            <label class=\"inline\">I'd like to moderate this session </label>\n";
+        echo "            <label class=\"inline\" for=\"modCHK_$j\">I'd like to moderate this session </label>\n";
         echo "        </span>\n";
         echo "        <span class=\"span4\">\n";
         echo "            <input type=\"checkbox\" id=\"deleteCHK_$j\" class=\"checkbox\" value=\"1\" name=\"delete$j\" $disabled/>\n";
-        echo "            <label class=\"inline \">Remove this session from my list </label>\n";
+        echo "            <label class=\"inline \" for=\"deleteCHK_$j\">Remove this session from my list </label>\n";
         echo "        </span>\n";
         echo "    </div>\n";
         echo "    <div class=\"controls controls-row\">\n";
