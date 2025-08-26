@@ -2,7 +2,7 @@
 // Copyright (c) 2009-2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 function render_session_interests($session_interest_count,$message,$message_error, $pageIsDirty, $showNotAttendingWarning) {
     global $session_interests, $title;
-    participant_header($title, false, 'Normal', false);
+    participant_header($title, false, 'Normal', true);
     if ($showNotAttendingWarning) {
         echo "<div class=\"alert alert-block\" style=\"margin:15px 0;\">\n";
         echo "    <h4>Warning!</h4>\n";
