@@ -6,7 +6,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output encoding="UTF-8" indent="yes" method="xml" />
     <xsl:template match="/">
-        <select name="selroom" id="selroom">
+        <select name="selroom" id="selroom" class="form-control">
             <option value="0" selected="selected">Select Room</option>
             <xsl:apply-templates select="/doc/query[@queryName='rooms']/row" />
         </select>

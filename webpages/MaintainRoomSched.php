@@ -7,7 +7,7 @@ $title = "Maintain Room Schedule";
 require_once('StaffCommonCode.php');
 require_once('SubmitMaintainRoom.php');
 
-staff_header($title);
+staff_header($title, true);
 $topsectiononly = true; // no room selected -- flag indicates to display only the top section of the page
 $conflict = false; // initialize
 if (isset($_POST["numrows"])) {
@@ -35,25 +35,32 @@ if ($conflict != true) {
         exit();
     }
     ?>
-<form id="maintain-room-sched-room-form" class="form-inline page-top-spacer" name="selroomform" method="POST" action="MaintainRoomSched.php">
-	<div class="vert-sep">
-        <label for="selroom">Select Room:</label>
+<div class="container">
+    <div class="card"><div class="card-body">
+<form id="maintain-room-sched-room-form" name="selroomform" method="POST" action="MaintainRoomSched.php">
+	<div class="form-group row">
+        <label for="selroom" class="col-sm-2">Select Room:</label>
+        <div class="col-sm-6">
 <?php RenderXSLT('MaintainRoomSched_roomSelect.xsl', array(), $resultXML); ?>
-        <button type="submit" name="submit" class="btn btn-primary">Fetch Room</button>
+        </div>
+        <div class="col-sm-4">
+            <button type="submit" name="submit" class="btn btn-primary">Fetch Room</button>
+        </div>
     </div>
 <?php
     if (isset($_SESSION['return_to_page'])) {
         echo "<A HREF=\"" . $_SESSION['return_to_page'] . "\">Return to report</A>";
     }
 ?>
-	<div class="vert-sep">
+	<div>
         <input type="checkbox" class="checkbox adjust" id="showUnschedRmsCHK" name="showUnschedRmsCHK" value="1"
             <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
         <label class="checkbox inline" for="showUnschedRmsCHK">Include unscheduled rooms</label>
 	</div>
 	<div class="padded text-info">For any session where you are rescheduling, please read the Notes for Programming Committee.</div>
 	</form>
-	<hr>
+    </div>
+    </div>
 <?php
 		// unset all stuff from posts so input fields get reset to blank
     for ($i = 1; $i <= newroomslots; $i++) {
@@ -65,10 +72,14 @@ if ($conflict != true) {
     }
 }
 if ($topsectiononly) {
+?>
+    </div>
+<?php
     staff_footer();
     exit();
 }
 ?>
+<div class="card mt-4">
 <form class="zambia-form" name="rmschdform" method="POST" action="MaintainRoomSched.php">
 <input type="hidden" name="showUnschedRmsCHK" value="1" <?php if (isset($_POST["showUnschedRmsCHK"])) echo "checked=\"checked\""?> />
 <?php
@@ -91,8 +102,8 @@ if (!$result = mysqli_query_exit_on_error($query)) {
 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 mysqli_free_result($result);
 $selroomname = htmlspecialchars($row["roomname"]);
-echo "<h2>$selroomid - " . $selroomname . "</h2>";
-echo "<h4 class=\"label\">Open Times</h4>\n";
+echo "<div class=\"card-header\"><h2>$selroomid - " . $selroomname . "</h2></div>";
+echo "<div class=\"card-body\"><h4 class=\"label\">Open Times</h4>\n";
 echo "<div class=\"border1111 lrpad lrmargin\"><p class=\"lrmargin\">";
 if ($row["opentime1"] != "") {
     echo time_description($row["opentime1"]) . " through " . time_description($row["closetime1"]) . "<br />\n";
@@ -111,20 +122,20 @@ if ($row["opentime5"] != "") {
 }
 echo "</div>\n";
 echo "<h4 class=\"label\">Characteristics</H4>\n";
-echo "   <table class=\"table-condensed compressed\">\n";
+echo "   <table class=\"table table-sm table-hover\">\n";
 echo "      <tr>\n";
-echo "         <th class=\"lrpad border1111\">Function</th>\n";
-echo "         <th class=\"lrpad border1111\">Floor</th>\n";
-echo "         <th class=\"lrpad border1111\">Dimensions</th>\n";
-echo "         <th class=\"lrpad border1111\">Area</th>\n";
-echo "         <th class=\"lrpad border1111\">Height</th>\n";
+echo "         <th>Function</th>\n";
+echo "         <th>Floor</th>\n";
+echo "         <th>Dimensions</th>\n";
+echo "         <th>Area</th>\n";
+echo "         <th>Height</th>\n";
 echo "         </tr>\n";
 echo "      <tr>\n";
-echo "         <td class=\"lrpad border1111\">".htmlspecialchars($row["function"])."</td>\n";
-echo "         <td class=\"lrpad border1111\">".htmlspecialchars($row["floor"])."</td>\n";
-echo "         <td class=\"lrpad border1111\">".htmlspecialchars($row["dimensions"])."</td>\n";
-echo "         <td class=\"lrpad border1111\">".htmlspecialchars($row["area"])."</td>\n";
-echo "         <td class=\"lrpad border1111\">".htmlspecialchars($row["height"])."</td>\n";
+echo "         <td>".htmlspecialchars($row["function"])."</td>\n";
+echo "         <td>".htmlspecialchars($row["floor"])."</td>\n";
+echo "         <td>".htmlspecialchars($row["dimensions"])."</td>\n";
+echo "         <td>".htmlspecialchars($row["area"])."</td>\n";
+echo "         <td>".htmlspecialchars($row["height"])."</td>\n";
 echo "         </tr>\n";
 if ($row["notes"] != "") {
     echo "        <tr>\n";
@@ -150,15 +161,15 @@ while ($foo = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
     $roomSetArray[] = $foo;
 }
 mysqli_free_result($result);
-echo "   <table class=\"table-condensed compressed\">\n";
+echo "   <table class=\"table table-sm table-hover\">\n";
 echo "      <tr>\n";
-echo "         <th class=\"lrpad border1111\">Room Set</th>\n";
-echo "         <th class=\"lrpad border1111\">Capacity</th>\n";
+echo "         <th>Room Set</th>\n";
+echo "         <th>Capacity</th>\n";
 echo "         </tr>\n";
 foreach ($roomSetArray as $roomset) {
     echo "   <tr>\n";
-    echo "      <td class=\"vatop lrpad border1111\">" . $roomset["roomsetname"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border1111\">" . $roomset["capacity"] . "</td>\n";
+    echo "      <td>" . $roomset["roomsetname"] . "</td>\n";
+    echo "      <td>" . $roomset["capacity"] . "</td>\n";
     echo "      </tr>\n";
 }
 echo "      </table>\n";
@@ -192,7 +203,7 @@ $numrows = --$i;
 
 echo "<hr />\n";
 echo "<h4 class=\"label\">Current Room Schedule</H4>\n";
-echo "<table class=\"table table-condensed compressed\">\n";
+echo "<table class=\"table table-sm\">\n";
 echo "   <tr>\n";
 echo "      <th>Delete</th>\n";
 echo "      <th>Start Time</th>\n";
@@ -208,18 +219,28 @@ for ($i = 1; $i <= $numrows; $i++) {
     echo "      <td class=\"border0010\"><input type=\"checkbox\" class=\"checkbox adjust\" name=\"del$i\" value=\"1\"></td>\n";
     echo "<input type=\"hidden\" name=\"row$i\" value=\"" . $bigarray[$i]["scheduleid"] . "\">";
     echo "<input type=\"hidden\" name=\"rowsession$i\" value=\"{$bigarray[$i]["sessionid"]}\"></td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . time_description($bigarray[$i]["starttime"]) . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["duration"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["trackname"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["taglist"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\"> <a href=EditSession.php?id=" . $bigarray[$i]["sessionid"] . ">" . $bigarray[$i]["sessionid"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["title"] . "</td>\n";
-    echo "      <td class=\"vatop lrpad border0010\">" . $bigarray[$i]["roomsetname"] . "</td>\n";
+    echo "      <td>" . time_description($bigarray[$i]["starttime"]) . "</td>\n";
+    echo "      <td>" . $bigarray[$i]["duration"] . "</td>\n";
+    echo "      <td>" . $bigarray[$i]["trackname"] . "</td>\n";
+    echo "      <td>" . $bigarray[$i]["taglist"] . "</td>\n";
+    echo "      <td> <a href=EditSession.php?id=" . $bigarray[$i]["sessionid"] . ">" . $bigarray[$i]["sessionid"] . "</td>\n";
+    echo "      <td>" . $bigarray[$i]["title"] . "</td>\n";
+    echo "      <td>" . $bigarray[$i]["roomsetname"] . "</td>\n";
     echo "      </tr>\n";
 }
 echo "   </table>\n";
 echo "<h4 class=\"label\">Add To Room Schedule</H4>\n";
-echo "<table id=\"add-to-room-schedule-table\" class=\"table table-condensed compressed\">\n";
+echo "<table id=\"add-to-room-schedule-table\" class=\"table table-sm\">\n";
+?>
+    <colgroup>
+        <col width="15%">
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+        <col width="55%">
+    </colgroup>
+
+<?php
 $query = <<<EOD
 SELECT
         S.sessionid, T.trackname, S.title
@@ -258,10 +279,9 @@ else {
 // Loop through room slots to build table rows.
 for ($i = 1; $i <= newroomslots; $i++) {
     echo "   <tr>\n";
-    echo "      <td>";
     // ****DAY****
     if (CON_NUM_DAYS>1) {
-        echo "<select class=\"span2\" name=day$i><option value=0 ";
+        echo "<td><select class=\"form-control\" name=day$i><option value=0 ";
         if ((!isset($_POST["day$i"])) or $_POST["day$i"]==0)
             echo "selected";
         echo ">Day&nbsp;</option>";
@@ -272,17 +292,17 @@ for ($i = 1; $i <= newroomslots; $i++) {
                 echo "selected";
             echo ">$x</option>\n";
             }
-        echo "</Select>&nbsp;\n";
+        echo "</Select>&nbsp;</td>\n";
         }
 	// ****HOUR****
-    echo "          <select class=\"span1 myspan1\" name=\"hour$i\">";
+    echo "          <td><select class=\"form-control\" name=\"hour$i\">";
     $selectedHour = $_POST["hour$i"] ?: -1;
     foreach ($hours as $key => $label) {
         echo "<option value=\"${key}\" " . ($selectedHour == $key ? 'selected' : '') . ">${label}</option>";
     }
-    echo "</select>\n";
+    echo "</select></td>\n";
 	// ****MIN****
-    echo "          <select class=\"span1 myspan1\" name=\"min$i\"><option value=\"-1\" ";
+    echo "          <td><select class=\"form-control\" name=\"min$i\"><option value=\"-1\" ";
 	if (!isset($_POST["min$i"]))
 	    $_POST["min$i"]=-1;
     if ($_POST["min$i"]==-1)
@@ -294,21 +314,20 @@ for ($i = 1; $i <= newroomslots; $i++) {
             echo "selected";
 		echo ">".($j<10?"0":"").$j."</option>";
         }
-    echo "</select>\n";
+    echo "</select></td>\n";
 	// ****AM/PM**** - Only display if not using 24 hour time.
     if (!DISPLAY_24_HOUR_TIME) {
-        echo "          <Select class=\"span1 myspan1\" name=\"ampm$i\"><option value=0 ";
+        echo "          <td><Select class=\"form-control\" name=\"ampm$i\"><option value=0 ";
         if ((!isset($_POST["ampm$i"])) or $_POST["ampm$i"]==0)
             echo "selected";
         echo ">AM&nbsp;</option><option value=1 ";
         if (isset($_POST["ampm$i"]) && $_POST["ampm$i"]==1)
             echo "selected";
         echo ">PM</option>";
-        echo "</select>\n";
+        echo "</select></td>\n";
     }
-    echo "          </td>";
     // ****Session****
-    echo "      <td class=\"room-select-td\"><Select class=\"span8\" name=\"sess$i\"><option value=\"unset\" ";
+    echo "      <td class=\"room-select-td\"><Select class=\"form-control\" name=\"sess$i\"><option value=\"unset\" ";
 	if ((!isset($_POST["sess$i"])) or $_POST["sess$i"]=="unset")
 	    echo "selected";
     echo ">Select Session</option>\n";
@@ -327,6 +346,6 @@ echo "<input type=\"hidden\" name=\"selroom\" value=\"$selroomid\">\n";
 echo "<input type=\"hidden\" name=\"selroomname\" value=\"$selroomname\">\n";
 echo "<input type=\"hidden\" name=\"numrows\" value=\"$numrows\">\n";
 echo "<div class=\"SubmitDiv\"><button type=\"submit\" name=\"update\" class=\"btn btn-primary\">Update</button></div>\n";
-echo "</form>\n";
+echo "</form></div></div></div>\n";
 staff_footer();
 ?>
