@@ -42,7 +42,7 @@ The brainstorming screen looks like this:
 
 ![Submit a Session](./images/submit_a_session_screen.png)
 
-This screen allows users to submit session ideas. More details about brainstorming [can be found over here](./using_the_brainstorm_function.md).
+This screen allows users to submit session ideas. More details about brainstorming [can be found over here](./modules/using_the_brainstorm_function.md).
 
 
 ## Creating a Session Manually

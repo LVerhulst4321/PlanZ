@@ -2,11 +2,11 @@
 
 ![PlanZ Logo](./webpages/images/Plan-Z-Logo-192.png)
 
-Convention scheduling tool originally developed for Arisia. Now used by several other conventions.
+PlanZ is a convention scheduling tool originally developed for Arisia.
 PlanZ tracks sessions (events, panels, and anything that needs to be scheduled),
-participants, and rooms.
-PlanZ was originally Zambia, but many changes have been made away from the original code and so a
-new name was desired.
+participants, and rooms. PlanZ is a fork of [Zambia](https://github.com/olszowka/Zambia/);
+enough changes have been made to the Zambia codebase that we decided a new
+name was in order.
 
 ## Features
 * Track sessions, rooms, and participants
@@ -18,7 +18,7 @@ new name was desired.
 * PHP 7.4 or greater (mostly tested on 8.1, but there may be some minor issues with 8.X)
   * XSLT library
   * Multibyte library (mbstring)
-* Apache of Nginx (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
+* Apache or Nginx (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
 * MySQL or MariaDB (Tested on MySQL 5.6 & 8.0, and on MariaDB 10.5)
 * SMTP connection for use as mail relay (only if you want to send email from PlanZ)
   * Note: many hosts limit use of their mail relays in ways not compatible with PlanZ
@@ -59,5 +59,5 @@ A portion of the application is built as a React client. You'll need to [build a
 
 ### Documentation
 
-Check out the [wiki](https://github.com/olszowka/Zambia/wiki) to review the original version of this code.
+We have some [user documentation over here](./Documentation/User_Documentation/README.md).
 

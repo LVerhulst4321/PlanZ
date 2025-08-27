@@ -25,6 +25,12 @@ You can look up other participants using the "Add" button, and search on their d
 
 Many sessions should have a moderator. There's a button that allows you to make one of the participants a moderator. Moderators should be specified with the term "(Mod)" after their name and a different border style.
 
+![Moderator Styling](./images/search_for_participant.png)
+
 ## Notes
 
 You can edit the notes for a panel by hovering over the notes until the pencil icon appears. When it appears, click it to get into an edit mode for the notes.
+
+![Show edit notes option](./images/show_edit_notes_option.png)
+
+![Edit notes](./images/edit_notes.png)

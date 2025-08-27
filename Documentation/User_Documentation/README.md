@@ -2,13 +2,11 @@
 
 PlanZ is a con programme scheduling webapp, and is intended to help with the running of fan-run SF cons. It might be applicable for other types of conventions, but the original developers of the webapp were SF con team members, and that's the domain that this webapp specializes in.
 
-## The Overall Con Planning Structure
-
-### Initial Webapp Set-up
+## Initial Webapp Set-up
 
 Before the convention committee start doing their work the site administrator needs to perform some set-up activities.
 
-### Programming Sessions
+## Programming Sessions
 
 Different cons work in different ways but I'd argue that -- at the high level -- there are a number of common activities. The details may vary from con to con, but each con probably needs to address the following things:
 
@@ -28,9 +26,16 @@ Different cons work in different ways but I'd argue that -- at the high level --
 
 PlanZ has tools that can help a programming team with each of the above options.
 
+## Other Tools
 
+### Reports
 
+PlanZ has a large number of reports that can help programming teams check the status of
+the overall programme schedule, potential problems, and other data about the con's programme readiness.
 
+### Optional Modules
+
+PlanZ has some additional tools that can be enabled as [optional modules](./modules/README.md).
 
 
 
