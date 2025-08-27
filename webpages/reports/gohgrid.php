@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'GOH Grid';
+$report['multi'] = 'true';
+$report['output_filename'] = 'gohgrid.csv';
 $report['description'] = 'Display unabridged schedule of all events with any GOHs participanting with rooms on horizontal axis and time on vertical. This includes all items marked "Do Not Print". ';
 $report['categories'] = array(
     'Programming Reports' => 50,
@@ -49,7 +51,7 @@ SELECT
         DATE_FORMAT(S.duration,"%H:%i") AS duration,
         S.title,
         TR.trackname,
-        TY.typename 
+        TY.typename
     FROM
              Schedule SCH
         JOIN Sessions S USING (sessionid)
@@ -60,7 +62,7 @@ SELECT
             SELECT DISTINCT POS.sessionid
                 FROM
                          ParticipantOnSession POS
-                    JOIN UserHasPermissionRole UHPR USING (badgeid)    
+                    JOIN UserHasPermissionRole UHPR USING (badgeid)
                 WHERE
                     UHPR.permroleid = 8 # GOH
                 )
@@ -75,9 +77,9 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='rooms']/row and doc/query[@queryName='times']/row and doc/query[@queryName='sessions']/row">
-                <table class="report">
+                <table class="table table-sm table-bordered">
                     <tr>
-                        <th class="report" style="">Time</th>
+                        <th style="">Time</th>
                         <xsl:apply-templates select="doc/query[@queryName='rooms']/row" />
                     </tr>
                     <xsl:apply-templates select="doc/query[@queryName='times']/row" />
@@ -90,7 +92,7 @@ $report['xsl'] =<<<'EOD'
     </xsl:template>
 
     <xsl:template match="doc/query[@queryName='rooms']/row">
-        <th class="report">
+        <th>
             <xsl:call-template name="showRoomName">
                 <xsl:with-param name="roomid" select = "@roomid" />
                 <xsl:with-param name="roomname" select = "@roomname" />
@@ -101,11 +103,11 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='times']/row">
         <xsl:variable name="starttime" select="@starttime" />
         <tr>
-            <td class="report"><xsl:value-of select="@starttimeFMT" /></td>
+            <td><xsl:value-of select="@starttimeFMT" /></td>
             <xsl:for-each select="/doc/query[@queryName='rooms']/row">
                 <xsl:variable name="roomid" select="@roomid" />
                 <xsl:variable name="sessionid" select="/doc/query[@queryName='sessions']/row[@roomid=$roomid and @starttime=$starttime]/@sessionid" />
-                <td class="report">
+                <td>
                     <xsl:choose>
                         <xsl:when test="/doc/query[@queryName='sessions']/row[@roomid=$roomid and @starttime=$starttime]">
                             <xsl:for-each select="/doc/query[@queryName='sessions']/row[@roomid=$roomid and @starttime=$starttime]">
@@ -118,7 +120,7 @@ $report['xsl'] =<<<'EOD'
                                     <xsl:call-template name="showSessionTitle">
                                         <xsl:with-param name="sessionid" select = "@sessionid" />
                                         <xsl:with-param name="title" select = "@title" />
-                                    </xsl:call-template> 
+                                    </xsl:call-template>
                                     <xsl:text> (</xsl:text>
                                     <xsl:value-of select="@duration" />
                                     <xsl:text>) </xsl:text>

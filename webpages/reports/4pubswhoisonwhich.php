@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Pubs - Who is on Which Session';
+$report['multi'] = 'true';
+$report['output_filename'] = '4pubswhoisonwhich.csv';
 $report['description'] = 'Show the id, pubsname and session info for each participant that are on at least one scheduled session. (Limited to published sessions.)';
 $report['categories'] = array(
     'Publication Reports' => 130,
@@ -19,7 +21,7 @@ SELECT
     WHERE
         EXISTS (
             SELECT SCH.sessionid
-                FROM 
+                FROM
                          Schedule SCH
                     JOIN ParticipantOnSession POS USING (sessionid)
                     JOIN Sessions S USING (sessionid)
@@ -53,12 +55,12 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
+                <table class="table table-sm table-bordered">
                     <tr>
-                        <th class="report" style="">Person ID</th>
-                        <th class="report" style="">Badge Number</th>
-                        <th class="report" style="">Name for Publications</th>
-                        <th class="report" style="">List of Sessions</th>
+                        <th style="">Person ID</th>
+                        <th style="">Badge Number</th>
+                        <th style="">Name for Publications</th>
+                        <th style="">List of Sessions</th>
                     </tr>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row" />
                 </table>
@@ -72,15 +74,15 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='participants']/row">
         <xsl:variable name="badgeid" select="@badgeid" />
         <tr>
-            <td class="report"><xsl:value-of select="@badgeid" /></td>
-            <td class="report"><xsl:value-of select="@badgenumber" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@badgeid" /></td>
+            <td><xsl:value-of select="@badgenumber" /></td>
+            <td>
                 <xsl:call-template name="showPubsname">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
-            <td class="report">
+            <td>
                 <xsl:apply-templates select="/doc/query[@queryName='sessions']/row[@badgeid=$badgeid]" />
             </td>
         </tr>
@@ -93,7 +95,7 @@ $report['xsl'] =<<<'EOD'
         <xsl:value-of select="@sessionid" />
         <xsl:if test="@moderator='1'">
             <xsl:text> MOD</xsl:text>
-        </xsl:if>        
+        </xsl:if>
     </xsl:template>
 </xsl:stylesheet>
 EOD;
