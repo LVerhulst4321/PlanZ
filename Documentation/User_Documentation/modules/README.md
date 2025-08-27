@@ -12,7 +12,7 @@ Here are some of the available modules:
 | OBS Feeds | Create extract of sessions per day/room for OBS. |
 | Print Room Schedule | Provide a tool (in the Tools area) option that allows con staff to print a physical copy of the room schedule for posting beside a room's door. |
 | Table Tents | Module for printing table tents. |
-| Volunteering Module | The volunteering module allows users to create volunteer shifts, and allows participants to sign up for those shifts |
+| [Volunteering Module](./volunteer_module.md) | The volunteering module allows users to create volunteer shifts, and allows participants to sign up for those shifts |
 
 ## Working with Modules
 
