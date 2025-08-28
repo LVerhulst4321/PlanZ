@@ -18,3 +18,6 @@ When this Phase is active, an extra menu option is available to Participants:
 And users can review their sessions and let the con know if they are no longer able to take part.
 
 ![My Schedule](./images/my_schedule.png)
+
+The Programming Team can keep track of the assignments and confirmation status using the "Participant Assignments with Confirmation Status" report.
+
