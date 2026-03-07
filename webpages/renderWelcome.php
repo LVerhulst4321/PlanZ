@@ -89,18 +89,20 @@ if (may_I('postcon')) { ?>
                 <?php } ?>
             </div>
         </div>
-        <div class="card mt-3">
-            <div class="card-body">
-                <?php if ($participant_array["regtype"] == null || $participant_array["regtype"] == '') { ?>
-                    You are currently <b>not registered</b> for <?php echo CON_NAME; ?>. 
-                    <?php if (defined("REGISTRATION_URL") && REGISTRATION_URL !== "") { ?>
-                        <a href="<?php echo REGISTRATION_URL ?>">Register now</a>.
+        <?php if (USE_REG_SYSTEM === TRUE) { ?>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <?php if ($participant_array["regtype"] == null || $participant_array["regtype"] == '') { ?>
+                        You are currently <b>not registered</b> for <?php echo CON_NAME; ?>. 
+                        <?php if (defined("REGISTRATION_URL") && REGISTRATION_URL !== "") { ?>
+                            <a href="<?php echo REGISTRATION_URL ?>">Register now</a>.
+                        <?php } ?>
+                    <?php } else { ?>
+                        Your current membership type is <b><?php echo $participant_array["regtype"] ?></b>.
                     <?php } ?>
-                <?php } else { ?>
-                    Your current membership type is <b><?php echo $participant_array["regtype"] ?></b>.
-                <?php } ?>
+                </div>
             </div>
-        </div>
+        <?php } ?>
     </div>
     <div class="col-md-6">
         <div class="card">
