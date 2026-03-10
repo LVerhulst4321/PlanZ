@@ -59,7 +59,9 @@ SELECT
     DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
     DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time,
     GROUP_CONCAT(TA.tagname SEPARATOR ',') AS taglist,
-    S.meetinglink
+    S.meetinglink,
+    S.streaminglink,
+    S.replaylink
 FROM
               Schedule SCH
          JOIN Sessions S USING (sessionid)
@@ -113,6 +115,16 @@ EOD;
             );
             if (!empty($row["meetinglink"])) {
                 $programRow["links"] = ["meeting" => $row["meetinglink"]];
+            }
+            if (!empty($row['streaminglink'])) {
+                $url = str_replace("{id}", $row["id"], $row["streaminglink"]);
+                $url = str_replace("{loc}", $row["loc"], $url);
+                $programRow["links"]["streaming"] = $url;
+            }
+            if (!empty($row["replaylink"])) {
+                $url = str_replace("{id}", $row["id"], $row["replaylink"]);
+                $url = str_replace("{loc}", $row["loc"], $url);
+                $programRow["links"]["replay"] = $url;
             }
             $program[] = $programRow;
     }

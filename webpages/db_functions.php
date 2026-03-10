@@ -547,6 +547,7 @@ UPDATE Sessions
         meetinglink="{$sessionf["mlink"]}",
         streaminglink="{$sessionf["streamlink"]}",
         signuplink="{$sessionf["signlink"]}",
+        replaylink="{$sessionf["replaylink"]}",
         techlevelid="{$sessionf["techlevelid"]}"
     WHERE
         sessionid = $id;
@@ -643,6 +644,7 @@ INSERT INTO Sessions
         meetinglink="{$sessionf["mlink"]}",
         streaminglink="{$sessionf["streamlink"]}",
         signuplink="{$sessionf["signlink"]}",
+        replaylink="{$sessionf["replaylink"]}",
         persppartinfo="{$sessionf["persppartinfo"]}",
         duration="{$sessionf["duration"]}",
         estatten={$sessionf["estatten"]},
@@ -724,6 +726,10 @@ function filter_session() {
         $session2["signlink"] = mysqli_real_escape_string($linki, $session["signlink"]);
     else
         $session2["signlink"] = "";
+    if (REPLAY_LINK === TRUE)
+        $session2["replaylink"] = mysqli_real_escape_string($linki, $session["replaylink"]);
+    else
+        $session2["replaylink"] = "";
     $session2["persppartinfo"] = mysqli_real_escape_string($linki, $session["persppartinfo"]);
     if (DURATION_IN_MINUTES === TRUE) {
         $session2["duration"] = conv_min2hrsmin($session["duration"]);
@@ -807,6 +813,7 @@ SELECT
         meetinglink,
         streaminglink,
         signuplink,
+        replaylink,
         techlevelid
     FROM
         Sessions
@@ -855,6 +862,7 @@ EOD;
     $session["mlink"] = $sessionarray["meetinglink"];
     $session["streamlink"] = $sessionarray["streaminglink"];
     $session["signlink"] = $sessionarray["signuplink"];
+    $session["replaylink"] = $sessionarray["replaylink"];
     $session["hashtag"] = $sessionarray["hashtag"];
     $session["techlevelid"] = $sessionarray["techlevelid"];
     mysqli_free_result($result);

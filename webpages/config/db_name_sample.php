@@ -113,6 +113,8 @@ define("MEETING_LINK", TRUE); // Add support for Meeting link in sessions
 define("STREAMING_LINK", TRUE); // Add support for streaming link in sessions
 define("STREAMING_LABEL", "Streaming link"); // Specify label for streaming link - allows conventions to specify specific streaming service if required
 define("SIGNUP_LINK", TRUE); // Add support for signup link in sessions
+define("REPLAY_LINK", TRUE); // Add support for replay link in sessions (supports {id} and {loc} placeholders)
+define("REPLAY_LABEL", "Replay link"); // Label for replay link field
 
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
@@ -156,4 +158,5 @@ define("PUBLIC_NEW_USER", FALSE); // allow new user creation from login screen
 define("CONFIRM_SESSION_ASSIGNMENT", TRUE); // Ask participants to confirm their assignments
 
 define("WEBHOOK_TIME_TOLERANCE", "PT05M"); // How long to allow signed webhook requests to be considered valid.
+
 ?>
