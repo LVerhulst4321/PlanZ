@@ -164,12 +164,12 @@ EOD;
         $links = [];
         if (defined('PHOTO_EXTRACT_LINK_TYPE') && !empty(PHOTO_EXTRACT_LINK_TYPE) && !empty($row['approvedphotofilename'])) {
             // Construct link to photo image on current server.
-            $links[PHOTO_EXTRACT_LINK_TYPE] = 'http' 
-                                            . ($_SERVER['HTTPS'] ? 's' : '') 
-                                            . '://' 
-                                            . $_SERVER['SERVER_NAME'] 
-                                            . PHOTO_PUBLIC_DIRECTORY 
-                                            . '/' 
+            $links[PHOTO_EXTRACT_LINK_TYPE] = 'http'
+                                            . ($_SERVER['HTTPS'] ? 's' : '')
+                                            . '://'
+                                            . $_SERVER['SERVER_NAME']
+                                            . PHOTO_PUBLIC_DIRECTORY
+                                            . '/'
                                             . $row['approvedphotofilename'];
         }
         $peopleRow = array(
@@ -185,19 +185,36 @@ EOD;
 
     //note:header('Content-type: application/json');
 
+    function wrapInObject(array $data, string $key) {
+        if (defined('JSON_EXTRACT_OBJECT') && JSON_EXTRACT_OBJECT) {
+            return [$key => $data];
+        }
+        else {
+            return $data;
+        }
+    }
+
     // Encode program and people as JSON.
     if (defined('JSON_EXTRACT_ASSIGN_VARS') && JSON_EXTRACT_ASSIGN_VARS) {
-        $programJson = "var program = " . json_encode($program).";\n";
-        $peopleJson = "var people = " . json_encode($people).";\n";
+        $programJson = "var program = " . json_encode(wrapInObject($program, 'program')).";\n";
+        $peopleJson = "var people = " . json_encode(wrapInObject($people, 'people')).";\n";
     }
     else {
-        $programJson = json_encode($program);
-        $peopleJson = json_encode($people);
+        $programJson = json_encode(wrapInObject($program, 'program'));
+        $peopleJson = json_encode(wrapInObject($people, 'people'));
     }
 
     //The json key is for general json output
-    $results["json"]  = $programJson;
-    $results["json"] .= $peopleJson;
+    if (defined('JSON_EXTRACT_OBJECT') && JSON_EXTRACT_OBJECT) {
+        $results["json"] = json_encode([
+            'program' => $program,
+            'people' => $people,
+        ], defined('JSON_EXTRACT_FLAGS') ? JSON_EXTRACT_FLAGS : 0);
+    }
+    else {
+        $results["json"]  = $programJson;
+        $results["json"] .= $peopleJson;
+    }
 
     //The program, people and konopas keys are for KonOpas
     $results["program"]  = $programJson;
@@ -259,7 +276,7 @@ EOD;
         $lochoursstr = str_replace(array("<em>", "</em>"), array("*", "*"), $lochoursstr);
         $lochoursstr = str_replace(array("<u>", "</u>"), array("**", "**"), $lochoursstr);
         $lochoursstr = str_replace(array("<strong>", "</strong>"), array("***", "***"), $lochoursstr);
-        
+
         $locations["output"] .= $lochoursstr . "\n";
     }
 
