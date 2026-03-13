@@ -185,7 +185,18 @@ EOD;
 
     //note:header('Content-type: application/json');
 
-    function wrapInObject(array $data, string $key) {
+    /**
+     * Wrap array in an object.
+     *
+     * If JSON_EXTRACT_OBJECT is true, the returned array will place the data in
+     * an associative array. If false, the data array is returned unchanged.
+     *
+     * @param array $data Data array to wrap with an object.
+     * @param string $key The property name of the data should be assigned to.
+     *
+     * @return array The associative array with the data array referenced by the key.
+     */
+    function wrapInObject(array $data, string $key): array {
         if (defined('JSON_EXTRACT_OBJECT') && JSON_EXTRACT_OBJECT) {
             return [$key => $data];
         }
