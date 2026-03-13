@@ -195,13 +195,14 @@ EOD;
     }
 
     // Encode program and people as JSON.
+    $jsonFlags = defined('JSON_EXTRACT_FLAGS') ? JSON_EXTRACT_FLAGS : 0;
     if (defined('JSON_EXTRACT_ASSIGN_VARS') && JSON_EXTRACT_ASSIGN_VARS) {
-        $programJson = "var program = " . json_encode(wrapInObject($program, 'program')).";\n";
-        $peopleJson = "var people = " . json_encode(wrapInObject($people, 'people')).";\n";
+        $programJson = "var program = " . json_encode(wrapInObject($program, 'program'), $jsonFlags).";\n";
+        $peopleJson = "var people = " . json_encode(wrapInObject($people, 'people'), $jsonFlags).";\n";
     }
     else {
-        $programJson = json_encode(wrapInObject($program, 'program'));
-        $peopleJson = json_encode(wrapInObject($people, 'people'));
+        $programJson = json_encode(wrapInObject($program, 'program'), $jsonFlags);
+        $peopleJson = json_encode(wrapInObject($people, 'people'), $jsonFlags);
     }
 
     //The json key is for general json output
@@ -209,7 +210,7 @@ EOD;
         $results["json"] = json_encode([
             'program' => $program,
             'people' => $people,
-        ], defined('JSON_EXTRACT_FLAGS') ? JSON_EXTRACT_FLAGS : 0);
+        ], $jsonFlags);
     }
     else {
         $results["json"]  = $programJson;
