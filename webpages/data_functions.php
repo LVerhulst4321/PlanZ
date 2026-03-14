@@ -230,6 +230,10 @@ function get_session_from_post() {
         $session["signlink"] = getString('signlink');
     else
         $session["signlink"] = "";
+    if (REPLAY_LINK === TRUE)
+        $session["replaylink"] = getString('replaylink');
+    else
+        $session["replaylink"] = "";
 }
 
 // Function set_session_defaults()
@@ -270,6 +274,9 @@ function set_session_defaults() {
     $session["invguest"] = false; // leave checkbox blank initially
     $session["participantlabel"] = "Panelists";  //default label to "Panelists"
     $session["mlink"] = "";
+    $session["streamlink"] = "";
+    $session["signlink"] = "";
+    $session["replaylink"] = "";
 }
 
 // Function set_brainstorm_session_defaults
