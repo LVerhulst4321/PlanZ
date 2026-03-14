@@ -1,6 +1,8 @@
 <?php
 $report = [];
 $report['name'] = 'Participant List of Interests ';
+$report['multi'] = 'true';
+$report['output_filename'] = 'participantinterests2.csv';
 $report['description'] = 'List all program participants who are attending and their interests.';
 $report['categories'] = array(
     'Programming Reports' => 1,
@@ -10,7 +12,7 @@ $report['queries']['participants'] =<<<'EOD'
 SELECT
         CONCAT(CD.lastname,", ",CD.firstname) AS name,
         P.pubsname,
-        CD.badgeid 
+        CD.badgeid
     FROM
              CongoDump CD
         JOIN Participants P USING (badgeid)
@@ -40,12 +42,12 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
+                <table class="table table-sm table-bordered">
                     <tr>
-                        <th class="report">Last name, first name</th>
-                        <th class="report">Name for Publications</th>
-                        <th class="report">Person ID</th>
-                        <th class="report">Interests</th>
+                        <th>Last name, first name</th>
+                        <th>Name for Publications</th>
+                        <th>Person ID</th>
+                        <th>Interests</th>
                     </tr>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
                 </table>
@@ -59,10 +61,10 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="doc/query[@queryName='participants']/row">
         <xsl:variable name="badgeid" select="@badgeid"/>
         <tr>
-            <td class="report"><xsl:value-of select="@name"/></td>
-            <td class="report"><xsl:value-of select="@pubsname"/></td>
-            <td class="report"><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
-            <td class="report">
+            <td><xsl:value-of select="@name"/></td>
+            <td><xsl:value-of select="@pubsname"/></td>
+            <td><xsl:call-template name="showBadgeid"><xsl:with-param name="badgeid" select="@badgeid"/></xsl:call-template></td>
+            <td>
                 <xsl:for-each select="/doc/query[@queryName = 'interests']/row[@badgeid = $badgeid]">
                     <div><xsl:value-of select="@interestname"/></div>
                 </xsl:for-each>

@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Participants with 1 or 2 sessions';
+$report['multi'] = 'true';
+$report['output_filename'] = 'reg1or2sessions.csv';
 $report['description'] = 'Program or Event participants with one or two scheduled sessions in Program or Event divisions not counting signings.';
 $report['categories'] = array(
     'Registration Reports' => 1,
@@ -14,7 +16,7 @@ SELECT
         CD.lastname,
         CD.firstname,
         CD.badgename,
-        CD.email, 
+        CD.email,
         DATE_FORMAT(ADDTIME('$ConStartDatim$',SCH.starttime),'%a %l:%i %p') AS starttime
     FROM
              Schedule SCH
@@ -54,14 +56,14 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='participants']/row">
-                <table class="report">
+                <table class="table table-sm table-bordered">
                     <tr>
-                        <th class="report">Person ID</th>
-                        <th class="report">Name for Publications</th>
-                        <th class="report">Last name, first name</th>
-                        <th class="report">Badge name</th>
-                        <th class="report">email</th>
-                        <th class="report">Session start time</th>
+                        <th>Person ID</th>
+                        <th>Name for Publications</th>
+                        <th>Last name, first name</th>
+                        <th>Badge name</th>
+                        <th>email</th>
+                        <th>Session start time</th>
                     </tr>
                     <xsl:apply-templates select="doc/query[@queryName='participants']/row"/>
                 </table>
@@ -74,17 +76,17 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='participants']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@badgeid" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@badgeid" /></td>
+            <td>
                 <xsl:call-template name="showPubsname">
                     <xsl:with-param name="badgeid" select = "@badgeid" />
                     <xsl:with-param name="pubsname" select = "@pubsname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@lastname" />, <xsl:value-of select="@firstname" /></td>
-            <td class="report"><xsl:value-of select="@badgename" /></td>
-            <td class="report"><xsl:value-of select="@email" /></td>
-            <td class="report"><xsl:value-of select="@starttime" /></td>
+            <td><xsl:value-of select="@lastname" />, <xsl:value-of select="@firstname" /></td>
+            <td><xsl:value-of select="@badgename" /></td>
+            <td><xsl:value-of select="@email" /></td>
+            <td><xsl:value-of select="@starttime" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

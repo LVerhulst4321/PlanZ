@@ -1,6 +1,8 @@
 <?php
 $report = [];
-$report['name'] = 'Participant Count of Interests ';
+$report['name'] = 'Participant Count of Interests';
+$report['multi'] = 'true';
+$report['output_filename'] = 'participantinterestscount.csv';
 $report['description'] = 'A count of interests from interested programming participants.';
 $report['categories'] = array(
     'Programming Reports' => 1,
@@ -28,10 +30,10 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='interests']/row">
-                <table class="report">
+                <table class="table table-sm table-bordered">
                     <tr>
-                        <th class="report">Interest Name</th>
-                        <th class="report">
+                        <th>Interest Name</th>
+                        <th>
                             <div>Number of</div>
                             <div>Participants</div>
                         </th>
@@ -47,8 +49,8 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='interests']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@interestname" /></td>
-            <td class="report"><xsl:value-of select="@partCount" /></td>
+            <td><xsl:value-of select="@interestname" /></td>
+            <td><xsl:value-of select="@partCount" /></td>
         </tr>
     </xsl:template>
 </xsl:stylesheet>

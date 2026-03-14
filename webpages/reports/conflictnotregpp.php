@@ -2,6 +2,8 @@
 // Copyright (c) 2018 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Conflict Report - Not Registered -- Program Participants';
+$report['multi'] = 'true';
+$report['output_filename'] = 'conflictnotregpp.csv';
 $report['description'] = 'This is a report of program participants only sorted by number of sessions they are on that are actually running, with some registration information. It is useful for cons that comp program participants based on a minimum number of panels. In this case, this report helps make sure people get their comps. Also, participants who have not earned a comp may need some kind of consideration.';
 $report['categories'] = array(
     'Registration Reports' => 385,
@@ -17,13 +19,13 @@ $report['columns'] = array(
 $report['queries'] = [];
 $report['queries']['participants'] =<<<'EOD'
 SELECT
-        P.badgeid, 
-        P.pubsname, 
+        P.badgeid,
+        P.pubsname,
         IF(instr(P.pubsname, CD.lastname) > 0, CD.lastname, substring_index(P.pubsname, ' ', -1)) AS pubsnamesort,
-        IFNULL(CD.regtype, ' ') AS regtype, 
+        IFNULL(CD.regtype, ' ') AS regtype,
         SU.assigned
-    FROM 
-                  Participants P 
+    FROM
+                  Participants P
              JOIN CongoDump CD USING (badgeid)
              JOIN UserHasPermissionRole UHPR USING (badgeid)
         LEFT JOIN (

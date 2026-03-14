@@ -2,6 +2,8 @@
 // Copyright (c) 2018-2019 Peter Olszowka. All rights reserved. See copyright document for more details.
 $report = [];
 $report['name'] = 'Event Schedule by time then room';
+$report['multi'] = 'true';
+$report['output_filename'] = 'eventsched.csv';
 $report['description'] = 'Lists all Events (as determined by division on session) Scheduled in all Rooms (includes "Public", "Do Not Print" and "Staff Only").';
 $report['categories'] = array(
     'Events Reports' => 5,
@@ -33,7 +35,7 @@ SELECT
         R.function,
         T.trackname,
         S.sessionid,
-        S.title, 
+        S.title,
         PS.pubstatusname,
         GROUP_CONCAT(TA.tagname SEPARATOR ', ') AS taglist
     FROM
@@ -77,21 +79,21 @@ $report['xsl'] =<<<'EOD'
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="doc/query[@queryName='sessions']/row">
-                <table id="reportTable" class="report" >
+                <table id="reportTable" class="table table-sm table-bordered">
                     <thead>
                         <tr>
-                            <th class="report">Start Time</th>
+                            <th>Start Time</th>
                             <th></th>
-                            <th class="report">Duration</th>
+                            <th>Duration</th>
                             <th></th>
-                            <th class="report">Room Name</th>
-                            <th class="report">Room Function</th>
-                            <th class="report">Track Name</th>
-                            <th class="report">Tags</th>
-                            <th class="report">Session ID</th>
-                            <th class="report">Title</th>
-                            <th class="report">Publication Status</th>
-                            <th class="report">Participants</th>
+                            <th>Room Name</th>
+                            <th>Room Function</th>
+                            <th>Track Name</th>
+                            <th>Tags</th>
+                            <th>Session ID</th>
+                            <th>Title</th>
+                            <th>Publication Status</th>
+                            <th>Participants</th>
                         </tr>
                     </thead>
                     <xsl:apply-templates select="doc/query[@queryName='sessions']/row" />
@@ -105,33 +107,33 @@ $report['xsl'] =<<<'EOD'
 
     <xsl:template match="doc/query[@queryName='sessions']/row">
         <tr>
-            <td class="report"><xsl:value-of select="@starttime" /></td>
+            <td><xsl:value-of select="@starttime" /></td>
             <td><xsl:value-of select="@starttimeraw" /></td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showDuration">
                     <xsl:with-param name="durationhrs" select = "@durationhrs" />
                     <xsl:with-param name="durationmin" select = "@durationmin" />
                 </xsl:call-template>
             </td>
             <td><xsl:value-of select="@duration" /></td>
-            <td class="report">
+            <td>
                 <xsl:call-template name="showRoomName">
                     <xsl:with-param name="roomid" select = "@roomid" />
                     <xsl:with-param name="roomname" select = "@roomname" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@function" /></td>
-            <td class="report"><xsl:value-of select="@trackname" /></td>
-            <td class="report"><xsl:value-of select="@taglist" /></td>
-            <td class="report"><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
-            <td class="report">
+            <td><xsl:value-of select="@function" /></td>
+            <td><xsl:value-of select="@trackname" /></td>
+            <td><xsl:value-of select="@taglist" /></td>
+            <td><xsl:call-template name="showSessionid"><xsl:with-param name="sessionid" select = "@sessionid" /></xsl:call-template></td>
+            <td>
                 <xsl:call-template name="showSessionTitle">
                     <xsl:with-param name="sessionid" select = "@sessionid" />
                     <xsl:with-param name="title" select = "@title" />
                 </xsl:call-template>
             </td>
-            <td class="report"><xsl:value-of select="@pubstatusname" /></td>
-            <td class="report">
+            <td><xsl:value-of select="@pubstatusname" /></td>
+            <td>
                 <xsl:call-template name="participants">
                     <xsl:with-param name="sessionid" select="@sessionid" />
                 </xsl:call-template>
