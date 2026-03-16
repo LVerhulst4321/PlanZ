@@ -15,6 +15,21 @@
 require_once __DIR__ . '/../../db_functions.php';
 
 /**
+ * Write file for full schedule.
+ *
+ * @param string $filepath     The file to write to.
+ * @param array  $fileTags     Array of top level file tags such as room name.
+ * @param array  $participants Array of participants per session.
+ *
+ * @return void
+ */
+function writeObsFullScheduleFile(string $filepath, array  $fileTags, array $participants): void
+{
+    $json = json_encode(getObsData("1=1", $participants, $fileTags));
+    writeJsonFile($filepath, $json);
+}
+
+/**
  * Write file for room.
  *
  * @param int    $roomId       The room identifier.
