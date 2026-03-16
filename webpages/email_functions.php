@@ -300,11 +300,7 @@ EOD;
 // ready to send email
 function get_swift_mailer() {
     //Create the Transport
-    if (empty(SMTP_PROTOCOL)) {
-        $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT));
-    } else {
-        $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT, SMTP_PROTOCOL));
-    }
+    $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, SMTP_PORT, SMTP_PROTOCOL ?? ''));
     if (!empty(SMTP_USER)) {
         $transport->setUsername(SMTP_USER);
     }

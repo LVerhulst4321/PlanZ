@@ -236,7 +236,7 @@ function validate_input_params($secret_key, $token, $remote_ip, $title, $badgeid
         exit;
     }
 
-    $validation = validateTurnstile($token, $secret_key, $remoteip);
+    $validation = validateTurnstile($token, $secret_key, $remote_ip);
     if (!$validation['success']) {
         participant_header($title, true, 'Login', true);
         echo "<p class='alert alert-danger mt-2'>Error with Cloudflare Turnstile.</p>";
@@ -325,7 +325,7 @@ $subjectLine = "$conName Password Reset";
 $fromAddress = PASSWORD_RESET_FROM_EMAIL;
 $responseParams = array("subject_line" => $subjectLine, "from_address" => $fromAddress);
 
-$badgeidSQL = mysqli_real_escape_string($linki, $badgeid);
+$badgeidSQL = mysqli_real_escape_string($linki, $badgeid ?? '');
 $emailSQL = trim(mb_strtolower(mysqli_real_escape_string($linki, $email), 'UTF-8'));
 $query = <<<EOD
 SELECT P.pubsname, CD.badgename, CD.firstname, CD.lastname, P.badgeid
