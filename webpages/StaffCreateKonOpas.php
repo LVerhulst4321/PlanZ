@@ -37,7 +37,7 @@
     $results = retrieveKonOpasData($showpubstatus, $showbio);
     $infofile = retrieveInfoData();
 
-    if ($results["message_error"] ?? false) {
+    if ($results["message_error"]) {
         error_log("StaffCreateKonOpas.php: " . $results["message_error"]);
         RenderError($results["message_error"]);
         exit();
@@ -100,10 +100,8 @@
     //Create data file for online guide ConClár
     //Should make this a flag or something to control whether to make the file.
     if ($results["json"]) {
-        $filename = defined('JSON_EXTRACT_FILENAME') ? JSON_EXTRACT_FILENAME : "konOpasData";
-        $extension = defined('JSON_EXTRACT_EXTENSION') ? JSON_EXTRACT_EXTENSION : ".json";
-        $fileNameProd = JSON_EXTRACT_DIRECTORY . $filename . $extension;
-        $fileNameTest = JSON_EXTRACT_DIRECTORY . $filename . "Test" . $extension;
+        $fileNameProd = JSON_EXTRACT_DIRECTORY . "konOpasData.json";
+        $fileNameTest = JSON_EXTRACT_DIRECTORY . "konOpasDataTest.json";
         $resultsFileProd = fopen($fileNameProd,"wb");
         $resultsFileTest = fopen($fileNameTest,"wb");
         if ($resultsFileProd === FALSE) {
@@ -134,8 +132,7 @@
         }
         fclose($resultsFileProd);
         fclose($resultsFileTest);
-        echo("<p>The ConClár prod data file $fileNameProd was created.\n");
-        echo("<p>The ConClár test data file $fileNameTest was created.\n");
+        echo('<p>The ConClár data file was created.' . "\n");
 
     }
     if (empty($results)) {
@@ -146,7 +143,7 @@
     }
 
     //Create info file for online guide ConClár
-    if ($infofile["message_error"] ?? false) {
+    if ($infofile["message_error"]) {
         error_log("StaffCreateKonOpas.php: " . $infofile["message_error"]);
         RenderError($infofile["message_error"]);
         exit();

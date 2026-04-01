@@ -113,8 +113,6 @@ define("MEETING_LINK", TRUE); // Add support for Meeting link in sessions
 define("STREAMING_LINK", TRUE); // Add support for streaming link in sessions
 define("STREAMING_LABEL", "Streaming link"); // Specify label for streaming link - allows conventions to specify specific streaming service if required
 define("SIGNUP_LINK", TRUE); // Add support for signup link in sessions
-define("REPLAY_LINK", TRUE); // Add support for replay link in sessions (supports {id} and {loc} placeholders)
-define("REPLAY_LABEL", "Replay link"); // Label for replay link field
 
 // Items for Photo Upload/Approval
 define("PARTICIPANT_PHOTOS", TRUE); // enable the participant photo feature
@@ -125,11 +123,7 @@ define("PHOTO_DIMENSIONS", "200,200,800,800,1048576"); // comma separated list: 
 define("PHOTO_DEFAULT_IMAGE", "default.png"); // placeholder image for participants without photo
 
 define("JSON_EXTRACT_DIRECTORY", "/var/data/guide/");  // Path to directory where Konopas/ConClár files to be written.
-define("JSON_EXTRACT_FILENAME", "konOpasData");  // File name of combined Konopas/ConClár file (note: program.js and participants.js are also extacted).
-define("JSON_EXTRACT_EXTENSION", ".json");  // File extension of Konopas/ConClár file.
 define("JSON_EXTRACT_ASSIGN_VARS", FALSE); // If TRUE include variable names in JSON output files (required for KonOpas).
-define("JSON_EXTRACT_OBJECT", FALSE); // If TRUE, wrap the program and participant data in a JSON. Strictly, to be valid JSON, the top level should be an object.
-define('JSON_EXTRACT_FLAGS', 0); // See `json_encode` docuentation for available flags. Use `JSON_PRETTY_PRINT` to format human readable JSON output (useful for debugging, but bigger output files).
 define("OBS_EXTRACT_DIRECTORY", "obs"); // Path to directory for OBS files, relative to web root.
 define('OBS_EXTRACT_TAGS', ''); // Comma separated list of Tags to generate OBS extracts for.
         // Prefix Tag with ~ in list to extract all items without tag.
@@ -162,5 +156,4 @@ define("PUBLIC_NEW_USER", FALSE); // allow new user creation from login screen
 define("CONFIRM_SESSION_ASSIGNMENT", TRUE); // Ask participants to confirm their assignments
 
 define("WEBHOOK_TIME_TOLERANCE", "PT05M"); // How long to allow signed webhook requests to be considered valid.
-
 ?>

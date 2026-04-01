@@ -320,18 +320,6 @@ function RenderEditCreateSession ($action, $session, $message1, $message2) {
 <?php
     }
 ?>
-<?php
-    if (REPLAY_LINK === TRUE) {
-?>
-        <div class="row mt-3">
-            <div class="form-group col-md-6">
-                <label for="replaylink"><?= REPLAY_LABEL ?>:</label>
-                <input type="text" class="form-control" size="80" maxlength="510" name="replaylink" id="replaylink" value="<?php echo htmlspecialchars($session["replaylink"], ENT_COMPAT);?>" />
-            </div>
-        </div>
-<?php
-    }
-?>
         <div class="text-right mt-3">
             <button class="btn btn-primary" type=submit value="save" onclick="mysubmit()">Save</button>
         </div>
