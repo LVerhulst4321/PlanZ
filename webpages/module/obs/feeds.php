@@ -95,16 +95,6 @@ function showObsFeedOptions(): void
         . $_SERVER['SERVER_NAME'];
     $result = mysqli_query_with_error_handling($query);
     echo "<ul>";
-
-    $filename = makeFileName('full', 'schedule');
-    $filepath = OBS_EXTRACT_DIRECTORY . '/' . $filename;
-    writeObsFullScheduleFile(
-        $rootDir . '/' . $filepath,
-        ['full' => 'schedule'],
-        $participants
-    );
-    echo "<li><a href=\"/$filepath\">$baseUrl/$filepath</a></li>";
-
     while ($row = mysqli_fetch_object($result)) {
         $filename = makeFileName('room', $row->roomname);
         $filepath = OBS_EXTRACT_DIRECTORY . '/' . $filename;
