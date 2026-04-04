@@ -870,7 +870,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER POS_insert_trig AFTER INSERT ON ParticipantOnSession FOR EACH ROW
+/*!50003 CREATE TRIGGER POS_insert_trig AFTER INSERT ON ParticipantOnSession FOR EACH ROW
     IF (
         SELECT count(*) FROM ParticipantOnSession
             WHERE sessionid = NEW.sessionid AND moderator = 1)
@@ -3741,7 +3741,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`db`@`%` SQL SECURITY DEFINER */
+/*!50013 SQL SECURITY DEFINER */
 /*!50001 VIEW `ParticipantPronouns` AS select `pd`.`badgeid` AS `badgeid`,case when `pd`.`pronounid` = 99 then `pd`.`pronounother` else `pr`.`pronounname` end AS `pronouns` from (`ParticipantDetails` `pd` join `Pronouns` `pr` on(`pd`.`pronounid` = `pr`.`pronounid`)) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3759,7 +3759,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`db`@`%` SQL SECURITY DEFINER */
+/*!50013 SQL SECURITY DEFINER */
 /*!50001 VIEW `PreviousCons` AS select `con_info`.`id` AS `previousconid`,`con_info`.`name` AS `previousconname`,`con_info`.`display_order` AS `display_order` from `con_info` where `con_info`.`active_to_time` < current_timestamp() */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3777,7 +3777,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`db`@`%` SQL SECURITY DEFINER */
+/*!50013 SQL SECURITY DEFINER */
 /*!50001 VIEW `current_con` AS select `c`.`id` AS `id`,`c`.`name` AS `name`,`p`.`name` AS `perennial_name`,`c`.`con_start_date` AS `con_start_date`,`c`.`con_end_date` AS `con_end_date`,`p`.`website_url` AS `website_url` from (`con_info` `c` join `perennial_con_info` `p`) where `c`.`perennial_con_id` = `p`.`id` and `c`.`active_to_time` > current_timestamp() and `c`.`active_from_time` <= current_timestamp() */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3795,7 +3795,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`db`@`%` SQL SECURITY DEFINER */
+/*!50013 SQL SECURITY DEFINER */
 /*!50001 VIEW `session_change_history` AS (select `SEH`.`sessionid` AS `sessionid`,`SEH`.`badgeid` AS `change_by_badgeid`,concat(`CD`.`firstname`,' ',`CD`.`lastname`) AS `change_by_name`,concat(`SEC`.`description`,case when `SEH`.`editdescription` is not null then concat(' — ',`SEH`.`editdescription`) else '' end,' — status: ',`SS`.`statusname`) AS `description`,`SEH`.`timestamp` AS `change_ts` from (((`SessionEditHistory` `SEH` join `SessionEditCodes` `SEC` on(`SEH`.`sessioneditcode` = `SEC`.`sessioneditcode`)) join `SessionStatuses` `SS` on(`SEH`.`statusid` = `SS`.`statusid`)) join `CongoDump` `CD` on(`CD`.`badgeid` = `SEH`.`badgeid`))) union (select `POSH`.`sessionid` AS `sessionid`,`POSH`.`change_by_badgeid` AS `change_by_badgeid`,`PartCR`.`pubsname` AS `change_by_name`,case when `POSH`.`change_type` = 'insert_assignment' then concat('Add ',`PartOS`.`pubsname`,' to session') when `POSH`.`change_type` = 'remove_assignment' then concat('Remove ',`PartOS`.`pubsname`,' from session') when `POSH`.`change_type` = 'assign_moderator' then concat('Assign ',`PartOS`.`pubsname`,' as moderator') when `POSH`.`change_type` = 'remove_moderator' then concat('Unassign ',`PartOS`.`pubsname`,' as moderator') else 'Unknown action.' end AS `description`,`POSH`.`change_ts` AS `change_ts` from ((`participant_on_session_history` `POSH` join `Participants` `PartOS` on(`PartOS`.`badgeid` = `POSH`.`badgeid`)) join `Participants` `PartCR` on(`PartCR`.`badgeid` = `POSH`.`change_by_badgeid`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
