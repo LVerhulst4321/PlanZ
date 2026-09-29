@@ -69,6 +69,9 @@ function build_report_menus($path, $alphabeticSort = false) {
     }
     fwrite($staffReportsICIFilHand, "<?php\n");
     fwrite($staffReportsICIFilHand, "\$reportCategories = array();\n");
+    // Bootstrap Icons are only loaded on Bootstrap 4 pages, so the Bootstrap 2 menu uses a plain star character
+    fwrite($reportMenuFilHand, "<li><a href='staffReportsInCategory.php?favourites=1'>&#9733; Favourites</a></li>\n");
+    fwrite($reportMenuBS4FilHand, "<a class='dropdown-item' href='staffReportsInCategory.php?favourites=1'><i class='bi bi-star-fill mr-1'></i>Favourites</a>\n");
     foreach ($reportCategories as $reportCategory => $reportCategoryArray) {
         $encodedReportCategory = htmlentities(urlencode($reportCategory));
         fwrite($reportMenuFilHand, "<li><a href='staffReportsInCategory.php?reportcategory=$encodedReportCategory'>$reportCategory</a></li>\n");

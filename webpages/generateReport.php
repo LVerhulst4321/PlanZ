@@ -69,6 +69,8 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
         $download = $is_multi_report ? getString("download") == 'csv' : false;
         $html = render_report_to_html($report, $resultXML);
         if (!$download) {
+            require_once('report_favourites_functions.php');
+            $favourites = get_report_favourites($_SESSION['badgeid']);
             staff_header("Reports", true, true, $reportColumns, $reportAdditionalOptions);
             $reportDescription = htmlspecialchars(str_replace('$CON_NAME', CON_NAME, $report['description']), ENT_NOQUOTES);
 ?>
@@ -76,7 +78,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
         <div class="card-header">
             <div class="row">
                 <div class="col-md-10">
-                    <h5 class="mb-0"><?php echo $report['name'] ?></h5>
+                    <h5 class="mb-0 d-flex align-items-center"><?php echo render_report_favourite_button($reportName, isset($favourites[$reportName])); ?><?php echo $report['name'] ?></h5>
                     <div>
                         <small class="text-muted">Generated: <?php echo date("D M j G:i:s T Y"); ?></small>
                     </div>
@@ -95,6 +97,7 @@ if (isset($report['csv_output']) && $report['csv_output'] == true) {
         </div>
     </div>
 <?php
+            render_report_favourite_scripts();
             staff_footer();
         } else {
             require_once('csv_report_functions.php');
