@@ -13,7 +13,8 @@ $report['queries']['participants'] =<<<'EOD'
 SELECT
         P.badgeid,
         P.pubsname,
-        COUNT(sessionid) AS interested,
+        COUNT(PSI.sessionid) AS interested,
+        IFNULL(ASG.assigned, 0) AS assigned,
         CD.badgename,
         concat(CD.firstname,' ',CD.lastname) AS name,
         PA.maxprog
@@ -22,12 +23,23 @@ SELECT
              JOIN CongoDump CD USING (badgeid)
         LEFT JOIN ParticipantSessionInterest PSI USING (badgeid)
         LEFT OUTER JOIN ParticipantAvailability PA USING (badgeid)
+        LEFT JOIN (
+            SELECT
+                    POS.badgeid, COUNT(POS.sessionid) AS assigned
+                FROM
+                         ParticipantOnSession POS
+                    JOIN Sessions S USING (sessionid)
+                WHERE
+                    S.statusid IN (1, 2, 3, 6, 7) ## Brainstorm, Vetted, Scheduled, Edit Me, Assigned
+                GROUP BY
+                    POS.badgeid
+            ) AS ASG USING (badgeid)
     WHERE
         P.interested = 1
         AND ((PSI.rank is not NULL
         AND PSI.rank != 0 AND PSI.rank != 6) OR PSI.willmoderate = 1)
     GROUP BY
-        P.badgeid, P.pubsname, CD.badgename, name
+        P.badgeid, P.pubsname, CD.badgename, name, ASG.assigned
     ORDER BY
         IF(INSTR(P.pubsname, CD.lastname) > 0, CD.lastname, SUBSTRING_INDEX(P.pubsname, ' ', -1)),
         CD.firstname;
@@ -46,6 +58,7 @@ $report['xsl'] =<<<'EOD'
                             <th>Person ID</th>
                             <th>Name for Publications</th>
                             <th>Interested Sessions Count</th>
+                            <th>Assigned Count</th>
                             <th>Max Sessions</th>
                         </tr>
                     </thead>
@@ -72,6 +85,7 @@ $report['xsl'] =<<<'EOD'
                 </xsl:call-template>
             </td>
             <td class="text-center"><xsl:value-of select="@interested" /></td>
+            <td class="text-center"><xsl:value-of select="@assigned" /></td>
             <td class="text-center"><xsl:value-of select="@maxprog" /></td>
         </tr>
     </xsl:template>
