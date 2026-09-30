@@ -29,3 +29,7 @@ upload_photos/
 #Exclude devtools folders.
 .ddev
 .vscode
+
+# Test tooling (root-level composer.json; kept separate from webpages/vendor/).
+/vendor/
+/.phpunit.cache/

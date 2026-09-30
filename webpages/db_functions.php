@@ -278,13 +278,22 @@ if (USE_REG_SYSTEM === TRUE) {
 
 function prepare_db_and_more() {
     global $con_start_php_timestamp, $linki, $fatalError;
+    // As of PHP 8.1, mysqli defaults to throwing mysqli_sql_exception on error instead
+    // of returning false. This app's error handling throughout (mysqli_query_with_error_handling(),
+    // the "if (!mysqli_query(...))" checks in Submit*.php, isLoggedIn(), etc.) was written
+    // for the pre-8.1 "returns false" behavior and depends on it to show a friendly error
+    // instead of an uncaught fatal error. Restore that behavior explicitly.
+    mysqli_report(MYSQLI_REPORT_OFF);
     $linki = mysqli_connect(DBHOSTNAME, DBUSERID, DBPASSWORD, DBDB);
     if (!$linki) {
         $fatalError = true;
         return false;
     }
     date_default_timezone_set(PHP_DEFAULT_TIMEZONE);
-    if (mysqli_set_charset($linki, "utf8") === false) {
+    // Matches the utf8mb4 conversion applied by Install/Upgrade_dbase/100ZED_utf8mb4_migration.sql.
+    // Declaring the connection as the old 3-byte "utf8" here would still reject 4-byte
+    // characters (e.g. emoji) even though the columns can now store them.
+    if (mysqli_set_charset($linki, "utf8mb4") === false) {
         $fatalError = true;
         return false;
     }

@@ -1,0 +1,77 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.3
+        env:
+          MARIADB_DATABASE: db
+          MARIADB_USER: db
+          MARIADB_PASSWORD: db
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mysqli, dom, xsl, mbstring
+          coverage: none
+
+      - name: Install test tooling (PHPUnit)
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install app runtime dependencies
+        working-directory: webpages
+        run: composer install --no-interaction --prefer-dist --no-dev
+
+      - name: Load database schema
+        run: mysql -h 127.0.0.1 -P 3306 -u db -pdb db < Install/EmptyDbase.dump
+
+      - name: Configure app for the CI database
+        run: |
+          cp webpages/config/db_name_sample.php webpages/config/db_name.php
+          cp webpages/config/db_env_sample.php webpages/config/db_env.php
+          # db_name_sample.php normally pulls DB credentials from a system-wide
+          # /etc/planz/db_env_sample.php; point it at our generated db_env.php instead.
+          sed -i "s#'/etc/planz/db_env_sample.php'#(__DIR__ . '/db_env.php')#g" webpages/config/db_name.php
+          sed -i \
+            -e 's/define("DBHOSTNAME", "");/define("DBHOSTNAME", "127.0.0.1");/' \
+            -e 's/define("DBUSERID", getenv("MYSQL_USER"));/define("DBUSERID", "db");/' \
+            -e 's/define("DBPASSWORD", getenv("MYSQL_PASSWORD"));/define("DBPASSWORD", "db");/' \
+            -e 's/define("DBDB", "");/define("DBDB", "db");/' \
+            webpages/config/db_env.php
+
+      - name: Start the app (PHP built-in server)
+        working-directory: webpages
+        run: |
+          php -S 127.0.0.1:8080 >/tmp/php-server.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -sf http://127.0.0.1:8080/login.php >/dev/null && exit 0
+            sleep 1
+          done
+          echo "App server did not become ready in time" >&2
+          cat /tmp/php-server.log >&2
+          exit 1
+
+      - name: Run tests
+        env:
+          PLANZ_TEST_BASE_URL: http://127.0.0.1:8080
+        run: vendor/bin/phpunit

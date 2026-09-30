@@ -1,0 +1,10 @@
+{
+    "name": "planz/tests",
+    "description": "Test tooling for PlanZ. Kept separate from webpages/composer.json so PHPUnit and test code never ship inside the web docroot (webpages/ is served directly by nginx).",
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
