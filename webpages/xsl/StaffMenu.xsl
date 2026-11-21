@@ -202,7 +202,7 @@
                     </xsl:if>
                     <xsl:if test="$ExportSchedule">
                       <li>
-                        <a href="{$basepath}StaffCreateKonOpas.php">Update KonOpas and ConClar</a>
+                        <a href="{$basepath}StaffCreateKonOpas.php">Publish KonOpas and ConClár</a>
                       </li>
                     </xsl:if>
                     <xsl:if test="$AdminModules">
