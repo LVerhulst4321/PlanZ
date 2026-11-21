@@ -3,7 +3,7 @@
 
 require_once('db_functions.php');
 
-function retrieveKonOpasData($showpubstatus = 2, $showbio = 1) {
+function retrieveKonOpasData($showpubstatus = 2, $showbio = 1, $publishedBy = null) {
     $results = array();
     // $showpubstatus is interpolated into several IN (...) clauses below.
     if (!isValidPubStatusList($showpubstatus)) {
@@ -41,9 +41,15 @@ EOD;
     $result = mysqli_query_with_error_handling($query);
 
     $sessionHasParticipant = array();
+    $sessionHasParticipantV2 = array();
     $participantOnSession = array();
     while($row = mysqli_fetch_assoc($result)) {
         $sessionHasParticipant[$row["sessionid"]][] = array("id" => $row["badgeid"], "name" => $row["pubsname"].($row["moderator"] == "1" ? " (moderator)" : ""));
+        $participantV2 = array("id" => $row["badgeid"]);
+        if ($row["moderator"] == "1") {
+            $participantV2["role"] = "moderator";
+        }
+        $sessionHasParticipantV2[$row["sessionid"]][] = $participantV2;
         $participantOnSession[$row["badgeid"]][] = $row["sessionid"];
     }
 
@@ -63,6 +69,7 @@ SELECT
     S.progguidhtml AS `deschtml`,
     DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d') as date,
     DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time,
+    DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d %H:%i:%s') as datetime,
     GROUP_CONCAT(TA.tagname SEPARATOR ',') AS taglist,
     S.meetinglink
 FROM
@@ -85,15 +92,20 @@ EOD;
 
     $results["program_num_rows"] = mysqli_num_rows($result);        //used for reporting
     $program = array();
+    $programV2 = array();
+    $timezone = new DateTimeZone(PHP_DEFAULT_TIMEZONE);
     while($row = mysqli_fetch_assoc($result)) {
         $tagsArray = array("Track:".$row["trackname"], "Division:".$row["divisionname"]);
+        $tagsArrayV2 = array(conclarV2Tag("Track", $row["trackname"]), conclarV2Tag("Division", $row["divisionname"]));
         if (!empty($row['typename'])) {
             $tagsArray[] = 'Type:'.$row['typename'];
+            $tagsArrayV2[] = conclarV2Tag("Type", $row['typename']);
         }
         if (!empty($row["taglist"])) {
             $temparrayoftags = explode(',', $row["taglist"]);
             foreach ($temparrayoftags as $singletag) {
                 array_push($tagsArray, "Tag:".$singletag);
+                $tagsArrayV2[] = conclarV2Tag("Tag", $singletag);
             }
         }
         $locfloor = '';
@@ -120,6 +132,19 @@ EOD;
                 $programRow["links"] = ["meeting" => $row["meetinglink"]];
             }
             $program[] = $programRow;
+
+            $datetime = DateTime::createFromFormat("Y-m-d H:i:s", $row["datetime"], $timezone);
+            $programV2[] = array(
+                "id"       => $row["id"],
+                "title"    => $row["title"],
+                "tags"     => $tagsArrayV2,
+                "datetime" => $datetime->format("c"),
+                "mins"     => $row["mins"],
+                "loc"      => array($row["loc"]),
+                "people"   => $sessionHasParticipantV2[$row["id"]] ?? [],
+                "desc"     => $desc,
+                "links"    => $programRow["links"]
+            );
     }
 
 
@@ -188,6 +213,32 @@ EOD;
         $people[] = $peopleRow;
     }
 
+    $pubStatusNames = retrievePubStatusNames($showpubstatus);
+    if ($pubStatusNames === false) {
+        $results["message_error"] = "Unable to look up publication statuses.";
+        return $results;
+    }
+    $results["pub_status_names"] = $pubStatusNames;
+
+    // This file is publicly downloadable, so identify the publisher by badge ID rather than name.
+    $conclarV2Info = array("publishedAt" => date("c"));
+    if ($publishedBy !== null) {
+        $conclarV2Info["publishedBy"] = $publishedBy;
+    }
+    $conclarV2Info["includePubStatuses"] = array_values($pubStatusNames);
+    $conclarV2Info["includeBios"] = $showbio != 0;
+    $conclarV2Json = json_encode(array(
+        "schemaVersion" => 2,
+        "info" => $conclarV2Info,
+        "schedule" => $programV2,
+        "people" => $people
+    ));
+    if ($conclarV2Json === false) {
+        $results["message_error"] = "Unable to encode ConClár data as JSON: " . json_last_error_msg();
+        return $results;
+    }
+    $results["conclar_v2"] = $conclarV2Json;
+
     //note:header('Content-type: application/json');
 
     // Encode program and people as JSON.
@@ -230,8 +281,37 @@ EOD;
 }
 
 
+function conclarV2Tag($category, $label) {
+    return array("value" => $category . ":" . $label, "category" => $category, "label" => $label);
+}
+
+
 function isValidPubStatusList($showpubstatus) {
     return is_scalar($showpubstatus) && preg_match('/^\d+(,\d+)*$/', (string) $showpubstatus) === 1;
+}
+
+
+// Returns pubstatusid => pubstatusname in display order, or false on a database error.
+// Unknown IDs are omitted.
+function retrievePubStatusNames($showpubstatus) {
+    if (!isValidPubStatusList($showpubstatus)) {
+        return false;
+    }
+    $query = <<<EOD
+SELECT pubstatusid, pubstatusname
+FROM PubStatuses
+WHERE pubstatusid IN ($showpubstatus)
+ORDER BY display_order;
+EOD;
+    $result = mysqli_query_with_error_handling($query);
+    if ($result === false) {
+        return false;
+    }
+    $pubStatusNames = array();
+    while($row = mysqli_fetch_assoc($result)) {
+        $pubStatusNames[$row["pubstatusid"]] = $row["pubstatusname"];
+    }
+    return $pubStatusNames;
 }
 
 

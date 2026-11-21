@@ -49,7 +49,7 @@
 
 <?php
 
-    $results = retrieveKonOpasData($showpubstatus, $showbio);
+    $results = retrieveKonOpasData($showpubstatus, $showbio, $badgeid);
     if (empty($results)) {
         $message_error = "StaffCreateKonOpas.php: retrieveKonOpasData() did not return expected result or error indicator.";
         error_log($message_error);
@@ -81,6 +81,7 @@
         "konopas.appcache" => $results["konopas"],
         "konOpasData.json" => $results["json"],
         "konOpasDataTest.json" => $results["json"],
+        "conclar-v2.json" => $results["conclar_v2"],
         "info.md" => $infofile["output"],
         "info_test.md" => $infofile["output"],
     );
