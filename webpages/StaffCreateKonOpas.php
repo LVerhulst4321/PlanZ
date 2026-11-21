@@ -7,18 +7,16 @@
     require_once('StaffCommonCode.php');
     require_once('konOpas_func.php');
 
-    if (!empty($_GET['showpubstatus'])) {
-        $showpubstatus = $_GET["showpubstatus"];
-    }
-    else {
-        $showpubstatus = 2;
-    }
+    $showpubstatus = isset($_GET["showpubstatus"]) && $_GET["showpubstatus"] !== "" ? $_GET["showpubstatus"] : "2";
+    $showbio = isset($_GET["showbio"]) && $_GET["showbio"] !== "" ? $_GET["showbio"] : "1";
 
-    if (!empty($_GET['showbio'])) {
-        $showbio = $_GET["showbio"];
+    if (!isValidPubStatusList($showpubstatus)) {
+        RenderError("Invalid showpubstatus: expected a comma-separated list of publication status IDs.");
+        exit();
     }
-    else {
-        $showbio = 1;
+    if ($showbio !== "0" && $showbio !== "1") {
+        RenderError("Invalid showbio: expected 0 or 1.");
+        exit();
     }
 
     staff_header($title, true);

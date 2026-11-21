@@ -5,6 +5,11 @@ require_once('db_functions.php');
 
 function retrieveKonOpasData($showpubstatus = 2, $showbio = 1) {
     $results = array();
+    // $showpubstatus is interpolated into several IN (...) clauses below.
+    if (!isValidPubStatusList($showpubstatus)) {
+        $results["message_error"] = "Invalid publication status list.";
+        return $results;
+    }
     if (prepare_db_and_more() === false) {
         $results["message_error"] = "Unable to connect to database.<br />No further execution possible.";
         return $results;
@@ -222,6 +227,11 @@ EOD;
 
     return $results;
 
+}
+
+
+function isValidPubStatusList($showpubstatus) {
+    return is_scalar($showpubstatus) && preg_match('/^\d+(,\d+)*$/', (string) $showpubstatus) === 1;
 }
 
 
