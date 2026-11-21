@@ -7,6 +7,8 @@
     require_once('StaffCommonCode.php');
     require_once('konOpas_func.php');
 
+    $extractDirectory = rtrim(JSON_EXTRACT_DIRECTORY, "/") . "/";
+
     $showpubstatus = isset($_GET["showpubstatus"]) && $_GET["showpubstatus"] !== "" ? $_GET["showpubstatus"] : "2";
     $showbio = isset($_GET["showbio"]) && $_GET["showbio"] !== "" ? $_GET["showbio"] : "1";
 
@@ -17,6 +19,22 @@
     if ($showbio !== "0" && $showbio !== "1") {
         RenderError("Invalid showbio: expected 0 or 1.");
         exit();
+    }
+
+    // Written via a temporary file and rename so the guide never fetches a half-written file.
+    // The temporary file must be in the same directory for rename() to be atomic.
+    function writeFileAtomically($path, $contents) {
+        $tempPath = $path . '.tmp.' . bin2hex(random_bytes(4));
+        if (file_put_contents($tempPath, $contents) === false) {
+            // A failed write can still leave a partial file in the public directory.
+            @unlink($tempPath);
+            return false;
+        }
+        if (!rename($tempPath, $path)) {
+            unlink($tempPath);
+            return false;
+        }
+        return true;
     }
 
     staff_header($title, true);
@@ -31,162 +49,53 @@
 
 <?php
 
-
     $results = retrieveKonOpasData($showpubstatus, $showbio);
-    $infofile = retrieveInfoData();
-
-    if ($results["message_error"]) {
-        error_log("StaffCreateKonOpas.php: " . $results["message_error"]);
-        RenderError($results["message_error"]);
-        exit();
-    }
-    if ($results["konopas"]) {
-        $resultsFile = fopen(JSON_EXTRACT_DIRECTORY . "program.js","w");
-        if ($resultsFile === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Cannot open ../program.js for writing.";
-            error_log($message_error);
-            RenderError($message_error);
-            exit(1);
-        }
-        if (fwrite($resultsFile, $results["program"]) === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Error writing to ../program.js.";
-            error_log($message_error);
-            RenderError($message_error);
-            fclose($resultsFile);
-            exit(1);
-        }
-        fclose($resultsFile);
-        echo('<p>The program data file was created.' . "\n");
-        echo('<p>Number of program items: ' . $results["program_num_rows"] . "\n");
-
-        $resultsFile = fopen(JSON_EXTRACT_DIRECTORY . "people.js","w");
-        if ($resultsFile === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Cannot open ../people.js for writing.";
-            error_log($message_error);
-            RenderError($message_error);
-            exit(1);
-        }
-        if (fwrite($resultsFile, $results["people"]) === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Error writing to ../people.js.";
-            error_log($message_error);
-            RenderError($message_error);
-            fclose($resultsFile);
-            exit(1);
-        }
-        fclose($resultsFile);
-        echo('<p>The people data file was created.' . "\n");
-        echo('<p>Number of participants: ' . $results["people_num_rows"] . "\n");
-
-        $resultsFile = fopen(JSON_EXTRACT_DIRECTORY . "konopas.appcache","w");
-        if ($resultsFile === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Cannot open ../konopas.appcache for writing.";
-            error_log($message_error);
-            RenderError($message_error);
-            exit(1);
-        }
-        if (fwrite($resultsFile, $results["konopas"]) === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Error writing to ../konopas.appcache.";
-            error_log($message_error);
-            RenderError($message_error);
-            fclose($resultsFile);
-            exit(1);
-        }
-        fclose($resultsFile);
-        echo('<p>The konopas.appcache data file was created.' . "\n");
-    }
-
-    //Create data file for online guide ConClár
-    //Should make this a flag or something to control whether to make the file.
-    if ($results["json"]) {
-        $fileNameProd = JSON_EXTRACT_DIRECTORY . "konOpasData.json";
-        $fileNameTest = JSON_EXTRACT_DIRECTORY . "konOpasDataTest.json";
-        $resultsFileProd = fopen($fileNameProd,"wb");
-        $resultsFileTest = fopen($fileNameTest,"wb");
-        if ($resultsFileProd === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Cannot open " . $fileNameProd . " for writing.";
-            error_log($message_error);
-            RenderError($message_error);
-            exit(1);
-        }
-        if ($resultsFileTest === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Cannot open " . $fileNameTest . " for writing.";
-            error_log($message_error);
-            RenderError($message_error);
-            exit(1);
-        }
-        if (fwrite($resultsFileProd, $results["json"]) === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Error writing to " . $fileNameProd . ".";
-            error_log($message_error);
-            RenderError($message_error);
-            fclose($resultsFileProd);
-            exit(1);
-        }
-        if (fwrite($resultsFileTest, $results["json"]) === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Error writing to " . $fileNameTest . ".";
-            error_log($message_error);
-            RenderError($message_error);
-            fclose($resultsFileTest);
-            exit(1);
-        }
-        fclose($resultsFileProd);
-        fclose($resultsFileTest);
-        echo('<p>The ConClár data file was created.' . "\n");
-
-    }
     if (empty($results)) {
         $message_error = "StaffCreateKonOpas.php: retrieveKonOpasData() did not return expected result or error indicator.";
         error_log($message_error);
         RenderError($message_error);
         exit();
     }
-
-    //Create info file for online guide ConClár
-    if ($infofile["message_error"]) {
-        error_log("StaffCreateKonOpas.php: " . $infofile["message_error"]);
-        RenderError($infofile["message_error"]);
+    if (!empty($results["message_error"])) {
+        error_log("StaffCreateKonOpas.php: " . $results["message_error"]);
+        RenderError($results["message_error"]);
         exit();
     }
-    if ($infofile["output"]) {
-        $fileNameProd = JSON_EXTRACT_DIRECTORY . "info.md";
-        $fileNameTest = JSON_EXTRACT_DIRECTORY . "info_test.md";
-        $infofileFileProd = fopen($fileNameProd,"w");
-        $infofileFileTest = fopen($fileNameTest,"w");
-        if ($infofileFileProd === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Cannot open " . $fileNameProd . " for writing.";
-            error_log($message_error);
-            RenderError($message_error);
-            exit(1);
-        }
-        if ($infofileFileTest === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Cannot open " . $fileNameTest . " for writing.";
-            error_log($message_error);
-            RenderError($message_error);
-            exit(1);
-        }
-        if (fwrite($infofileFileProd, $infofile["output"]) === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Error writing to " . $fileNameProd . ".";
-            error_log($message_error);
-            RenderError($message_error);
-            fclose($infofileFileProd);
-            exit(1);
-        }
-        if (fwrite($infofileFileTest, $infofile["output"]) === FALSE) {
-            $message_error = "StaffCreateKonOpas.php: Error writing to " . $fileNameTest . ".";
-            error_log($message_error);
-            RenderError($message_error);
-            fclose($infofileFileTest);
-            exit(1);
-        }
-        fclose($infofileFileProd);
-        fclose($infofileFileTest);
-        echo('<p>The ConClár info file was created.' . "\n");
-    }
+
+    $infofile = retrieveInfoData();
     if (empty($infofile)) {
         $message_error = "StaffCreateKonOpas.php: retrieveInfoData() did not return expected result or error indicator.";
         error_log($message_error);
         RenderError($message_error);
         exit();
     }
+    if (!empty($infofile["message_error"])) {
+        error_log("StaffCreateKonOpas.php: " . $infofile["message_error"]);
+        RenderError($infofile["message_error"]);
+        exit();
+    }
+
+    $fileContents = array(
+        "program.js" => $results["program"],
+        "people.js" => $results["people"],
+        "konopas.appcache" => $results["konopas"],
+        "konOpasData.json" => $results["json"],
+        "konOpasDataTest.json" => $results["json"],
+        "info.md" => $infofile["output"],
+        "info_test.md" => $infofile["output"],
+    );
+    foreach ($fileContents as $fileName => $contents) {
+        if (!writeFileAtomically($extractDirectory . $fileName, $contents)) {
+            $message_error = "StaffCreateKonOpas.php: Error writing to " . $extractDirectory . $fileName . ".";
+            error_log($message_error);
+            RenderError($message_error);
+            exit(1);
+        }
+    }
+
+    echo "<p>The data files were created in <code>" . htmlspecialchars($extractDirectory) . "</code>.</p>\n";
+    echo "<p>Number of program items: " . $results["program_num_rows"] . "</p>\n";
+    echo "<p>Number of participants: " . $results["people_num_rows"] . "</p>\n";
 
 ?>
 
