@@ -21,6 +21,10 @@ if (($password === "" or $password === null) and ($cpassword === "" or $cpasswor
         exit();
     }
 }
+// An OIDC session, or an installation without password sign-in, has no PlanZ password to change.
+if ($update_password === true && (is_oidc_session() || !is_password_login_enabled())) {
+    $update_password = false;
+}
 $query = "UPDATE Participants SET ";
 if ($update_password === true) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);

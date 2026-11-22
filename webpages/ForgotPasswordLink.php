@@ -6,7 +6,7 @@ $title = "Reset Password";
 require ('PartCommonCode.php');
 $selector = getString('selector');
 $validator = getString('validator');
-if (RESET_PASSWORD_SELF !== true) {
+if (!can_reset_own_password()) {
     http_response_code(403); // forbidden
     participant_header($title, true, 'Login', true);
     echo "<p class='alert alert-danger vert-sep-above'>You have reached this page in error.</p>";

@@ -51,6 +51,7 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
             $paramArray["SessionInterests"] = may_I('my_panel_interests') ? true : false;
             $paramArray["survey"] = array_key_exists('survey_exists', $_SESSION) ? $_SESSION['survey_exists'] : false;
             $paramArray["PARTICIPANT_PHOTOS"] = PARTICIPANT_PHOTOS === TRUE ? 1 : 0;
+            $paramArray["SWITCH_PARTICIPANT"] = can_switch_participant();
             RenderXSLT('ParticipantMenu_BS4.xsl', $paramArray, GeneratePermissionSetXML());
         } else {
 ?>
@@ -82,8 +83,15 @@ function participant_header($title, $noUserRequired = false, $loginPageStatus = 
                             <?php makeMenuItem("Suggest a Session", may_I('BrainstormSubmit'),"./brainstorm.php", false); ?>
                             <li class="divider-vertical"></li>
                         </ul>
-                            <?php if (may_I('Staff')) {
-                                echo '<ul class="nav pull-right"><li class="divider-vertical"></li><li><a id="StaffView" href="StaffPage.php">Staff View</a></li></ul>';
+                            <?php if (may_I('Staff') || can_switch_participant()) {
+                                echo '<ul class="nav pull-right">';
+                                if (can_switch_participant()) {
+                                    echo '<li class="divider-vertical"></li><li><a id="SwitchParticipant" href="SelectParticipant.php">Switch Participant</a></li>';
+                                }
+                                if (may_I('Staff')) {
+                                    echo '<li class="divider-vertical"></li><li><a id="StaffView" href="StaffPage.php">Staff View</a></li>';
+                                }
+                                echo '</ul>';
                             }?>
                     </div>
                 </div>

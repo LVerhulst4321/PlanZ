@@ -271,8 +271,11 @@ if (file_exists(__DIR__ . '/config/db_name.php')) {
 } else {
     echo '<strong>FATAL ERROR: Config file not found.</strong><br />';
 }
-if (USE_REG_SYSTEM === TRUE) {
-    include_once __DIR__ . '/custom_reg.php'; // Calls an extra file which contains authentication methods for interfacing with con Registration.
+// USE_REG_SYSTEM means participants' contact details come from the registration system, so they
+// can't be edited in PlanZ. A site can also supply custom_reg.php, with authentication methods for
+// its registration system; sites using OIDC sign-in don't need one.
+if (USE_REG_SYSTEM === TRUE && file_exists(__DIR__ . '/custom_reg.php')) {
+    include_once __DIR__ . '/custom_reg.php';
 }
 
 
@@ -913,11 +916,20 @@ EOD;
 
 function isLoggedIn() {
     global $message_error, $message2;
+    if (isset($_SESSION['badgeid']) && isset($_SESSION['auth_method']) && $_SESSION['auth_method'] === 'oidc') {
+        return isOidcSessionValid();
+    }
     if (!isset($_SESSION['badgeid']) || !isset($_SESSION['hashedPassword'])) {
         return false;
     }
+    // Password sessions end when password login is switched off (LOGIN_MODE "oidc"), so access
+    // from a password login doesn't outlast the switch.
+    if (defined('LOGIN_MODE') && strtolower((string)LOGIN_MODE) === 'oidc') {
+        unset($_SESSION['badgeid'], $_SESSION['hashedPassword']);
+        return false;
+    }
 
-    if (USE_REG_SYSTEM === TRUE) {
+    if (USE_REG_SYSTEM === TRUE && function_exists('custom_isLoggedIn')) {
         global $reg_link;
         return custom_isLoggedIn();
     }
@@ -952,6 +964,30 @@ function isLoggedIn() {
     } else {
         return true;
     }
+}
+
+// Function isOidcSessionValid()
+// An OIDC session has no password to re-check. Instead, check that OIDC sign-in is still enabled
+// and the participant still exists. Their member claims are read again at their next sign-in.
+function isOidcSessionValid() {
+    global $linki;
+    $mode = defined('LOGIN_MODE') ? strtolower((string)LOGIN_MODE) : 'password';
+    $valid = false;
+    if ($mode === 'oidc' || $mode === 'both') {
+        $stmt = mysqli_prepare($linki, "SELECT 1 FROM Participants WHERE badgeid = ?;");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $_SESSION['badgeid']);
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_store_result($stmt);
+                $valid = mysqli_stmt_num_rows($stmt) === 1;
+            }
+            mysqli_stmt_close($stmt);
+        }
+    }
+    if (!$valid) {
+        unset($_SESSION['badgeid'], $_SESSION['auth_method'], $_SESSION['permission_set']);
+    }
+    return $valid;
 }
 
 // Function retrieveParticipant()

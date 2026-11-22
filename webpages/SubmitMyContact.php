@@ -71,6 +71,10 @@ function update_participant($badgeid) {
         }
     }
     $password = getString('password');
+    // An OIDC session, or an installation without password sign-in, has no PlanZ password to change.
+    if (is_oidc_session() || !is_password_login_enabled()) {
+        $password = null;
+    }
     if (!empty($password)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $updateClause .= "password=\"$hashedPassword\", ";

@@ -1,5 +1,10 @@
 {
+    "description": "PHP libraries for PlanZ. firebase/php-jwt is only used by OpenID Connect sign-in, which needs PHP 8.0; on PHP 7, install with --ignore-platform-req=php and it's never loaded. platform-check is off so Composer's autoloader doesn't stop the rest of PlanZ on PHP 7.",
     "require": {
-        "emarref/jwt": "^1.0"
+        "emarref/jwt": "^1.0",
+        "firebase/php-jwt": "^7.2"
+    },
+    "config": {
+        "platform-check": false
     }
 }

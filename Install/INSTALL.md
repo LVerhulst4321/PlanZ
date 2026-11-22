@@ -16,6 +16,10 @@ You need a server with:
        (often, but not always, included by default)
      - php-fpm is needed if you are hosting on Nginx. It is optional on
        Apache, but will generally allow for better performance.
+  - [Composer](https://getcomposer.org/), only if you want sign-in through a
+    registration system (OpenID Connect) or the API used by mobile apps such as
+    WisSched and FogGuide. See "Installing PHP libraries with Composer" in step 3.
+     - OpenID Connect sign-in needs PHP 8.0 or later.
   - mysql or mariadb
      - a user with full privileges including privileges to create TRIGGERS
        (during install) and run them (during regular usage)
@@ -98,6 +102,64 @@ Checking out the html and php code.
     cd /var/www/public_html
     git clone https://github.com/leaneverhulst/PlanZed.git planzdemo
 
+### Installing PHP libraries with Composer
+
+Most of PlanZ runs without this. You only need it for:
+
+  - sign-in through a registration system, using OpenID Connect (see
+    [Signing in through a registration system](../Documentation/User_Documentation/oidc_sign_in.md)),
+    which needs PHP 8.0 or later
+  - the API used by mobile apps such as WisSched and FogGuide (`api/login.php`)
+
+Install the libraries listed in `webpages/composer.json`, at the versions in
+`webpages/composer.lock`:
+
+    cd /var/www/public_html/planzdemo/webpages
+    composer install --no-dev
+
+On PHP 7, add `--ignore-platform-req=php`:
+
+    composer install --no-dev --ignore-platform-req=php
+
+Without it, Composer refuses to install anything, because the OpenID Connect
+library needs PHP 8. With it, that library is installed but never loaded, and
+the mobile app API works as before.
+
+This creates `webpages/vendor`. Run it again after updating PlanZ, whenever
+`webpages/composer.lock` has changed.
+
+If you can't run Composer on the web server, run the same command on another
+computer, then copy the `webpages/vendor` directory to the server.
+
+If the libraries are missing, OpenID Connect sign-in shows "Sign-in through …
+is not set up correctly", and the PHP error log says to run `composer install`.
+
+### Keep the vendor directory away from the web
+
+`webpages` is the site's document root, so anyone can request files in
+`webpages/vendor` unless you block it. Those files show exactly which library
+versions you have, and they aren't meant to be run directly. Block the
+directory in your web server's configuration.
+
+nginx, in the `server` block for PlanZ, before any `location ~ \.php$` block:
+
+    location ^~ /vendor/ {
+        return 404;
+    }
+
+If PlanZ isn't at the root of the site, put its path in front, for example
+`location ^~ /planz/vendor/`.
+
+Apache, in the virtual host for PlanZ:
+
+    <Directory "/var/www/public_html/planzdemo/webpages/vendor">
+        Require all denied
+    </Directory>
+
+To check, open `https://<your PlanZ address>/vendor/composer/installed.json`
+in a browser. You should get "Not Found" or "Forbidden", not a list of
+packages.
+
 ## 4 - Tweak the configuration to use your database and specify other preferences
 
 You want to copy config/db_name_sample.php to config/db_name.php
@@ -116,7 +178,12 @@ or whatever your URL is...
 
 ## 6 - Adding an account for PlanZ so you can log in.
 
-PlanZ can take a feed from a registration system to create and configure users.  However, the
+PlanZ can let members sign in with their account on a registration system that acts as an
+OpenID Connect provider, such as ConReg. Participants can then be created at their first sign-in,
+with their contact details and staff roles coming from the registration system. See
+[Signing in through a registration system](../Documentation/User_Documentation/oidc_sign_in.md).
+
+PlanZ can also take a feed from a registration system to create and configure users.  However, the
 code for handling that is specific to each registration system and not in the master branch.
 
 There is a script `add_planz_users.php` in scripts directory to add users.

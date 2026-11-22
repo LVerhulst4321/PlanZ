@@ -3,6 +3,71 @@
 use PlanZ\PlanZModule;
 
 /*
+ * get_login_mode:
+ *  Which sign-in methods are offered, from LOGIN_MODE in db_name.php:
+ *      "password" - PlanZ user ID or email and password (the default)
+ *      "oidc"     - sign in through an OpenID Connect provider, such as ConReg, only
+ *      "both"     - either
+ */
+function get_login_mode() {
+    $mode = defined('LOGIN_MODE') ? strtolower((string)LOGIN_MODE) : 'password';
+    return in_array($mode, array('password', 'oidc', 'both'), true) ? $mode : 'password';
+}
+
+function is_password_login_enabled() {
+    return get_login_mode() !== 'oidc';
+}
+
+function is_oidc_login_enabled() {
+    return get_login_mode() !== 'password';
+}
+
+/*
+ * get_oidc_provider_name:
+ *  The name users know the sign-in provider by, used in messages.
+ */
+function get_oidc_provider_name() {
+    return defined('OIDC_PROVIDER_NAME') && OIDC_PROVIDER_NAME !== '' ? OIDC_PROVIDER_NAME : 'the registration system';
+}
+
+/*
+ * get_oidc_login_button_text:
+ *  Text of the OIDC sign-in button: OIDC_LOGIN_BUTTON_TEXT, or "Sign in with <provider name>".
+ */
+function get_oidc_login_button_text() {
+    if (defined('OIDC_LOGIN_BUTTON_TEXT') && trim(OIDC_LOGIN_BUTTON_TEXT) !== '') {
+        return trim(OIDC_LOGIN_BUTTON_TEXT);
+    }
+    return 'Sign in with ' . get_oidc_provider_name();
+}
+
+/*
+ * is_oidc_session:
+ *  True if the current session was signed in through OIDC.
+ */
+function is_oidc_session() {
+    return isset($_SESSION['auth_method']) && $_SESSION['auth_method'] === 'oidc';
+}
+
+/*
+ * can_reset_own_password:
+ *  Password self-service (reset by email, change on the profile page) is only offered when password
+ *  sign-in is enabled and the current session (if any) didn't come from OIDC.
+ */
+function can_reset_own_password() {
+    return defined('RESET_PASSWORD_SELF') && RESET_PASSWORD_SELF === true
+        && is_password_login_enabled() && !is_oidc_session();
+}
+
+/*
+ * can_switch_participant:
+ *  True if an OIDC session can act as more than one member.
+ */
+function can_switch_participant() {
+    return is_oidc_session() && isset($_SESSION['oidc_members']) && count($_SESSION['oidc_members']) > 1;
+}
+
+/*
  * is_email_login_supported:
  *  If the installation has specified the options for login via email address in the installation's,
  *  db_name.php file then return true; else return false (which means that only login by badgeid

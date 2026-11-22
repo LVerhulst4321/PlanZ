@@ -6,6 +6,8 @@ PlanZ is a con programme scheduling webapp, and is intended to help with the run
 
 Before the convention committee start doing their work the site administrator needs to perform some set-up activities.
 
+- [Signing in through a registration system](./oidc_sign_in.md) - Let members sign in with their registration account (OpenID Connect, for example ConReg) instead of a PlanZ password, with their contact details and staff roles coming from the registration system.
+
 ## Programming Sessions
 
 Different cons work in different ways but I'd argue that -- at the high level -- there are a number of common activities. The details may vary from con to con, but each con probably needs to address the following things:

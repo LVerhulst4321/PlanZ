@@ -52,7 +52,7 @@ function get_badge_name($firstname, $lastname, $badgename) {
     }
 }
 
-if (!defined('RESET_PASSWORD_SELF') || RESET_PASSWORD_SELF !== true) {
+if (!can_reset_own_password()) {
     http_response_code(403); // forbidden
     participant_header($title, true, 'Login', true);
     echo "<p class='alert alert-error vert-sep-above'>You have reached this page in error.</p>";
