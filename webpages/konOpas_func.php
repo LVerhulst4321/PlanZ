@@ -71,7 +71,9 @@ SELECT
     DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%H:%i') as time,
     DATE_FORMAT(ADDTIME('$ConStartDatim',SCH.starttime),'%Y-%m-%d %H:%i:%s') as datetime,
     GROUP_CONCAT(TA.tagname SEPARATOR ',') AS taglist,
-    S.meetinglink
+    S.meetinglink,
+    S.streaminglink,
+    S.signuplink
 FROM
               Schedule SCH
          JOIN Sessions S USING (sessionid)
@@ -133,6 +135,14 @@ EOD;
             }
             $program[] = $programRow;
 
+            $linksV2 = $programRow["links"];
+            if (!empty($row["streaminglink"])) {
+                $linksV2["streaming"] = $row["streaminglink"];
+            }
+            if (!empty($row["signuplink"])) {
+                $linksV2["signup"] = $row["signuplink"];
+            }
+
             $datetime = DateTime::createFromFormat("Y-m-d H:i:s", $row["datetime"], $timezone);
             $programV2[] = array(
                 "id"       => $row["id"],
@@ -143,7 +153,7 @@ EOD;
                 "loc"      => array($row["loc"]),
                 "people"   => $sessionHasParticipantV2[$row["id"]] ?? [],
                 "desc"     => $desc,
-                "links"    => $programRow["links"]
+                "links"    => $linksV2
             );
     }
 
