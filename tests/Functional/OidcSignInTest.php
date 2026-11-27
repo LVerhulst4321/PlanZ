@@ -24,6 +24,9 @@ final class OidcSignInTest extends TestCase
         global $linki;
         $linki = TestDb::connection();
         mysqli_report(MYSQLI_REPORT_OFF);
+        // The 'Participant' atom is only granted in the 'Invitation' phase (1), which isn't
+        // current in a fresh install (as in CI).
+        mysqli_query($linki, "UPDATE Phases SET current = 1 WHERE phaseid = 1");
         $this->cleanUp();
         $_SESSION = [];
     }

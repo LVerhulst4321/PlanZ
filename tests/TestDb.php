@@ -48,9 +48,10 @@ final class TestDb
         // Role 3 = 'Program Participant', which grants the 'my_availability' permission
         // atom for phase 3 ('Availability') — see Install/EmptyDbase.dump.
         mysqli_query($db, "INSERT INTO UserHasPermissionRole (badgeid, permroleid) VALUES ('$badgeid', 3)");
-        // The 'Availability' phase isn't current by default in a fresh install; turn
-        // it on so the fixture user actually has access to My Availability.
-        mysqli_query($db, "UPDATE Phases SET current = 1 WHERE phaseid = 3");
+        // Neither the 'Invitation' phase (1, which grants the 'Participant' atom needed to
+        // log in as a participant) nor the 'Availability' phase (3) is current by default in
+        // a fresh install; turn them on so the fixture user can log in and use My Availability.
+        mysqli_query($db, "UPDATE Phases SET current = 1 WHERE phaseid IN (1, 3)");
     }
 
     public static function dropFixture(): void
