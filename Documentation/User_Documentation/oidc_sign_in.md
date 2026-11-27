@@ -98,8 +98,35 @@ application, consumer or client). Use these settings:
 | PKCE | S256. PlanZ always uses it. |
 | Redirect URI | `https://<your PlanZ address>/oidc_callback.php`, exactly as in `OIDC_REDIRECT_URI` |
 | Consent screen | Off, if the system offers it. People are signing in to the convention's own tool. |
+| Initiate login URL | Optional: `https://<your PlanZ address>/oidc_login.php`. See [Sending people to PlanZ from the registration system](#sending-people-to-planz-from-the-registration-system). |
 
 Note the client ID and secret for the next step.
+
+### Sending people to PlanZ from the registration system
+
+The registration system can link people straight into PlanZ, for example
+from a button in its member portal such as *Apply to be a programme
+participant*. Without help from PlanZ, the link would take them to PlanZ's
+login page, and they'd have to press the sign-in button even though they're
+already logged in to the registration system.
+
+If the registration system supports OpenID Connect *third-party initiated
+login*, give it `https://<your PlanZ address>/oidc_login.php` as its
+*initiate login URL*. Its links then start the PlanZ sign-in straight away:
+
+- People already logged in to the registration system go straight through.
+  Others log in there first.
+- People with more than one membership choose a member, as usual.
+- Someone already signed in to PlanZ is signed in again, so the PlanZ user is
+  always the person logged in to the registration system.
+- If the link names a PlanZ page to go to (`target_link_uri`), PlanZ goes
+  there after signing in, but only if it is a page of this PlanZ site.
+  Otherwise they land on the usual page.
+- PlanZ ignores a request whose `iss` isn't `OIDC_ISSUER`, and just shows its
+  login page.
+
+The sign-in button on PlanZ's login page still works for people who go to
+PlanZ directly.
 
 ## Connect PlanZ to the registration system
 
@@ -342,6 +369,10 @@ Users who signed in with a password still have one in PlanZ. With
    `staff` and `admin`. Each entitlement becomes a Drupal permission: grant it
    to a Drupal role, and give that role to your staff.
 4. Optionally, install `conreg_planz` so ConReg sends PlanZ badge IDs.
+5. Optionally, so ConReg's buttons for PlanZ (in the member portal and on the
+   registration *Thank you* page) sign members in straight away, enter
+   `https://planz.example.org/oidc_login.php` as the **Initiate login URL**
+   in ConReg's connected application settings for PlanZ.
 
 ### In PlanZ
 
@@ -393,4 +424,5 @@ log. Check the log first. Its lines start with `OIDC`.
 | Your membership for … is not ready for PlanZ yet | The registration system sent no badge ID for their membership. In ConReg, check the event's `conreg_planz` settings. |
 | You have not been set up as a participant in PlanZ yet | `OIDC_AUTO_PROVISION` is `FALSE` and there's no PlanZ participant with their badge ID. Add them, or check the badge ID settings. |
 | Staff View doesn't appear for a staff member | They don't have the entitlement in the registration system, the entitlement isn't in `OIDC_ENTITLEMENT_ROLES`, or they're using PlanZ as another member. The log says if a mapped role doesn't exist in PlanZ. |
+| A link from the registration system shows PlanZ's login page instead of signing in | The log says "initiate login: iss … does not match configured issuer". The registration system's issuer must match `OIDC_ISSUER` exactly, including the trailing slash. |
 | Contact details don't update | Check `OIDC_SCOPES` includes `phone` and `address`, and that the registration system sends them. Details only update when someone signs in. |

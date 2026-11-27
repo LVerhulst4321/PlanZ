@@ -84,6 +84,111 @@ final class OidcProtocolTest extends TestCase
         $this->assertSame('none', $q['prompt']);
     }
 
+    // ---- Third-party initiated login ----
+
+    public function testPressingTheButtonAsksForNothing(): void
+    {
+        $this->assertSame(['login_hint' => null, 'target' => null], oidc_initiate_request($this->config(), []));
+        parse_str(parse_url(oidc_authorize_url($this->config(), $this->discovery(), oidc_new_pending(false)), PHP_URL_QUERY), $q);
+        $this->assertArrayNotHasKey('login_hint', $q);
+    }
+
+    public function testInitiatedLoginFromTheConfiguredIssuerIsAccepted(): void
+    {
+        $initiate = oidc_initiate_request($this->config(), ['iss' => 'https://reg.example.org/',
+            'login_hint' => 'lead@example.invalid', 'target_link_uri' => 'https://planz.example.org/my_contact.php']);
+        $this->assertSame(['login_hint' => 'lead@example.invalid', 'target' => '/my_contact.php'], $initiate);
+
+        $pending = oidc_new_pending(false, null, $initiate);
+        $this->assertSame('/my_contact.php', $pending['target']);
+        parse_str(parse_url(oidc_authorize_url($this->config(), $this->discovery(), $pending), PHP_URL_QUERY), $q);
+        $this->assertSame('lead@example.invalid', $q['login_hint']);
+        $this->assertArrayNotHasKey('prompt', $q, 'an initiated login may show the provider\'s login page');
+        $this->assertArrayNotHasKey('target_link_uri', $q);
+    }
+
+    public static function wrongIssuers(): array
+    {
+        return [
+            'another provider' => ['https://evil.example.com/'],
+            'no trailing slash' => ['https://reg.example.org'],
+            'different case' => ['https://REG.example.org/'],
+            'empty' => [''],
+            'array' => [['https://reg.example.org/']],
+        ];
+    }
+
+    /** @dataProvider wrongIssuers */
+    public function testInitiatedLoginFromAnotherIssuerIsRefused($iss): void
+    {
+        $this->expectException(OidcException::class);
+        oidc_initiate_request($this->config(), ['iss' => $iss, 'target_link_uri' => 'https://planz.example.org/my_contact.php']);
+    }
+
+    public function testUnusableLoginHintIsDropped(): void
+    {
+        foreach (['', str_repeat('a', 256), "lead@example.invalid\r\nX: y", ['a']] as $hint) {
+            $this->assertNull(oidc_initiate_request($this->config(), ['iss' => 'https://reg.example.org/', 'login_hint' => $hint])['login_hint']);
+        }
+    }
+
+    public static function acceptedTargets(): array
+    {
+        return [
+            'absolute URL' => ['https://planz.example.org/my_contact.php', '/', '/my_contact.php'],
+            'with query' => ['https://planz.example.org/PartSearchSessions.php?track=3', '/', '/PartSearchSessions.php?track=3'],
+            'fragment dropped' => ['https://planz.example.org/my_contact.php#bio', '/', '/my_contact.php'],
+            'host case and default port' => ['https://PLANZ.example.org:443/welcome.php', '/', '/welcome.php'],
+            'site root' => ['https://planz.example.org', '/', '/'],
+            'path' => ['/my_contact.php', '/', '/my_contact.php'],
+            'under base path' => ['https://planz.example.org/planz/welcome.php', '/planz/', '/planz/welcome.php'],
+            'base path without slash' => ['https://planz.example.org/planz', '/planz/', '/planz/'],
+        ];
+    }
+
+    /** @dataProvider acceptedTargets */
+    public function testTargetWithinPlanZIsFollowed(string $target, string $basePath, string $expected): void
+    {
+        $this->assertSame($expected, oidc_safe_target($target, 'https://planz.example.org/oidc_callback.php', $basePath));
+    }
+
+    public static function refusedTargets(): array
+    {
+        return [
+            'another host' => ['https://evil.example.com/welcome.php', '/'],
+            'host with PlanZ as prefix' => ['https://planz.example.org.evil.example.com/welcome.php', '/'],
+            'plain http' => ['http://planz.example.org/welcome.php', '/'],
+            'other port' => ['https://planz.example.org:8443/welcome.php', '/'],
+            'user info' => ['https://planz.example.org@evil.example.com/welcome.php', '/'],
+            'protocol-relative' => ['//evil.example.com/welcome.php', '/'],
+            'backslash' => ['/\\evil.example.com/welcome.php', '/'],
+            'javascript' => ['javascript:alert(1)', '/'],
+            'relative path' => ['welcome.php', '/'],
+            'whitespace' => [" https://evil.example.com/", '/'],
+            'newline' => ["/welcome.php\r\nLocation: https://evil.example.com/", '/'],
+            'outside base path' => ['https://planz.example.org/other/welcome.php', '/planz/'],
+            'base path prefix only' => ['https://planz.example.org/planzevil/welcome.php', '/planz/'],
+            'dot segments' => ['https://planz.example.org/planz/../other/welcome.php', '/planz/'],
+            'encoded dot segments' => ['https://planz.example.org/planz/%2e%2e/other/welcome.php', '/planz/'],
+            'sign-in page' => ['https://planz.example.org/oidc_login.php', '/'],
+            'callback' => ['https://planz.example.org/oidc_callback.php?code=x', '/'],
+            'logout' => ['https://planz.example.org/LOGOUT.php', '/'],
+            'empty' => ['', '/'],
+        ];
+    }
+
+    /** @dataProvider refusedTargets */
+    public function testTargetOutsidePlanZIsNotFollowed(string $target, string $basePath): void
+    {
+        $this->assertNull(oidc_safe_target($target, 'https://planz.example.org/oidc_callback.php', $basePath));
+    }
+
+    public function testRefusedTargetStillStartsTheSignIn(): void
+    {
+        $initiate = oidc_initiate_request($this->config(), ['iss' => 'https://reg.example.org/', 'target_link_uri' => 'https://evil.example.com/']);
+        $this->assertNull($initiate['target']);
+    }
+
     public function testStateMustMatch(): void
     {
         $pending = oidc_new_pending(false);

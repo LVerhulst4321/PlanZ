@@ -174,14 +174,91 @@ function oidc_pkce_challenge(string $verifier): string {
 }
 
 // Creates the values for one sign-in attempt. Stored in the session until the callback.
-function oidc_new_pending(bool $silent, ?int $now = null): array {
+// $initiate is what a third-party initiated login asked for (see oidc_initiate_request()): a
+// login_hint to pass on to the provider, and a PlanZ page to go to after signing in.
+function oidc_new_pending(bool $silent, ?int $now = null, array $initiate = []): array {
     return [
         'state' => oidc_random_token(),
         'nonce' => oidc_random_token(),
         'code_verifier' => oidc_random_token(48),
         'silent' => $silent,
         'created' => $now ?? time(),
+        'login_hint' => $initiate['login_hint'] ?? null,
+        'target' => $initiate['target'] ?? null,
     ];
+}
+
+// Reads a third-party initiated login (OpenID Connect Core, section 4): the provider, for example
+// ConReg's member portal, sends the browser to oidc_login.php with "iss", and optionally
+// "login_hint" and "target_link_uri", so the sign-in starts without the user pressing PlanZ's
+// button. A request without "iss" is someone pressing the button, and asks for nothing.
+// Throws if "iss" isn't the configured issuer, so a request claiming to come from another
+// provider isn't acted on. Returns ['login_hint' => ?string, 'target' => ?string], where target
+// is a path within PlanZ (see oidc_safe_target()).
+function oidc_initiate_request(array $config, array $params): array {
+    $initiate = ['login_hint' => null, 'target' => null];
+    if (!isset($params['iss'])) {
+        return $initiate;
+    }
+    if (!is_string($params['iss']) || $config['issuer'] === '' || !hash_equals($config['issuer'], $params['iss'])) {
+        $iss = is_string($params['iss']) ? $params['iss'] : gettype($params['iss']);
+        throw new OidcException("OIDC initiate login: iss '" . substr($iss, 0, 200) . "' does not match configured issuer '{$config['issuer']}'");
+    }
+    $hint = $params['login_hint'] ?? null;
+    if (is_string($hint) && $hint !== '' && strlen($hint) <= 255 && !preg_match('/[\x00-\x1f\x7f]/', $hint)) {
+        $initiate['login_hint'] = $hint;
+    }
+    $target = $params['target_link_uri'] ?? null;
+    if (is_string($target)) {
+        $initiate['target'] = oidc_safe_target($target, $config['redirect_uri'], defined('BASE_PATH') ? BASE_PATH : '/');
+    }
+    return $initiate;
+}
+
+// Pages that a sign-in must not end on, because they start, finish or undo a sign-in.
+const OIDC_TARGET_EXCLUDED_PAGES = ['oidc_login.php', 'oidc_callback.php', 'login.php', 'dologin.php', 'logout.php', 'selectparticipant.php'];
+
+// Turns a target_link_uri into a path within PlanZ to redirect to after signing in, or null if it
+// isn't one. Accepts an absolute URL on the same scheme, host and port as the redirect URI, or a
+// path; either way the path must be under BASE_PATH. Returns the path and query only, so the
+// redirect can never leave PlanZ.
+function oidc_safe_target(string $target, string $redirectUri, string $basePath): ?string {
+    if ($target === '' || strlen($target) > 2048 || preg_match('/[\x00-\x20\x7f\\\\]/', $target)) {
+        return null;
+    }
+    $parts = parse_url($target);
+    if ($parts === false || isset($parts['user']) || isset($parts['pass'])) {
+        return null;
+    }
+    if (isset($parts['scheme']) || isset($parts['host'])) {
+        $planz = parse_url($redirectUri);
+        if (!is_array($planz) || !isset($planz['scheme'], $planz['host'], $parts['scheme'], $parts['host'])) {
+            return null;
+        }
+        $defaultPort = fn($p) => $p['port'] ?? (strtolower($p['scheme']) === 'https' ? 443 : 80);
+        if (strtolower($parts['scheme']) !== strtolower($planz['scheme'])
+                || strtolower($parts['host']) !== strtolower($planz['host'])
+                || $defaultPort($parts) !== $defaultPort($planz)) {
+            return null;
+        }
+    } elseif (substr($target, 0, 1) !== '/') {
+        return null;
+    }
+    $basePath = '/' . trim($basePath, '/') . '/';
+    $basePath = $basePath === '//' ? '/' : $basePath;
+    $path = $parts['path'] ?? '/';
+    if ($path . '/' === $basePath) {
+        $path = $basePath;
+    }
+    if (strpos($path, $basePath) !== 0) {
+        return null;
+    }
+    $segments = explode('/', rawurldecode($path));
+    if (in_array('..', $segments, true) || in_array('.', $segments, true)
+            || in_array(strtolower(end($segments)), OIDC_TARGET_EXCLUDED_PAGES, true)) {
+        return null;
+    }
+    return $path . (isset($parts['query']) && $parts['query'] !== '' ? '?' . $parts['query'] : '');
 }
 
 function oidc_authorize_url(array $config, array $discovery, array $pending): string {
@@ -197,6 +274,9 @@ function oidc_authorize_url(array $config, array $discovery, array $pending): st
     ];
     if (!empty($pending['silent'])) {
         $params['prompt'] = 'none';
+    }
+    if (!empty($pending['login_hint'])) {
+        $params['login_hint'] = $pending['login_hint'];
     }
     $endpoint = $discovery['authorization_endpoint'];
     return $endpoint . (strpos($endpoint, '?') === false ? '?' : '&') . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
@@ -822,4 +902,10 @@ function oidc_check_csrf(?string $token): bool {
 // Where to go after signing in as a member.
 function oidc_landing_page(): string {
     return may_I('Staff') ? 'StaffPage.php' : 'welcome.php';
+}
+
+// Where to redirect after signing in: the page a third-party initiated login asked for (already
+// checked by oidc_safe_target()), or the landing page.
+function oidc_after_signin_location(?string $target): string {
+    return is_string($target) && $target !== '' ? $target : './' . oidc_landing_page();
 }

@@ -30,7 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 oidc_activate_member($member, $config);
-                header('Location: ./' . oidc_landing_page());
+                $target = $_SESSION['oidc_target'] ?? null;
+                unset($_SESSION['oidc_target']);
+                header('Location: ' . oidc_after_signin_location($target));
                 exit();
             } catch (OidcException $e) {
                 error_log($e->getMessage());

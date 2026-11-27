@@ -99,9 +99,13 @@ if (count($members) === 1) {
         error_log($e->getMessage());
         oidc_callback_fail($e->userMessage);
     }
-    header('Location: ./' . oidc_landing_page());
+    header('Location: ' . oidc_after_signin_location($pending['target'] ?? null));
     exit();
 }
 
+// The page a third-party initiated login asked for, once they've chosen a member.
+if (!empty($pending['target'])) {
+    $_SESSION['oidc_target'] = $pending['target'];
+}
 header('Location: ./SelectParticipant.php');
 exit();

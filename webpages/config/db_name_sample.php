@@ -170,6 +170,10 @@ define("OIDC_LOGIN_BUTTON_TEXT", ""); // text of the sign-in button, e.g. "Sign 
 define("OIDC_ISSUER", "https://reg.example.org/"); // must match the provider's "issuer" exactly, including any trailing slash
 define("OIDC_CLIENT_ID", "planz");
 define("OIDC_REDIRECT_URI", "https://planz.example.org/oidc_callback.php");
+// To let the provider send members straight into PlanZ, already signed in (third-party initiated
+// login, for example ConReg's member portal buttons), give it https://planz.example.org/oidc_login.php
+// as its "initiate login URL". PlanZ only acts on it if "iss" is OIDC_ISSUER, and only follows a
+// target_link_uri to a page within PlanZ.
 define("OIDC_SCOPES", "openid profile email phone address conreg_member conreg_members conreg_entitlements");
 define("OIDC_LOGOUT_URL", ""); // optional: link to log out of the provider, shown after logging out of PlanZ, e.g. "https://reg.example.org/user/logout"
 define("OIDC_SILENT_SIGNIN", FALSE); // TRUE: try signing in without a click (prompt=none) once per browser session
