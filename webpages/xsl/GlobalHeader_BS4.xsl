@@ -16,6 +16,9 @@
     <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:param name="PUBLIC_NEW_USER" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="LOGIN_PHP" select="'doLogin.php'" />
+    <xsl:param name="PASSWORD_LOGIN" select="true()" /><!-- TRUE/FALSE: show user ID and password form -->
+    <xsl:param name="OIDC_LOGIN" select="false()" /><!-- TRUE/FALSE: show sign in through OIDC provider -->
+    <xsl:param name="OIDC_LOGIN_BUTTON_TEXT" select="'Sign in'" />
     <xsl:template match="/">
         <header class="header-wrapper" data-pbo="GlobalHeader_BS4.xsl:15">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -137,6 +140,21 @@
                         <h2>Login</h2>
                     </div>
                     <div class="card-body">
+                        <xsl:if test="$OIDC_LOGIN">
+                            <div class="row">
+                                <div class="col-md-6 mt-3 mb-3 text-center">
+                                    <a id="oidc-login" href="{$basepath}oidc_login.php" class="btn btn-primary">
+                                        <xsl:value-of select="$OIDC_LOGIN_BUTTON_TEXT" />
+                                    </a>
+                                </div>
+                            </div>
+                        </xsl:if>
+                        <xsl:if test="$OIDC_LOGIN and $PASSWORD_LOGIN">
+                            <div class="row">
+                                <div class="col-md-6 text-center text-muted mb-2">or sign in with a PlanZ password</div>
+                            </div>
+                        </xsl:if>
+                        <xsl:if test="$PASSWORD_LOGIN">
                         <div class="row">
                         <form id="login-form" class="col-md-6" name="loginform" method="post" action="{concat($basepath, $LOGIN_PHP)}" data-pbo="GlobalHeader_BS4.xsl:60">
                             <fieldset id="login-box mt-3">
@@ -154,6 +172,7 @@
                             </fieldset>
                         </form>
                         </div>
+                        </xsl:if>
                         <xsl:choose>
                             <xsl:when test="$RESET_PASSWORD_SELF and $PUBLIC_NEW_USER">
                                 <div class="row">

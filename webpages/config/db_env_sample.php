@@ -27,6 +27,8 @@ define("TURNSTILE_SECRET_KEY", ""); // ... and secret key
 
 define("ROOT_URL", 'https://' . getenv("HOSTNAME") . '/'); // URL to reach this server. Required to generate an email password reset link.
 
+define("OIDC_CLIENT_SECRET", getenv("OIDC_CLIENT_SECRET")); // OpenID Connect client secret; only needed when LOGIN_MODE is "oidc" or "both"
+
 // The shared secrets to use for webhook clients.
 // This should be an associative array mapping client id to an array of keys.
 // The keys should be a random string. I suggest finding a random password generator and putting in a 64 character password

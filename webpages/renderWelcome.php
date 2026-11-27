@@ -57,7 +57,7 @@ if (may_I('postcon')) { ?>
                             </select>
                         </div>
                     </div>
-                    <?php if (RESET_PASSWORD_SELF == true) { ?>
+                    <?php if (can_reset_own_password()) { ?>
                         <?php if ($participant_array['chpw']) { ?>
                             <p class="mt-3 mb-3"><b>Now take a moment and personalize your password.</b></p>
                             <div class="form-group mb-2 row">
@@ -110,7 +110,7 @@ if (may_I('postcon')) { ?>
                 <p> Use the "Profile" menu to:</p>
                 <ul>
                     <li> Check your contact information. </li>
-                    <?php if (RESET_PASSWORD_SELF == true) { ?>
+                    <?php if (can_reset_own_password()) { ?>
                         <li> Change your password.</li>
                     <?php } ?>
                     <li> Indicate whether you will be participating in <?php echo CON_NAME; ?>.</li>

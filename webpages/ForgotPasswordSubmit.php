@@ -228,7 +228,7 @@ EOD;
 }
 
 function validate_input_params($secret_key, $token, $remote_ip, $title, $badgeid, $email) {
-    if (RESET_PASSWORD_SELF !== true) {
+    if (!can_reset_own_password()) {
         http_response_code(403); // forbidden
         participant_header($title, true, 'Login', true);
         echo "<p class='alert alert-danger mt-2'>You have reached this page in error.</p>";

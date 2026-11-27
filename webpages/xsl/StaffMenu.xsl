@@ -9,6 +9,7 @@
   <xsl:param name="basepath" select="'/'"/>
   <xsl:param name="reportMenuList" select="''"/>
   <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
+  <xsl:param name="SWITCH_PARTICIPANT" select="false()"/><!-- TRUE/FALSE: OIDC user can act as several members -->
   <xsl:param name="emailAvailable" select="'0'"/>
   <!-- Set of <li> elements; contents of ReportMenuInclude.php -->
   <xsl:variable name="ConfigureReports" select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
@@ -215,6 +216,12 @@
               </xsl:if>
             </ul>
             <ul class="nav pull-right">
+              <xsl:if test="$SWITCH_PARTICIPANT">
+                <li class="divider-vertical"/>
+                <li>
+                  <a id="SwitchParticipant" href="{$basepath}SelectParticipant.php">Switch Participant</a>
+                </li>
+              </xsl:if>
               <li class="divider-vertical"/>
               <li>
                 <a id="ParticipantView" href="{$basepath}welcome.php">Participant View</a>

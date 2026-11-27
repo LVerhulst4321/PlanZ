@@ -7,6 +7,7 @@
   <xsl:param name="title" select="''" />
   <xsl:param name="basepath" select="'/'"/>
   <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
+  <xsl:param name="SWITCH_PARTICIPANT" select="false()"/><!-- TRUE/FALSE: OIDC user can act as several members -->
   <xsl:param name="survey" select="'false'" />
   <xsl:param name="my_suggestions" select="'true'" />
   <xsl:param name="SessionFeedback" select="'true'" />
@@ -82,11 +83,18 @@
             </li>
           </xsl:if>
         </ul>
-        <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='Staff']">
+        <xsl:if test="$SWITCH_PARTICIPANT or /doc/query[@queryname='permission_set']/row[@permatomtag='Staff']">
           <div class="navbar-nav ml-auto">
-            <div class="nav-item py-0">
-              <a id="StaffView" class="nav-link py-1" href="{$basepath}StaffPage.php">Staff View</a>
-            </div>
+            <xsl:if test="$SWITCH_PARTICIPANT">
+              <div class="nav-item py-0">
+                <a id="SwitchParticipant" class="nav-link py-1" href="{$basepath}SelectParticipant.php">Switch Participant</a>
+              </div>
+            </xsl:if>
+            <xsl:if test="/doc/query[@queryname='permission_set']/row[@permatomtag='Staff']">
+              <div class="nav-item py-0">
+                <a id="StaffView" class="nav-link py-1" href="{$basepath}StaffPage.php">Staff View</a>
+              </div>
+            </xsl:if>
           </div>
         </xsl:if>
       </div>

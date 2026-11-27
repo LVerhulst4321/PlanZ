@@ -18,6 +18,10 @@ name was in order.
 * PHP 7.4 or greater (mostly tested on 8.1, but there may be some minor issues with 8.X)
   * XSLT library
   * Multibyte library (mbstring)
+  * These parts of PlanZ need PHP 8.0 or later:
+    * Sign-in through a registration/single sign-on system (OpenID Connect). See
+      [Signing in through a registration
+      system](./Documentation/User_Documentation/oidc_sign_in.md).
 * Apache or Nginx (Should be able to run on other web servers than can handle PHP and MySQL, but not tested)
 * MySQL or MariaDB (Tested on MySQL 5.6 & 8.0, and on MariaDB 10.5)
 * SMTP connection for use as mail relay (only if you want to send email from PlanZ)
@@ -48,6 +52,7 @@ Other software which can work with PlanZ:
 * Convention Guide scripts (https://github.com/pselkirk/conguide), a tool for producing a printable pocket program in InDesign, including a schedule grid
 * KonOpas (https://github.com/eemeli/konopas), a free tool for publishing the schedule to mobile devices
 * ConClár (https://github.com/lostcarpark/conclar), an online Program Guide tool for conventions
+* OpenID Connect for identity provider/registration systems such as ConReg (https://drupal.org/project/conreg)
 
 ## More Information
 

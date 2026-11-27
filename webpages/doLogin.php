@@ -6,6 +6,12 @@ require_once('login_functions.php');
 require_once('./db_exceptions.php');
 require_once('./api/admin/module_model.php');
 $userIdPrompt = get_user_id_prompt();
+if (!isset($_SESSION['badgeid']) && !is_password_login_enabled()) {
+    // Password sign-in is switched off (LOGIN_MODE "oidc").
+    $headerErrorMessage = "Please sign in with the button below.";
+    require('login.php');
+    exit(0);
+}
 if (!isset($_SESSION['badgeid'])) {
     $title = "Submit Password";
     $email = mb_strtolower(trim(getString('badgeid')), "UTF-8");
@@ -41,7 +47,8 @@ EOD;
     $badgeid = $dbobject->badgeid;
     $dbpassword = $dbobject->password;
     $_SESSION['data_consent'] = $dbobject->data_retention;
-    if (!password_verify($password, $dbpassword)) {
+    // Participants created by OIDC sign-in have no password.
+    if (empty($dbpassword) || !password_verify($password, $dbpassword)) {
         error_log("Password provided for email address '$email' is not valid");
         $headerErrorMessage = "Incorrect $userIdPrompt or password.";
         require('login.php');
@@ -52,6 +59,7 @@ EOD;
     if ($pubsname != "" && $pubsname != null) {
         $_SESSION['badgename'] = $pubsname;
     }
+    unset($_SESSION['auth_method'], $_SESSION['oidc_members'], $_SESSION['oidc_entitlements'], $_SESSION['oidc_active_mid']);
     $_SESSION['badgeid'] = $badgeid;
     $_SESSION['hashedPassword'] = $dbpassword;
     set_permission_set($badgeid, $linki);

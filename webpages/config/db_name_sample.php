@@ -81,6 +81,8 @@ define("TRACK_TAG_USAGE", "TAG_OVER_TRACK"); // Describe how Track and Tag field
 define("REQUIRE_CONSENT", TRUE); // Require Data Collection Consent from all users
 define("USE_REG_SYSTEM", FALSE);
         // True -> PlanZ users loaded from reg system into CongoDump; staff users cannot edit them
+        //         (use this with OIDC sign-in, which copies contact details from the provider at
+        //         every sign-in, so changes made in PlanZ would be overwritten)
         // False -> PlanZ users can be created and edited by staff users in PlanZ
 define("REGISTRATION_URL", "");
 define("USE_REGTYPE_DESCRIPTION", FALSE);
@@ -152,6 +154,72 @@ define("CON_SUPPORT_EMAIL", ""); // From address to be used for password reset e
 define("REPORT_INCLUDE_DIRECTORY", "/var/data/planz/");  // outside of web server path, only served by PHP
 
 define("PUBLIC_NEW_USER", FALSE); // allow new user creation from login screen
+
+// ---- Sign-in method ----
+define("LOGIN_MODE", "password");
+        // "password": PlanZ user ID or email and password (the default).
+        // "oidc": sign in only through an OpenID Connect provider, such as ConReg. The password form,
+        //         password reset and password change are switched off.
+        // "both": offer both.
+
+// ---- OpenID Connect (only used when LOGIN_MODE is "oidc" or "both") ----
+// Register PlanZ as a confidential client at the provider, using the authorization code grant, with
+// OIDC_REDIRECT_URI as its redirect URI. Put OIDC_CLIENT_SECRET in db_env.php, not here.
+define("OIDC_PROVIDER_NAME", "ConReg"); // what users know the provider as, used in messages such as "Your ConReg account has no membership..."
+define("OIDC_LOGIN_BUTTON_TEXT", ""); // text of the sign-in button, e.g. "Sign in with your Octocon membership"; empty gives "Sign in with " followed by OIDC_PROVIDER_NAME
+define("OIDC_ISSUER", "https://reg.example.org/"); // must match the provider's "issuer" exactly, including any trailing slash
+define("OIDC_CLIENT_ID", "planz");
+define("OIDC_REDIRECT_URI", "https://planz.example.org/oidc_callback.php");
+// To let the provider send members straight into PlanZ, already signed in (third-party initiated
+// login, for example ConReg's member portal buttons), give it https://planz.example.org/oidc_login.php
+// as its "initiate login URL". PlanZ only acts on it if "iss" is OIDC_ISSUER, and only follows a
+// target_link_uri to a page within PlanZ.
+define("OIDC_SCOPES", "openid profile email phone address conreg_member conreg_members conreg_entitlements");
+define("OIDC_LOGOUT_URL", ""); // optional: link to log out of the provider, shown after logging out of PlanZ, e.g. "https://reg.example.org/user/logout"
+define("OIDC_SILENT_SIGNIN", FALSE); // TRUE: try signing in without a click (prompt=none) once per browser session
+define("OIDC_EVENT_ID", 1); // the provider's event ID (ConReg "eid") this PlanZ is for; members of other events are ignored
+// Badge IDs: if the member claim has OIDC_BADGEID_CLAIM (ConReg sends planz_badge_id when
+// conreg_planz is installed), that is the badge ID, and the three settings after it aren't used.
+// A member whose planz_badge_id is null can't sign in until ConReg gives them one.
+// Without the claim, badge IDs are built as prefix + number zero-padded to the number of digits,
+// which must match conreg_planz's settings for the event so users it created are found.
+define("OIDC_BADGEID_CLAIM", "planz_badge_id"); // "" to always build badge IDs from the settings below
+define("OIDC_BADGEID_PREFIX", "");
+define("OIDC_BADGEID_DIGITS", 4);
+define("OIDC_BADGEID_SOURCE", "mid"); // "mid" (ConReg member ID) or "member_no" (membership number)
+define("OIDC_AUTO_PROVISION", FALSE);
+        // TRUE: any confirmed member of the event may sign in, and a PlanZ participant is created at
+        //       their first sign-in.
+        // FALSE: only members already set up in PlanZ (for example by ConReg's conreg_planz) may sign in.
+define("OIDC_PARTICIPANT_ROLE", "Program Participant"); // role every OIDC participant gets
+// Roles for the user's own member come only from the provider's entitlements, mapped here to PlanZ
+// role names. At each sign-in their PlanZ roles are set to exactly the participant role plus these,
+// so a role removed in the provider is removed in PlanZ. Members a user acts for (not their own)
+// never get more than the participant role.
+define("OIDC_ENTITLEMENT_ROLES", [
+    "staff" => ["Staff"],
+    "admin" => ["Administrator", "Staff"],
+]);
+define("OIDC_LOCAL_ROLES", []); // roles managed in PlanZ that sign-in leaves alone, e.g. ["GOH", "Event Participant"]
+// Claim names, for providers that send ConReg-style member claims under other names.
+define("OIDC_SELF_CLAIM", "conreg_member");
+define("OIDC_MEMBERS_CLAIM", "conreg_members");
+define("OIDC_ENTITLEMENTS_CLAIM", "conreg_entitlements");
+// Contact details are copied from the member claim into PlanZ at every sign-in, replacing what
+// PlanZ has (an empty value clears the field). Fields the claim leaves out, for example because
+// the phone or address scope wasn't granted, keep what PlanZ has. Set USE_REG_SYSTEM to TRUE
+// so they can't be edited in PlanZ. OIDC_MEMBER_FIELDS changes where a PlanZ field comes from;
+// the defaults match ConReg:
+//     firstname => first_name, lastname => last_name, badgename => badge_name, email => email,
+//     phone => phone, postaddress1 => address.street_address:first_line,
+//     postaddress2 => address.street_address:other_lines, postcity => address.locality,
+//     poststate => address.region, postzip => address.postal_code, postcountry => address.country,
+//     regtype => member_type
+// A dotted name reads a nested value. ":first_line" takes the first line of a multi-line value
+// and ":other_lines" the rest, joined with ", ". "" stops PlanZ taking that field.
+define("OIDC_MEMBER_FIELDS", []); // e.g. ["phone" => ""] to leave phone numbers alone
+define("OIDC_COUNTRY_NAMES", TRUE); // TRUE: turn two-letter ISO country codes ("IE") into English names ("Ireland")
+define("OIDC_COUNTRY_NAME_OVERRIDES", []); // names to use instead, e.g. ["IE" => "Republic of Ireland"]
 
 define("CONFIRM_SESSION_ASSIGNMENT", TRUE); // Ask participants to confirm their assignments
 

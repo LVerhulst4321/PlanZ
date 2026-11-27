@@ -51,7 +51,7 @@ $paramArray['enablePronouns'] = (defined('USE_PRONOUNS') && USE_PRONOUNS) ? 1 : 
 $paramArray['enableBioEdit'] = may_I('EditBio');
 $paramArray['htmlbio'] = HTML_BIO ? 1 : 0;
 $paramArray['userIdPrompt'] = USER_ID_PROMPT;
-$paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
+$paramArray["RESET_PASSWORD_SELF"] = can_reset_own_password();
 if (defined("PARTICIPANT_PHOTOS") && PARTICIPANT_PHOTOS && defined("PHOTO_PUBLIC_DIRECTORY")) {
 	$paramArray['photoPath'] = PHOTO_PUBLIC_DIRECTORY;
 	if (defined("PHOTO_DEFAULT_IMAGE") && PHOTO_DEFAULT_IMAGE) {

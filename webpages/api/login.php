@@ -9,12 +9,16 @@ if (file_exists(__DIR__ . '/../config/db_name.php')) {
 require_once('../db_exceptions.php');
 require_once("db_support_functions.php");
 require_once("jwt_functions.php");
+require_once(__DIR__ . "/../login_functions.php");
 require_once("participant_functions.php");
 
 // the standard db_functions file makes certain assumptions about the end-client being
 // HTML (to which it renders error pages), and those assumptions aren't good
 // in a REST/JSON world.
 function resolve_login($userid, $password) {
+    if (!is_password_login_enabled()) {
+        return false; // LOGIN_MODE "oidc": no password sign-in, here or on the login page.
+    }
     $db = connect_to_db();
     try {
         $query = <<<EOD
@@ -36,7 +40,7 @@ EOD;
             if (mysqli_num_rows($result) == 1) {
                 $dbobject = mysqli_fetch_object($result);
                 mysqli_stmt_close($stmt);
-                if (password_verify($password, $dbobject->password)) {
+                if (!empty($dbobject->password) && password_verify($password, $dbobject->password)) {
                     return jwt_create_token($dbobject->badgeid, get_name($dbobject), $dbobject->regtype == null ? false : true);
                 } else {
                     return false;

@@ -15,6 +15,9 @@
     <xsl:param name="RESET_PASSWORD_SELF" select="true()" /><!-- TRUE/FALSE -->
     <xsl:param name="PUBLIC_NEW_USER" select="false()" /><!-- TRUE/FALSE -->
     <xsl:param name="LOGIN_PHP" select="'doLogin.php'" />
+    <xsl:param name="PASSWORD_LOGIN" select="true()" /><!-- TRUE/FALSE: show user ID and password form -->
+    <xsl:param name="OIDC_LOGIN" select="false()" /><!-- TRUE/FALSE: show sign in through OIDC provider -->
+    <xsl:param name="OIDC_LOGIN_BUTTON_TEXT" select="'Sign in'" />
     <xsl:template match="/">
         <header class="header-wrapper" data-pbo="GlobalHeader.xsl:14">
             <div id="reg-header-container" class="collapsible-wrapper">
@@ -96,24 +99,35 @@
                                                 <xsl:attribute name="class">extended</xsl:attribute>
                                             </xsl:otherwise>
                                         </xsl:choose>
-                                        <div class="control-group">
-                                            <label class="control-label vert-sep vert-sep-above" for="badgeid">
-                                                <xsl:value-of select="$USER_ID_PROMPT"/>
-                                                <xsl:text>:</xsl:text>
-                                            </label>
-                                            <div class="controls vert-sep vert-sep-above">
-                                                <input type="text" name="badgeid" id="badgeid" class="pbox" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
+                                        <xsl:if test="$OIDC_LOGIN">
+                                            <div class="control-group">
+                                                <div class="controls vert-sep vert-sep-above">
+                                                    <a id="oidc-login" href="{$basepath}oidc_login.php" class="btn btn-primary">
+                                                        <xsl:value-of select="$OIDC_LOGIN_BUTTON_TEXT" />
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <label class="control-label" for="passwd">Password:</label>
-                                            <div class="controls">
-                                                <input type="password" id="passwd" name="passwd" class="pbox" placeholder="Password" title="Enter your password" />
+                                        </xsl:if>
+                                        <xsl:if test="$PASSWORD_LOGIN">
+                                            <div class="control-group">
+                                                <label class="control-label vert-sep vert-sep-above" for="badgeid">
+                                                    <xsl:value-of select="$USER_ID_PROMPT"/>
+                                                    <xsl:text>:</xsl:text>
+                                                </label>
+                                                <div class="controls vert-sep vert-sep-above">
+                                                    <input type="text" name="badgeid" id="badgeid" class="pbox" placeholder="{$USER_ID_PROMPT}" title="Enter your {$USER_ID_PROMPT}" />
+                                                </div>
+                                                <label class="control-label" for="passwd">Password:</label>
+                                                <div class="controls">
+                                                    <input type="password" id="passwd" name="passwd" class="pbox" placeholder="Password" title="Enter your password" />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <div class="controls">
-                                                <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
+                                            <div class="control-group">
+                                                <div class="controls">
+                                                    <input type="submit" value="Login" class="btn btn-primary" title="Click to log in" />
+                                                </div>
                                             </div>
-                                        </div>
+                                        </xsl:if>
                                         <xsl:choose>
                                             <xsl:when test="$RESET_PASSWORD_SELF and $PUBLIC_NEW_USER">
                                                 <div class="control-group">

@@ -12,6 +12,7 @@
     <xsl:param name="PARTICIPANT_PHOTOS" select="'0'"/>
     <xsl:param name="emailAvailable" select="'0'"/>
     <xsl:param name="isToolbarPresent" select="'0'"/>
+    <xsl:param name="SWITCH_PARTICIPANT" select="false()"/><!-- TRUE/FALSE: OIDC user can act as several members -->
     <!-- Set of <a> elements; contents of ReportMenuBS4Include.php -->
     <xsl:variable name="ConfigureReports"
         select="/doc/query[@queryname='permission_set']/row[@permatomtag='ConfigureReports']"/>
@@ -177,6 +178,11 @@
                     </div>
                 </xsl:if>
                 <div class="navbar-nav ml-auto mr-2">
+                    <xsl:if test="$SWITCH_PARTICIPANT">
+                        <div class="nav-item py-0">
+                            <a id="SwitchParticipant" class="nav-link py-1" href="{$basepath}SelectParticipant.php">Switch Participant</a>
+                        </div>
+                    </xsl:if>
                     <div class="nav-item py-0">
                         <a id="ParticipantView" class="nav-link py-1" href="{$basepath}welcome.php">Participant View</a>
                     </div>

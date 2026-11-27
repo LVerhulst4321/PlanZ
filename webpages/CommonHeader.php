@@ -22,7 +22,10 @@ function commonHeader($headerVersion, $isLoggedIn, $noUserRequired, $loginPageSt
     $paramArray["USER_ID_PROMPT"] = get_user_id_prompt();
     $paramArray["header_error_message"] = $headerErrorMessage;
     $paramArray["no_user_required"] = $noUserRequired;
-    $paramArray["RESET_PASSWORD_SELF"] = RESET_PASSWORD_SELF;
+    $paramArray["RESET_PASSWORD_SELF"] = can_reset_own_password();
+    $paramArray["PASSWORD_LOGIN"] = is_password_login_enabled();
+    $paramArray["OIDC_LOGIN"] = is_oidc_login_enabled();
+    $paramArray["OIDC_LOGIN_BUTTON_TEXT"] = get_oidc_login_button_text();
     $paramArray["PUBLIC_NEW_USER"] = PUBLIC_NEW_USER;
     $paramArray["LOGIN_PHP"] = defined('CUSTOM_LOGIN_PHP') && !empty(CUSTOM_LOGIN_PHP) ? CUSTOM_LOGIN_PHP : 'doLogin.php';
     if ($bootstrap4) {
